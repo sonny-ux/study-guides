@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Analysis — Chapter 5: Differentiation</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="document.addEventListener('DOMContentLoaded',()=>{renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});initAll();})"></script>
+<style>
+:root{
+  --bg:#08080c;--surface:#0f0f14;--card:#141419;--border:#1e1e28;--border2:#2e2e3e;
+  --text:#e2dced;--muted:#5a5a7a;
+  --ch5:#3a9c6a;--ch5b:#6acc9a;
+  --green:#4a8c5a;--green2:#7abc8a;
+  --red:#9c4a4a;--red2:#cc7070;
+  --gold:#9c7a3a;--gold2:#ccaa6a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font-size:16px;line-height:1.8;overflow-x:hidden;}
+
+.topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(8,8,12,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0;}
+.nav-scroll{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0;scrollbar-width:none;}
+.nav-scroll::-webkit-scrollbar{display:none;}
+.nav-tab{flex-shrink:0;padding:13px 18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;}
+.nav-tab.active,.nav-tab:hover{color:var(--ch5b);border-bottom-color:var(--ch5);}
+
+.pbar{position:fixed;top:44px;left:0;right:0;height:2px;background:var(--border);z-index:199;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--ch5),var(--ch5b));width:0%;transition:width .1s;}
+
+.page{display:none;padding-top:52px;min-height:100vh;}
+.page.active{display:block;}
+
+.hero{padding:32px 20px 28px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(58,156,106,.07) 0%,transparent 60%);pointer-events:none;}
+.ch-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;padding:4px 10px;border-radius:2px;margin-bottom:12px;}
+.hero h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:600;line-height:1.2;margin-bottom:8px;}
+.hero-sub{font-size:.9rem;color:var(--muted);font-style:italic;line-height:1.7;}
+
+.sec{padding:28px 20px;border-bottom:1px solid var(--border);}
+.sec h2{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;}
+
+.main-idea{border-radius:4px;padding:18px 20px;margin-bottom:22px;}
+.mi-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:7px;}
+.mi-text{font-size:.95rem;line-height:1.78;}
+
+.def-box{border-left:3px solid;border-radius:0 3px 3px 0;padding:16px 18px;margin:14px 0;background:var(--card);}
+.box-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;}
+.box-body{font-size:.88rem;color:#9aacbc;line-height:1.75;}
+.box-body strong{color:var(--text);}
+.box-body p{margin-bottom:6px;}
+.box-body p:last-child{margin-bottom:0;}
+
+.thm{border-left:3px solid var(--green2);border-radius:0 3px 3px 0;padding:16px 18px;margin:14px 0;background:#0a100a;}
+.thm .box-label{color:var(--green2);}
+.thm .box-body{color:#8aac8a;}
+.thm .box-body strong{color:#aaccaa;}
+.thm .box-body p{margin-bottom:6px;}
+.thm .box-body p:last-child{margin-bottom:0;}
+
+.warn{border-left:3px solid var(--red2);border-radius:0 3px 3px 0;padding:14px 18px;margin:12px 0;background:#100a0a;}
+.warn .box-label{color:var(--red2);}
+.warn .box-body{color:#ac8a8a;}
+.warn .box-body p{margin-bottom:6px;}
+.warn .box-body p:last-child{margin-bottom:0;}
+
+.explain{border-left:3px solid var(--gold2);border-radius:0 3px 3px 0;padding:14px 18px;margin:12px 0;background:#0e0e0a;}
+.explain .box-label{color:var(--gold2);}
+.explain .box-body{color:#9a9070;}
+.explain .box-body strong{color:#ccc080;}
+.explain .box-body p{margin-bottom:6px;}
+.explain .box-body p:last-child{margin-bottom:0;}
+
+.pw{background:var(--card);border:1px solid var(--border2);border-radius:4px;padding:18px;margin:14px 0;}
+.pw-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;color:var(--ch5b);}
+.pw-step{display:flex;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.pw-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.pw-n{font-family:'JetBrains Mono',monospace;font-size:10px;min-width:20px;padding-top:2px;color:var(--ch5b);}
+.pw-c{flex:1;}
+.pw-s{font-size:.9rem;margin-bottom:5px;line-height:1.6;}
+.pw-w{font-size:.82rem;color:var(--muted);font-style:italic;line-height:1.6;}
+.pw-w strong{color:#8898a8;font-style:normal;}
+
+.acc-wrap{display:flex;flex-direction:column;gap:8px;margin:14px 0;}
+.acc{background:var(--card);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+.acc-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;background:var(--surface);}
+.acc-title{font-size:.9rem;font-style:italic;}
+.acc-arrow{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);transition:transform .2s;}
+.acc.open .acc-arrow{transform:rotate(90deg);}
+.acc-body{display:none;padding:14px 16px;font-size:.86rem;color:#9aacbc;line-height:1.78;border-top:1px solid var(--border);}
+.acc.open .acc-body{display:block;}
+
+.row-item{display:flex;gap:8px;align-items:baseline;font-size:.88rem;color:#9aacbc;padding:6px 0;border-bottom:1px solid var(--border);}
+.row-item:last-child{border-bottom:none;}
+.row-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--muted);min-width:140px;flex-shrink:0;letter-spacing:.08em;}
+
+.hw-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--ch5b);background:rgba(58,156,106,.1);border:1px solid var(--ch5);border-radius:2px;padding:2px 7px;margin-right:7px;}
+.ps-tag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.06em;color:var(--green2);background:rgba(74,140,90,.1);border:1px solid var(--green);border-radius:2px;padding:2px 6px;margin-left:6px;}
+.rudin-tag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.06em;color:var(--gold2);background:rgba(156,122,58,.1);border:1px solid var(--gold);border-radius:2px;padding:2px 6px;margin-left:6px;}
+
+.sol-btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;border:1px solid var(--border2);border-radius:2px;cursor:pointer;background:transparent;color:var(--muted);margin-top:12px;display:block;min-height:40px;-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s;}
+.sol-btn:active{border-color:var(--ch5b);color:var(--ch5b);}
+
+.drill-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:18px 20px;margin-bottom:10px;}
+.drill-tag{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.08em;border-radius:2px;padding:2px 7px;margin-right:7px;text-transform:uppercase;}
+.drill-tag.tf{background:rgba(58,156,106,.1);color:var(--ch5b);}
+.drill-tag.mc{background:rgba(74,140,90,.1);color:var(--green2);}
+.drill-tag.ord{background:rgba(156,170,106,.1);color:var(--gold2);}
+.drill-q{font-size:.9rem;color:var(--text);margin-bottom:14px;line-height:1.65;}
+.tf-row{display:flex;gap:8px;}
+.tf-btn{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:10px 14px;min-height:44px;font-size:.85rem;font-family:'JetBrains Mono',monospace;color:var(--muted);cursor:pointer;transition:border-color .13s;-webkit-tap-highlight-color:transparent;}
+.tf-btn:hover:not(:disabled){border-color:var(--ch5b);}
+.tf-btn.correct{border-color:var(--green2)!important;background:rgba(74,140,90,.1)!important;color:var(--green2)!important;}
+.tf-btn.wrong{border-color:var(--red2)!important;background:rgba(156,74,74,.08)!important;color:var(--red2)!important;}
+.drill-exp{margin-top:10px;display:none;}
+.mc-opts{display:flex;flex-direction:column;gap:6px;}
+.mc-opt{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:11px 14px;min-height:44px;font-size:.85rem;color:var(--muted);cursor:pointer;text-align:left;font-family:'EB Garamond',serif;line-height:1.5;transition:border-color .13s;display:flex;align-items:flex-start;gap:10px;width:100%;-webkit-tap-highlight-color:transparent;}
+.mc-opt:hover:not(:disabled){border-color:var(--ch5b);}
+.mc-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);min-width:16px;flex-shrink:0;padding-top:2px;}
+.mc-opt.correct{border-color:var(--green2)!important;background:rgba(74,140,90,.1)!important;color:var(--green2)!important;}
+.mc-opt.wrong{border-color:var(--red2)!important;background:rgba(156,74,74,.08)!important;}
+.ord-steps{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.ord-step{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:9px 13px;font-size:.85rem;color:var(--muted);line-height:1.5;display:flex;gap:10px;align-items:flex-start;cursor:grab;transition:border-color .13s,opacity .13s;-webkit-tap-highlight-color:transparent;touch-action:none;}
+.ord-step.dragging{opacity:.3;cursor:grabbing;}
+.ord-step.drag-over{border-color:var(--ch5b)!important;}
+.ord-step.correct-p{border-color:var(--green2)!important;background:rgba(74,140,90,.1)!important;color:var(--green2)!important;cursor:default;}
+.ord-step.wrong-p{border-color:var(--red2)!important;background:rgba(156,74,74,.08)!important;cursor:default;}
+.drag-handle{font-family:'JetBrains Mono';color:var(--border2);user-select:none;}
+.ord-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch5b);min-width:16px;padding-top:2px;flex-shrink:0;}
+
+@media(max-width:600px){
+  .sec{padding:22px 16px;}
+  .drill-card{padding:14px;}
+  .ord-step{padding:12px 10px;font-size:.84rem;}
+  .drag-handle{font-size:1.15rem;min-width:20px;text-align:center;}
+  .tf-btn,.sol-btn{min-height:48px;}
+  .nav-tab{padding:12px 14px;}
+  .hero{padding:24px 16px 20px;}
+  .box-body{font-size:.86rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-scroll">
+    <button class="nav-tab active" onclick="showPage('p1',this)">The Derivative</button>
+    <button class="nav-tab" onclick="showPage('p2',this)">Mean Value Theorem</button>
+    <button class="nav-tab" onclick="showPage('p3',this)">Taylor &amp; L'Hôpital</button>
+    <button class="nav-tab" onclick="showPage('p4',this)">Practice</button>
+  </div>
+</nav>
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+
+<!-- ==================== PAGE 1 ==================== -->
+<div class="page active" id="p1">
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(58,156,106,.1);color:var(--ch5b);border:1px solid var(--ch5);">Chapter 5</div>
+  <h1 style="color:var(--ch5b);">Differentiation</h1>
+  <p class="hero-sub">Rudin · PS7 Ex.4,7,8 · Spring 2026. The local linear structure of functions — and the Mean Value Theorem as the central engine of differential calculus.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">01</span> What Chapter 5 Is About</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,156,106,.07),rgba(58,106,156,.03));border:1px solid var(--ch5);">
+    <div class="mi-label" style="color:var(--ch5b);">Main Idea</div>
+    <div class="mi-text">Chapter 4 gave you continuity — the idea that a function doesn't jump. Chapter 5 asks a harder question: is the function smooth? Differentiability is continuity plus a linear approximation. A differentiable function near any point looks like a straight line at the right scale. That local linear structure is extraordinarily powerful: it connects function values at different points (MVT), controls how functions grow (monotonicity), and allows approximation by polynomials (Taylor's theorem).</div>
+  </div>
+  <p style="font-size:.9rem;color:#9aacbc;line-height:1.75;">The chapter culminates in the MVT, which is the central engine behind almost every quantitative result in analysis — bounding errors, proving constancy, establishing monotonicity. You will use MVT constantly from here on.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">02</span> Definition of the Derivative</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,156,106,.07),rgba(58,106,156,.03));border:1px solid var(--ch5);">
+    <div class="mi-label" style="color:var(--ch5b);">Main Idea</div>
+    <div class="mi-text">The derivative is the limit of the difference quotient. $f(t)-f(x)$ is the change in output; $t-x$ is the change in input. Their ratio is the average rate of change. Taking the limit as $t\to x$ asks: what does this ratio approach as the interval shrinks to a point? If the limit exists and is finite, $f$ is differentiable at $x$.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch5b);">
+    <div class="box-label" style="color:var(--ch5b);">Definition — The Derivative</div>
+    <div class="box-body">Let $f:[a,b]\to\mathbb{R}$ and fix $x\in[a,b]$. The <strong>derivative of $f$ at $x$</strong> is:
+    $$f'(x)=\lim_{t\to x}\frac{f(t)-f(x)}{t-x}=\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}$$
+    Both forms appear in proofs. Know both.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch5b);">
+    <div class="box-label" style="color:var(--ch5b);">The Linear Approximation View</div>
+    <div class="box-body">Differentiability at $x$ means: there exists $f'(x)$ such that
+    $$f(x+h)=f(x)+f'(x)\cdot h+o(h)\quad\text{as }h\to 0$$
+    where $o(h)/h\to 0$. Near $x$, $f$ looks like the linear function $f(x)+f'(x)(t-x)$. The derivative $f'(x)$ is the slope of that line.</div>
+  </div>
+  <div class="warn">
+    <div class="box-label">Differentiable implies continuous — but NOT vice versa</div>
+    <div class="box-body">If $f'(x)$ exists, then $f$ is continuous at $x$. Proof: $f(t)-f(x)=\frac{f(t)-f(x)}{t-x}\cdot(t-x)\to f'(x)\cdot 0=0$.<br><br>
+    The converse fails. Classic counterexample: $f(x)=|x|$ at $x=0$. The difference quotient is $|h|/h$, which equals $+1$ for $h>0$ and $-1$ for $h<0$ — different one-sided limits, so no derivative at $0$. Yet $|x|$ is continuous everywhere.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">A Continuous Function That Is Nowhere Differentiable</div>
+    <div class="box-body">Weierstrass (1872): $f(x)=\sum_{n=0}^\infty a^n\cos(b^n\pi x)$ for appropriate $a,b$. Continuous on all of $\mathbb{R}$ but differentiable at no point. This showed that continuity and differentiability are genuinely different — not just "almost the same."</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">03</span> Differentiation Rules</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,156,106,.07),rgba(58,106,156,.03));border:1px solid var(--ch5);">
+    <div class="mi-label" style="color:var(--ch5b);">Main Idea</div>
+    <div class="mi-text">Rudin derives the standard rules as theorems, each following directly from the limit definition. Understanding the proof of each rule matters more than in a calculus course — your problem sets ask you to prove them from scratch.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Sum, Product, Quotient Rules (Rudin §5.3)</div>
+    <div class="box-body">If $f$ and $g$ are differentiable at $x$:<br><br>
+    $(f+g)'(x)=f'(x)+g'(x)$ — linearity of the limit.<br><br>
+    $(fg)'(x)=f'(x)g(x)+f(x)g'(x)$ — product rule. Proved by adding and subtracting $f(x+h)g(x)$.<br><br>
+    $(f/g)'(x)=\dfrac{f'(x)g(x)-f(x)g'(x)}{g(x)^2}$ — quotient rule, when $g(x)\neq 0$.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch5b);">
+    <div class="box-label" style="color:var(--ch5b);">Chain Rule (Rudin §5.5) — the key proof technique</div>
+    <div class="box-body">If $g$ is differentiable at $x$ and $f$ is differentiable at $g(x)$, then $(f\circ g)'(x)=f'(g(x))\cdot g'(x)$.<br><br>
+    <strong>The auxiliary $\varphi$ trick:</strong> Define
+    $$\varphi(k)=\begin{cases}\dfrac{f(g(x)+k)-f(g(x))}{k}-f'(g(x)) & k\neq 0\\0 & k=0\end{cases}$$
+    By differentiability of $f$, $\varphi(k)\to 0$ as $k\to 0$, so $\varphi$ is continuous at $0$. The key identity: $f(g(x)+k)-f(g(x))=(f'(g(x))+\varphi(k))\cdot k$ holds for all $k$.<br><br>
+    Set $k=g(x+h)-g(x)$, divide by $h$, take $h\to 0$: $k\to 0$ (since $g$ is continuous), $\varphi(k)\to 0$, and $k/h\to g'(x)$.<br><br>
+    <strong>Why the auxiliary $\varphi$?</strong> The naive approach divides by $k=g(x+h)-g(x)$, which might be zero for small $h\neq 0$. The $\varphi$ trick avoids division by $k$ entirely.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">04</span> Power Rule for Rationals</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,156,106,.07),rgba(58,106,156,.03));border:1px solid var(--ch5);">
+    <div class="mi-label" style="color:var(--ch5b);">Main Idea</div>
+    <div class="mi-text">Rudin proves $(x^q)'=qx^{q-1}$ for $q\in\mathbb{Q}$ in three steps, each using the previous. This is PS7 Exercise 8 — you need to reproduce the argument.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Step 1: $(x^n)'=nx^{n-1}$ for $n\in\mathbb{N}$</div>
+    <div class="box-body">By the product rule and induction. Base case $n=1$: $(x)'=1$. Inductive step: $(x^{n+1})'=(x\cdot x^n)'=x^n+x\cdot nx^{n-1}=(n+1)x^n$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Step 2: $(x^{1/n})'=\frac{1}{n}x^{1/n-1}$ for $n\in\mathbb{N}$, $x>0$</div>
+    <div class="box-body">Let $r(x)=x^{1/n}$, the inverse of $s(y)=y^n$. Since $s'(y)=ny^{n-1}\neq 0$ for $y>0$, the inverse function theorem gives:
+    $$r'(x)=\frac{1}{s'(r(x))}=\frac{1}{n\cdot(x^{1/n})^{n-1}}=\frac{1}{n}x^{\frac{1}{n}-1}$$</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Step 3: $(x^{m/n})'=\frac{m}{n}x^{m/n-1}$ for $m\in\mathbb{Z}$, $n\in\mathbb{N}$</div>
+    <div class="box-body">Write $h(x)=x^{m/n}=(x^{1/n})^m$. By the chain rule with $f(y)=y^m$ and $g(x)=x^{1/n}$:
+    $$h'(x)=m(x^{1/n})^{m-1}\cdot\frac{1}{n}x^{1/n-1}=\frac{m}{n}x^{\frac{m-1}{n}+\frac{1}{n}-1}=\frac{m}{n}x^{m/n-1}$$</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">05</span> Local Extrema</h2>
+  <div class="def-box" style="border-left-color:var(--ch5b);">
+    <div class="box-label" style="color:var(--ch5b);">Theorem (Rudin §5.8)</div>
+    <div class="box-body">If $f:[a,b]\to\mathbb{R}$ has a local maximum at $x\in(a,b)$ and $f'(x)$ exists, then $f'(x)=0$.<br><br>
+    <strong>Proof:</strong> For $t>x$ close to $x$: $\frac{f(t)-f(x)}{t-x}\leq 0$ (since $f(t)\leq f(x)$). Taking $t\to x^+$ gives $f'(x)\leq 0$. For $t&lt;x$: $\frac{f(t)-f(x)}{t-x}\geq 0$. Taking $t\to x^-$ gives $f'(x)\geq 0$. So $f'(x)=0$.</div>
+  </div>
+  <div class="warn">
+    <div class="box-label">$f'(x)=0$ does NOT imply a local extremum</div>
+    <div class="box-body">$f(x)=x^3$ has $f'(0)=0$ but $x=0$ is an inflection point, not an extremum. The condition $f'(x)=0$ is necessary but not sufficient. You need the second derivative or a sign change in $f'$ to conclude an extremum exists.</div>
+  </div>
+</div>
+
+</div><!-- end page 1 -->
+
+<!-- ==================== PAGE 2 ==================== -->
+<div class="page" id="p2">
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(58,156,106,.1);color:var(--ch5b);border:1px solid var(--ch5);">Chapter 5</div>
+  <h1 style="color:var(--ch5b);">The Mean Value Theorem</h1>
+  <p class="hero-sub">The engine of differential calculus — connecting derivative information to function values at different points.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">01</span> Why MVT Is Central</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,156,106,.07),rgba(58,106,156,.03));border:1px solid var(--ch5);">
+    <div class="mi-label" style="color:var(--ch5b);">Main Idea</div>
+    <div class="mi-text">Almost every "quantitative" result in Chapter 5 and beyond reduces to MVT. Want to show $f$ is constant? Show $f'=0$ and apply MVT. Want to bound $|f(x)-f(y)|$? Bound $|f'|$ and apply MVT. Want monotonicity? Check the sign of $f'$ and apply MVT. The theorem converts derivative information into value information.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">02</span> Rolle and the MVT</h2>
+  <div class="explain" style="border-left-color:var(--ch5);">
+    <div class="box-label">The Geometric Picture — Why We Subtract the Secant Line</div>
+    <div class="box-body">Draw $f$ on $[a,b]$. The <strong>secant line</strong> connecting $(a,f(a))$ to $(b,f(b))$ has slope $\frac{f(b)-f(a)}{b-a}$. The MVT says: at some interior point $c$, the tangent to the graph is <em>parallel</em> to that secant — the instantaneous rate equals the average rate over the whole interval.<br><br>
+    <strong>The proof strategy:</strong> Rolle's theorem only applies when $f(a)=f(b)$ — both endpoints at the same height. The insight is to <em>tilt</em> the graph until the endpoints are level. If you subtract the secant line $\ell(x)=f(a)+\frac{f(b)-f(a)}{b-a}(x-a)$ from $f$, you get a new function $h=f-\ell$ where $h(a)=h(b)=0$. The secant line is gone; the endpoints are equal; Rolle applies.<br><br>
+    <strong>How to discover $h$:</strong> Ask: what is the simplest function that agrees with $f$ at $a$ and $b$? It's the affine interpolant — the secant line. Subtracting it from $f$ is the canonical way to zero out both endpoints. This is not magic; it is the one natural choice, and once you see it, it becomes automatic.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch5b);">
+    <div class="box-label" style="color:var(--ch5b);">Rolle's Theorem (Rudin §5.10)</div>
+    <div class="box-body">Let $f:[a,b]\to\mathbb{R}$ be continuous on $[a,b]$, differentiable on $(a,b)$, and $f(a)=f(b)$. Then $\exists\,c\in(a,b)$ with $f'(c)=0$.<br><br>
+    <strong>Proof:</strong> By the EVT (compactness!), $f$ attains its max and min on $[a,b]$. If both extrema are at the endpoints, $f$ is constant (since $f(a)=f(b)$), so $f'\equiv 0$. Otherwise, $f$ attains an extremum at some interior $c\in(a,b)$, and the local extremum theorem gives $f'(c)=0$.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch5b);">
+    <div class="box-label" style="color:var(--ch5b);">Mean Value Theorem (Rudin §5.10)</div>
+    <div class="box-body">Let $f:[a,b]\to\mathbb{R}$ be continuous on $[a,b]$ and differentiable on $(a,b)$. Then $\exists\,c\in(a,b)$ such that:
+    $$f(b)-f(a)=f'(c)(b-a)$$
+    <strong>Reading:</strong> $f(b)-f(a)$ is the total change in output; $b-a$ is the total input change; $f'(c)$ is the instantaneous rate at some intermediate $c$. The instantaneous rate somewhere equals the average rate over the whole interval.<br><br>
+    <strong>Proof:</strong> Define $g(x)=f(x)-f(a)-\frac{f(b)-f(a)}{b-a}(x-a)$. Then $g(a)=g(b)=0$, so by Rolle's theorem $\exists\,c$ with $g'(c)=0$, i.e., $f'(c)=\frac{f(b)-f(a)}{b-a}$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">The Three Standard Consequences</div>
+    <div class="box-body"><strong>1. $f'=0\Rightarrow f$ is constant:</strong> For any $x&lt;y$, MVT gives $f(y)-f(x)=f'(c)(y-x)=0$.<br><br>
+    <strong>2. $f'\geq 0\Rightarrow f$ is increasing:</strong> For $x&lt;y$, $f(y)-f(x)=f'(c)(y-x)\geq 0$.<br><br>
+    <strong>3. $|f'|\leq M\Rightarrow|f(x)-f(y)|\leq M|x-y|$:</strong> Lipschitz bound directly from MVT. The fundamental estimate for controlling function oscillation.</div>
+  </div>
+  <div class="pw">
+    <div class="pw-label">Proof Walk — MVT via Rolle</div>
+    <div class="pw-step"><div class="pw-n">1</div><div class="pw-c"><div class="pw-s">Define $h(x)=f(x)-f(a)-\frac{f(b)-f(a)}{b-a}(x-a)$.</div><div class="pw-w"><strong>How to find $h$:</strong> We need $h(a)=h(b)=0$ so Rolle applies. The unique affine function through $(a,f(a))$ and $(b,f(b))$ is the secant line $\ell(x)=f(a)+\frac{f(b)-f(a)}{b-a}(x-a)$. Setting $h=f-\ell$ gives $h(a)=h(b)=0$ by construction. Any critical point of $h$ is a point where $f'=\ell'=\frac{f(b)-f(a)}{b-a}$.</div></div></div>
+    <div class="pw-step"><div class="pw-n">2</div><div class="pw-c"><div class="pw-s">Verify: $h(a)=0$ and $h(b)=f(b)-f(a)-(f(b)-f(a))=0$.</div><div class="pw-w"><strong>Check Rolle's hypothesis</strong> $h(a)=h(b)=0$.</div></div></div>
+    <div class="pw-step"><div class="pw-n">3</div><div class="pw-c"><div class="pw-s">Compute $h'(x)=f'(x)-\frac{f(b)-f(a)}{b-a}$.</div><div class="pw-w"><strong>Know what $h'(c)=0$ means</strong> in terms of $f'$.</div></div></div>
+    <div class="pw-step"><div class="pw-n">4</div><div class="pw-c"><div class="pw-s">Apply Rolle: $\exists\,c\in(a,b)$ with $h'(c)=0$, i.e., $f'(c)=\frac{f(b)-f(a)}{b-a}$. $\blacksquare$</div><div class="pw-w"><strong>Translate</strong> $h'(c)=0$ back into the MVT statement.</div></div></div>
+  </div>
+  <div class="explain">
+    <div class="box-label">The Subdivision Trick — an Alternative to MVT</div>
+    <div class="box-body">Sometimes MVT is unavailable. Substitute: subdivide $[x,y]$ into $n$ equal parts and sum:
+    $$|f(y)-f(x)|\leq\sum_{k=1}^n\left|f\!\left(x+\frac{k(y-x)}{n}\right)-f\!\left(x+\frac{(k-1)(y-x)}{n}\right)\right|$$
+    If each term satisfies a bound of the form $C/n^2$, the sum goes to $0$ as $n\to\infty$, proving $f(y)=f(x)$. This is the technique in PS7 Exercise 4.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">03</span> Monotonicity and Derivatives</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,156,106,.07),rgba(58,106,156,.03));border:1px solid var(--ch5);">
+    <div class="mi-label" style="color:var(--ch5b);">Main Idea</div>
+    <div class="mi-text">PS7 Exercise 7 asks you to prove the equivalence between $f$ increasing and $f'\geq 0$. Both directions are important and use different tools. The forward direction reads off the sign of the difference quotient directly; the backward direction invokes the MVT.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">$f$ increasing $\Rightarrow$ $f'\geq 0$: read the difference quotient</div>
+    <div class="box-body">If $f$ is increasing and $h>0$: $\frac{f(x+h)-f(x)}{h}\geq 0$ (numerator and denominator both $\geq 0$). Taking $h\to 0^+$ gives $f'(x)\geq 0$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">$f'\geq 0$ $\Rightarrow$ $f$ increasing: apply MVT</div>
+    <div class="box-body">For any $x&lt;y$ in $[0,1]$: MVT gives $c\in(x,y)$ with $f(y)-f(x)=f'(c)(y-x)\geq 0$ (since $f'(c)\geq 0$ and $y-x>0$). So $f(y)\geq f(x)$.</div>
+  </div>
+  <div class="warn">
+    <div class="box-label">Strict vs. Non-Strict</div>
+    <div class="box-body">$f'\geq 0$ gives $f$ <em>non-decreasing</em>. For <em>strictly</em> increasing you need $f'>0$ — but even that's not necessary: $f(x)=x^3$ is strictly increasing with $f'(0)=0$. So $f'>0$ is sufficient but not necessary for strict increase.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">04</span> Cauchy's Mean Value Theorem</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,156,106,.07),rgba(58,106,156,.03));border:1px solid var(--ch5);">
+    <div class="mi-label" style="color:var(--ch5b);">The Parametric Curve Picture</div>
+    <div class="mi-text">Think of $t\mapsto(g(t),f(t))$ as a parametric curve in the plane, with $t$ going from $a$ to $b$. The curve starts at the point $(g(a),f(a))$ and ends at $(g(b),f(b))$.<br><br>
+    The <strong>secant line</strong> connecting these two endpoints has slope $\dfrac{f(b)-f(a)}{g(b)-g(a)}$. The <strong>tangent</strong> to the curve at parameter $t$ has slope $\dfrac{f'(t)}{g'(t)}$ (rise over run, using the chain rule).<br><br>
+    Cauchy's MVT says: at some parameter value $c\in(a,b)$, the tangent slope equals the secant slope. When $g(t)=t$, the parametric curve is just the graph of $f$ itself, and you recover the ordinary MVT. The Cauchy version is the MVT for curves, not just graphs.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch5b);">
+    <div class="box-label" style="color:var(--ch5b);">Cauchy's MVT (Rudin §5.9)</div>
+    <div class="box-body">Let $f,g:[a,b]\to\mathbb{R}$ be continuous on $[a,b]$, differentiable on $(a,b)$. Then $\exists\,c\in(a,b)$ such that:
+    $$[f(b)-f(a)]\cdot g'(c)=[g(b)-g(a)]\cdot f'(c)$$
+    Or equivalently, if $g(b)\neq g(a)$ and $g'(c)\neq 0$: $\dfrac{f(b)-f(a)}{g(b)-g(a)}=\dfrac{f'(c)}{g'(c)}$<br><br>
+    <strong>When $g(x)=x$:</strong> The right side becomes $\frac{f(b)-f(a)}{b-a}=f'(c)$ — the ordinary MVT. The parametric curve $t\mapsto(t,f(t))$ is just the graph of $f$.</div>
+  </div>
+  <div class="explain" style="border-left-color:var(--ch5);">
+    <div class="box-label">How the Proof Auxiliary Function Is Discovered</div>
+    <div class="box-body">Again the strategy is Rolle: find $h$ with $h(a)=h(b)$. Guided by the parametric picture: the secant line connecting $(g(a),f(a))$ to $(g(b),f(b))$ can be written as $[f(b)-f(a)](x-g(a))=[g(b)-g(a)](y-f(a))$. The signed deviation of the parametric point $(g(t),f(t))$ from this secant is proportional to:
+    $$h(t)=[f(b)-f(a)]\cdot g(t)-[g(b)-g(a)]\cdot f(t)$$
+    Check: $h(a)=[f(b)-f(a)]g(a)-[g(b)-g(a)]f(a)$ and $h(b)=[f(b)-f(a)]g(b)-[g(b)-g(a)]f(b)$ — both equal $f(a)g(b)-f(b)g(a)$, the same value. So $h(a)=h(b)$ and Rolle gives a $c$ with $h'(c)=0$, which is exactly the Cauchy MVT.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Why Cauchy MVT Is Worth Knowing — L'Hôpital Follows From It</div>
+    <div class="box-body">The main application of Cauchy's MVT in Chapter 5 is L'Hôpital's rule. Given $f(a)=g(a)=0$, apply Cauchy's MVT on $[a,x]$ for $x$ near $a$: there exists $c\in(a,x)$ with $\frac{f(x)-f(a)}{g(x)-g(a)}=\frac{f'(c)}{g'(c)}$, i.e., $\frac{f(x)}{g(x)}=\frac{f'(c)}{g'(c)}$. As $x\to a$, the point $c$ (squeezed between $a$ and $x$) also $\to a$, giving $\lim\frac{f(x)}{g(x)}=\lim\frac{f'(c)}{g'(c)}=L$.</div>
+  </div>
+</div>
+
+</div><!-- end page 2 -->
+
+<!-- ==================== PAGE 3 ==================== -->
+<div class="page" id="p3">
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(58,156,106,.1);color:var(--ch5b);border:1px solid var(--ch5);">Chapter 5</div>
+  <h1 style="color:var(--ch5b);">Taylor's Theorem &amp; L'Hôpital</h1>
+  <p class="hero-sub">Higher-order approximations, Lagrange remainder, and computing limits of indeterminate forms.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">01</span> Taylor's Theorem</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,156,106,.07),rgba(58,106,156,.03));border:1px solid var(--ch5);">
+    <div class="mi-label" style="color:var(--ch5b);">Main Idea</div>
+    <div class="mi-text">The MVT gives a linear approximation: $f(x)\approx f(\alpha)+f'(\alpha)(x-\alpha)$, with an error term controlled by $f''$. But what if you want a better approximation — one that uses second, third, or higher derivative information? You extend the polynomial to degree $n$, matching $f$ and all of its first $n$ derivatives at $\alpha$. That is the Taylor polynomial, and Taylor's theorem gives a sharp bound on how far the polynomial is from $f$.<br><br>
+    <strong>Connecting back to MVT:</strong> Take $n=0$ in Taylor's theorem and you get $f(x)=f(\alpha)+f'(c)(x-\alpha)$ — exactly the MVT. The hierarchy is: MVT ($n=0$) → linear approximation → quadratic → cubic, each buying one more order of accuracy as $(x-\alpha)\to 0$.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch5b);">
+    <div class="box-label" style="color:var(--ch5b);">Taylor's Theorem (Rudin §5.15)</div>
+    <div class="box-body">Let $f:[a,b]\to\mathbb{R}$ have $n$ continuous derivatives on $[a,b]$ and suppose $f^{(n+1)}$ exists on $(a,b)$. Then for any $x,\alpha\in[a,b]$:
+    $$f(x)=\sum_{k=0}^n\frac{f^{(k)}(\alpha)}{k!}(x-\alpha)^k+\frac{f^{(n+1)}(c)}{(n+1)!}(x-\alpha)^{n+1}$$
+    for some $c$ between $\alpha$ and $x$.<br><br>
+    The sum is the <strong>Taylor polynomial</strong> of degree $n$ — it matches $f$ and all derivatives up to order $n$ at $\alpha$. The remainder term $\frac{f^{(n+1)}(c)}{(n+1)!}(x-\alpha)^{n+1}$ is the <strong>Lagrange remainder</strong> — it bounds how far the polynomial is from $f$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">The MVT as Taylor with $n=0$</div>
+    <div class="box-body">Take $n=0$: $f(x)=f(\alpha)+f'(c)(x-\alpha)$, i.e., $f(x)-f(\alpha)=f'(c)(x-\alpha)$. This is exactly the MVT. Taylor's theorem is the MVT iterated $n$ times.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">Using Taylor to Estimate Errors</div>
+    <div class="box-body">If $|f^{(n+1)}(t)|\leq M$ for all $t$ in the interval:
+    $$\left|f(x)-\sum_{k=0}^n\frac{f^{(k)}(\alpha)}{k!}(x-\alpha)^k\right|\leq\frac{M}{(n+1)!}|x-\alpha|^{n+1}$$
+    <strong>Example:</strong> Approximate $e^{0.1}$ using the Taylor polynomial of $e^x$ at $0$ of degree 3: $1+0.1+0.01/2+0.001/6=1.10517$. Error $\leq e^{0.1}\cdot(0.1)^4/4!\approx 4.6\times 10^{-6}$.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">02</span> L'Hôpital's Rule</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,156,106,.07),rgba(58,106,156,.03));border:1px solid var(--ch5);">
+    <div class="mi-label" style="color:var(--ch5b);">Main Idea</div>
+    <div class="mi-text">L'Hôpital addresses $\lim_{x\to a}f(x)/g(x)$ when both $f(x)\to 0$ and $g(x)\to 0$ (or both $\to\pm\infty$). The trick: replace $f/g$ by $f'/g'$. The proof uses Cauchy's MVT, which is precisely why Cauchy's MVT appears just before this in Rudin — it's not an afterthought, it's the engine.</div>
+  </div>
+  <div class="explain" style="border-left-color:var(--ch5);">
+    <div class="box-label">Why Does $f'/g'$ Replace $f/g$? — The Heuristic</div>
+    <div class="box-body">When $f(a)=g(a)=0$, both functions vanish at $a$. Near $a$, a differentiable function behaves like its linear part: $f(x)\approx f'(a)(x-a)$ and $g(x)\approx g'(a)(x-a)$. So:
+    $$\frac{f(x)}{g(x)}\approx\frac{f'(a)(x-a)}{g'(a)(x-a)}=\frac{f'(a)}{g'(a)}$$
+    The factor $(x-a)$ cancels from both numerator and denominator — that is the entire intuition. L'Hôpital replaces the ratio of "sizes" with the ratio of "rates of growth." Cauchy's MVT makes this rigorous by producing a $c$ between $a$ and $x$ with $f(x)/g(x)=f'(c)/g'(c)$ exactly (not approximately), and then letting $x\to a$ forces $c\to a$.<br><br>
+    <strong>The $\infty/\infty$ case</strong> is different — both functions are large, not small, so the linear-approximation heuristic breaks down. But the conclusion is the same, requiring a separate argument that Rudin handles by applying the $0/0$ version to $1/f$ and $1/g$.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch5b);">
+    <div class="box-label" style="color:var(--ch5b);">L'Hôpital's Rule (Rudin §5.13)</div>
+    <div class="box-body">Suppose $f,g:(a,b)\to\mathbb{R}$ are differentiable with $g'(x)\neq 0$ on $(a,b)$, and $f(x)\to 0$ and $g(x)\to 0$ as $x\to a^+$ (or both $\to\pm\infty$). If:
+    $$\lim_{x\to a^+}\frac{f'(x)}{g'(x)}=L$$
+    then $\lim_{x\to a^+}\frac{f(x)}{g(x)}=L$ as well.<br><br>
+    <strong>Proof outline:</strong> Apply Cauchy's MVT on intervals $[x,t]$ near $a$: there exists $c\in(x,t)$ with $\frac{f(x)-f(t)}{g(x)-g(t)}=\frac{f'(c)}{g'(c)}$. As $t\to a$ and $f(t),g(t)\to 0$, the left side approaches $f(x)/g(x)$. As $x\to a$, $c\to a$ too, and $f'(c)/g'(c)\to L$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Worked Example: $\lim_{x\to 0}\sin x/x$</div>
+    <div class="box-body">$0/0$ form at $x=0$. Apply L'Hôpital: $\lim_{x\to 0}\frac{(\sin x)'}{(x)'}=\lim_{x\to 0}\frac{\cos x}{1}=1$.</div>
+  </div>
+  <div class="warn">
+    <div class="box-label">L'Hôpital Requires the Hypothesis</div>
+    <div class="box-body">L'Hôpital only applies when you have an indeterminate form $0/0$ or $\infty/\infty$. Applying it to $\lim_{x\to 0}(1+x)/\sin x$ is wrong — the numerator goes to $1\neq 0$. Always check the form. Also: if $\lim f'/g'$ does not exist, you cannot conclude anything about $\lim f/g$.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">03</span> Darboux's Theorem</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,156,106,.07),rgba(58,106,156,.03));border:1px solid var(--ch5);">
+    <div class="mi-label" style="color:var(--ch5b);">Main Idea</div>
+    <div class="mi-text">If $f$ is differentiable everywhere, must $f'$ be continuous? The answer is no — but $f'$ cannot be too discontinuous either. Derivatives satisfy the intermediate value property even when they are not continuous.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">Darboux's Theorem (Intermediate Value for Derivatives)</div>
+    <div class="box-body">If $f$ is differentiable on $[a,b]$ and $f'(a)&lt;\lambda&lt;f'(b)$, then there exists $c\in(a,b)$ with $f'(c)=\lambda$.<br><br>
+    Consequence: $f'$ cannot have jump discontinuities — a derivative can only have discontinuities of the oscillation type (second kind). This is a strong constraint on what functions can be derivatives.</div>
+  </div>
+</div>
+
+</div><!-- end page 3 -->
+
+<!-- ==================== PAGE 4: PRACTICE ==================== -->
+<div class="page" id="p4">
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(58,156,106,.1);color:var(--ch5b);border:1px solid var(--ch5);">Chapter 5</div>
+  <h1 style="color:var(--ch5b);">Practice</h1>
+  <p class="hero-sub">PS7 problems with background, approach, and full solutions. Includes quick drills.</p>
+</div>
+
+<!-- Drills -->
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">01</span> Quick Drills — True / False</h2>
+
+  <div class="drill-card" id="tf5-1" data-correct="false">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f'(p)>0$, then $f$ is increasing on some open interval around $p$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf5-1','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf5-1','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="warn"><div class="box-label">False — the classic trap</div><div class="box-body">$f(x)=x+2x^2\sin(1/x)$ for $x\neq 0$, $f(0)=0$ has $f'(0)=1>0$ yet oscillates near $0$ and is not monotone on any interval. $f'(p)>0$ means $f$ is locally increasing at $p$ in the infinitesimal sense, not on a neighborhood. You need $f'$ continuous and positive at $p$ for monotonicity on an interval.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf5-2" data-correct="true">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f$ is differentiable at $p$, then $f$ is continuous at $p$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf5-2','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf5-2','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True — Rudin Thm 5.2</div><div class="box-body">$f(x)-f(p)=\frac{f(x)-f(p)}{x-p}\cdot(x-p)\to f'(p)\cdot 0=0$. So $f(x)\to f(p)$. Converse false: $|x|$ is continuous everywhere but not differentiable at $0$.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf5-3" data-correct="false">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>The MVT requires $f$ to be differentiable on the closed interval $[a,b]$, including at the endpoints.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf5-3','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf5-3','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="warn"><div class="box-label">False — only continuity at the endpoints</div><div class="box-body">MVT (Rudin §5.10): $f$ continuous on $[a,b]$, differentiable on $(a,b)$. Differentiability at $a$ and $b$ is NOT required. The proof applies EVT (needs only continuity) to the auxiliary function $h$, and Thm 5.8 (needs differentiability in the open interior). Example: $f(x)=\sqrt{x}$ on $[0,1]$ satisfies MVT even though $f'(0)=\infty$.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf5-4" data-correct="true">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f'(x)=0$ for all $x\in(a,b)$, then $f$ is constant on $(a,b)$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf5-4','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf5-4','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True — by MVT</div><div class="box-body">For any $x,y\in(a,b)$ with $x&lt;y$: MVT gives $f(y)-f(x)=f'(c)(y-x)=0$. So $f(y)=f(x)$ for all pairs. Corollary: if $f'=g'$ on $(a,b)$, then $f-g$ is constant.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf5-5" data-correct="false">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f'(x)=g'(x)$ for all $x\in(a,b)$, then $f(x)=g(x)$ for all $x\in(a,b)$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf5-5','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf5-5','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="warn"><div class="box-label">False — they can differ by a constant</div><div class="box-body">Apply the corollary above to $h=f-g$: $h'\equiv 0$, so $h\equiv C$. If $C\neq 0$, $f\neq g$ even though $f'=g'$. Example: $f(x)=x^2+1$ and $g(x)=x^2$ have the same derivative everywhere.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf5-6" data-correct="false">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>L'Hôpital's rule: whenever $\lim_{x\to a}f(x)=\lim_{x\to a}g(x)=0$, we have $\lim f/g=\lim f'/g'$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf5-6','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf5-6','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="warn"><div class="box-label">False — two additional conditions required</div><div class="box-body">(1) The limit $\lim f'/g'$ must exist. L'Hôpital gives no information if $f'/g'$ oscillates or diverges. (2) $g'(x)\neq 0$ near $a$. Without these the conclusion fails. The rule says: if you have $0/0$ or $\pm\infty/\infty$ AND $\lim f'/g'$ exists, THEN $\lim f/g$ equals it.</div></div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">02</span> Proof Ordering</h2>
+
+  <div class="drill-card" id="ord5-1" data-answer="B,D,C,A,E">
+    <div class="drill-q"><span class="drill-tag ord">ORDER</span>Drag to arrange: prove the MVT via Rolle's theorem.</div>
+    <div class="ord-steps">
+      <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Apply Rolle's theorem to $h$: since $h(a)=h(b)=0$, $\exists\,c\in(a,b)$ with $h'(c)=0$.</span></div>
+      <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Define $h(x)=f(x)-f(a)-\dfrac{f(b)-f(a)}{b-a}(x-a)$.</span></div>
+      <div class="ord-step" data-label="C" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">C</span><span>Compute $h'(x)=f'(x)-\dfrac{f(b)-f(a)}{b-a}$.</span></div>
+      <div class="ord-step" data-label="D" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">D</span><span>Check: $h(a)=0$ and $h(b)=f(b)-f(a)-(f(b)-f(a))=0$.</span></div>
+      <div class="ord-step" data-label="E" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">E</span><span>Therefore $f'(c)=\dfrac{f(b)-f(a)}{b-a}$. $\blacksquare$</span></div>
+    </div>
+    <button class="sol-btn check-btn" onclick="checkOrder('ord5-1')">Check My Order</button>
+    <div id="ord5-1-ans" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Correct order: B → D → C → A → E</div>
+        <div class="box-body"><strong>B:</strong> Define the auxiliary function $h$ — subtract the secant line so endpoint values match.<br><strong>D:</strong> Verify Rolle's equal-endpoint hypothesis by direct calculation.<br><strong>C:</strong> Compute $h'$ so you know what "$h'(c)=0$" means in terms of $f'$.<br><strong>A:</strong> Apply Rolle.<br><strong>E:</strong> Translate: $h'(c)=0$ gives the MVT statement.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card" id="ord5-2" data-answer="B,C,D,A">
+    <div class="drill-q"><span class="drill-tag ord">ORDER</span>Drag to arrange: prove that differentiability at $p$ implies continuity at $p$.</div>
+    <div class="ord-steps">
+      <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Therefore $\lim_{x\to p}(f(x)-f(p))=f'(p)\cdot 0=0$, so $f(x)\to f(p)$.</span></div>
+      <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Write $f(x)-f(p)=\dfrac{f(x)-f(p)}{x-p}\cdot(x-p)$ for $x\neq p$.</span></div>
+      <div class="ord-step" data-label="C" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">C</span><span>As $x\to p$: the first factor $\to f'(p)$ (definition of derivative) and $(x-p)\to 0$.</span></div>
+      <div class="ord-step" data-label="D" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">D</span><span>By the product rule for limits, the product $\to f'(p)\cdot 0$.</span></div>
+    </div>
+    <button class="sol-btn check-btn" onclick="checkOrder('ord5-2')">Check My Order</button>
+    <div id="ord5-2-ans" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Correct order: B → C → D → A</div>
+        <div class="box-body"><strong>B:</strong> The key algebraic trick: multiply and divide by $(x-p)$ to extract the difference quotient.<br><strong>C:</strong> Identify what each factor converges to independently.<br><strong>D:</strong> Combine via the product rule for limits — valid since both limits exist.<br><strong>A:</strong> Conclude: $f(x)-f(p)\to 0$ means $f(x)\to f(p)$.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">03</span> Multiple Choice</h2>
+
+  <div class="drill-card" id="mc5-1">
+    <div class="drill-q"><span class="drill-tag mc">MULTI</span>You want to show $|f(b)-f(a)|\leq M|b-a|$ given $|f'|\leq M$ on $(a,b)$. The first step is to write $f(b)-f(a)$ as:</div>
+    <div class="mc-opts">
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc5-1',this)"><span class="mc-lbl">A</span>$f'(a)(b-a)$ — tangent line approximation at $a$</button>
+      <button class="mc-opt" data-correct="true" onclick="answerMC('mc5-1',this)"><span class="mc-lbl">B</span>$f'(c)(b-a)$ for some $c\in(a,b)$ — by the MVT</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc5-1',this)"><span class="mc-lbl">C</span>$\tfrac{1}{2}f''(c)(b-a)^2$ — Taylor remainder term</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc5-1',this)"><span class="mc-lbl">D</span>$\int_a^b f'(t)\,dt$ — via the FTC</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">B — MVT is the direct route</div><div class="box-body">MVT gives $f(b)-f(a)=f'(c)(b-a)$ exactly, so $|f(b)-f(a)|=|f'(c)||b-a|\leq M|b-a|$. (D also gives the exact value via FTC, but bounding the integral is an extra step. MVT is cleaner for Lipschitz-type bounds.)</div></div></div>
+  </div>
+
+  <div class="drill-card" id="mc5-2">
+    <div class="drill-q"><span class="drill-tag mc">MULTI</span>L'Hôpital's rule directly applies when the limit has which indeterminate form?</div>
+    <div class="mc-opts">
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc5-2',this)"><span class="mc-lbl">A</span>$0\cdot\infty$ — product of zero and infinity</button>
+      <button class="mc-opt" data-correct="true" onclick="answerMC('mc5-2',this)"><span class="mc-lbl">B</span>$0/0$ or $\pm\infty/\infty$ — ratio forms only</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc5-2',this)"><span class="mc-lbl">C</span>Any expression as long as $g(x)\neq 0$ near $a$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc5-2',this)"><span class="mc-lbl">D</span>$1^\infty$ or $\infty-\infty$</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">B — ratio forms only</div><div class="box-body">For $0\cdot\infty$, first rewrite as a ratio: $f\cdot g=f/(1/g)$ or $g/(1/f)$. For $1^\infty$ or $\infty-\infty$, take logs or algebraically manipulate before applying L'Hôpital.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="mc5-3">
+    <div class="drill-q"><span class="drill-tag mc">MULTI</span>Rolle's theorem requires which hypotheses on $f:[a,b]\to\mathbb{R}$?</div>
+    <div class="mc-opts">
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc5-3',this)"><span class="mc-lbl">A</span>Differentiable on $[a,b]$ (closed) and $f(a)=f(b)$</button>
+      <button class="mc-opt" data-correct="true" onclick="answerMC('mc5-3',this)"><span class="mc-lbl">B</span>Continuous on $[a,b]$, differentiable on $(a,b)$, and $f(a)=f(b)$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc5-3',this)"><span class="mc-lbl">C</span>Twice differentiable on $(a,b)$ and $f(a)=f(b)$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc5-3',this)"><span class="mc-lbl">D</span>Continuous on $(a,b)$, differentiable on $(a,b)$, and $f(a)=f(b)$</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">B — exactly the three Rolle hypotheses</div><div class="box-body">(1) Continuous on closed $[a,b]$ — needed for EVT to find the interior extremum. (2) Differentiable on open $(a,b)$ — needed for Thm 5.8 (interior extremum $\Rightarrow$ zero derivative). (3) $f(a)=f(b)$. A is too strong; D drops continuity at endpoints, which EVT requires.</div></div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch5b);">04</span> PS7 Problems</h2>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Problem</span>Suppose $f:\mathbb{R}\to\mathbb{R}$ satisfies $|f(x)-f(y)|\leq(x-y)^2$ for all $x,y\in\mathbb{R}$. Show $f$ is constant. <span class="ps-tag">PS7 Ex.4</span></div>
+    <button class="sol-btn" onclick="toggleSol('pa')">show solution</button>
+    <div id="pa" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Solution (two methods)</div>
+        <div class="box-body"><strong>Method 1 (derivative):</strong> Fix $x\in\mathbb{R}$. For $h\neq 0$:
+        $$\left|\frac{f(x+h)-f(x)}{h}\right|\leq\frac{h^2}{|h|}=|h|\to 0\text{ as }h\to 0$$
+        So $f'(x)=0$ for all $x$. By the MVT, for any $x&lt;y$ there exists $c\in(x,y)$ with $f(y)-f(x)=f'(c)(y-x)=0$. Hence $f$ is constant. $\blacksquare$<br><br>
+        <strong>Method 2 (subdivision):</strong> Fix $x&lt;y$. For any $n\in\mathbb{N}$, let $x_k=x+k(y-x)/n$. Then:
+        $$|f(y)-f(x)|\leq\sum_{k=1}^n|f(x_k)-f(x_{k-1})|\leq\sum_{k=1}^n\left(\frac{y-x}{n}\right)^2=\frac{(y-x)^2}{n}\to 0$$
+        So $f(y)=f(x)$ for all $x,y$. $\blacksquare$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Problem</span>Let $f:[0,1]\to\mathbb{R}$ be differentiable. Show $f$ is monotonically increasing if and only if $f'(x)\geq 0$ for all $x\in[0,1]$. <span class="ps-tag">PS7 Ex.7</span></div>
+    <button class="sol-btn" onclick="toggleSol('pb')">show solution</button>
+    <div id="pb" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Proof</div>
+        <div class="box-body"><strong>$(\Rightarrow)$:</strong> Suppose $f$ is increasing. For any $x\in[0,1]$ and $h>0$ small enough:
+        $$\frac{f(x+h)-f(x)}{h}\geq 0$$
+        since $f(x+h)\geq f(x)$ (increasing) and $h>0$. Taking $h\to 0^+$ gives $f'(x)\geq 0$.<br><br>
+        <strong>$(\Leftarrow)$:</strong> Suppose $f'(x)\geq 0$ for all $x$. Let $x&lt;y$ in $[0,1]$. Apply the MVT to $f$ on $[x,y]$: there exists $c\in(x,y)$ such that $f(y)-f(x)=f'(c)(y-x)$. Since $f'(c)\geq 0$ and $y-x>0$, we get $f(y)\geq f(x)$. $\blacksquare$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Problem</span>Prove the chain rule. Then derive $(x^q)'=qx^{q-1}$ for $q\in\mathbb{Q}$, $x>0$. <span class="ps-tag">PS7 Ex.8</span></div>
+    <button class="sol-btn" onclick="toggleSol('pc')">show solution</button>
+    <div id="pc" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Chain Rule Proof</div>
+        <div class="box-body">Let $y_0=g(x)$. Define:
+        $$\varphi(k)=\begin{cases}\dfrac{f(y_0+k)-f(y_0)}{k}-f'(y_0) & k\neq 0\\0 & k=0\end{cases}$$
+        By differentiability of $f$ at $y_0$, $\varphi(k)\to 0$ as $k\to 0$, so $\varphi$ is continuous at $0$. The identity $f(y_0+k)-f(y_0)=(f'(y_0)+\varphi(k))k$ holds for all $k$.<br><br>
+        Set $k=g(x+h)-g(x)$. Then:
+        $$\frac{f(g(x+h))-f(g(x))}{h}=(f'(g(x))+\varphi(k))\cdot\frac{g(x+h)-g(x)}{h}$$
+        As $h\to 0$: $k\to 0$ (since $g$ is continuous), so $\varphi(k)\to 0$; and $(g(x+h)-g(x))/h\to g'(x)$. Therefore $(f\circ g)'(x)=f'(g(x))\cdot g'(x)$. $\blacksquare$</div>
+      </div>
+      <div class="thm"><div class="box-label">$(x^q)'=qx^{q-1}$ for $q=m/n\in\mathbb{Q}$</div>
+        <div class="box-body"><strong>Step 1:</strong> $(x^n)'=nx^{n-1}$ by induction and the product rule.<br><br>
+        <strong>Step 2:</strong> $(x^{1/n})'=\frac{1}{n}x^{1/n-1}$. The function $r(x)=x^{1/n}$ is the inverse of $s(y)=y^n$. The inverse function theorem gives $r'(x)=1/s'(r(x))=1/(n(x^{1/n})^{n-1})=\frac{1}{n}x^{1/n-1}$.<br><br>
+        <strong>Step 3:</strong> $h(x)=x^{m/n}=(x^{1/n})^m$. Chain rule:
+        $$h'(x)=m(x^{1/n})^{m-1}\cdot\frac{1}{n}x^{1/n-1}=\frac{m}{n}x^{\frac{m-1}{n}+\frac{1-n}{n}}=\frac{m}{n}x^{m/n-1}\quad\blacksquare$$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">R1</span>Suppose $f'(x)>0$ on $(a,b)$. Prove $f$ is strictly increasing on $(a,b)$. Is the converse true? <span class="rudin-tag">RUDIN</span></div>
+    <button class="sol-btn" onclick="toggleSol('rd1')">show solution</button>
+    <div id="rd1" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Proof and Counterexample</div>
+        <div class="box-body"><strong>Strictly increasing:</strong> For $x&lt;y$ in $(a,b)$, MVT gives $c\in(x,y)$ with $f(y)-f(x)=f'(c)(y-x)$. Since $f'(c)>0$ and $y-x>0$, we get $f(y)>f(x)$.<br><br>
+        <strong>Converse is false:</strong> $f(x)=x^3$ on $\mathbb{R}$. Strictly increasing (if $x&lt;y$ then $x^3&lt;y^3$), but $f'(0)=0$. So $f'>0$ is sufficient but not necessary for strict increase. $\blacksquare$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">R2</span>Suppose $f$ is differentiable on $\mathbb{R}$, $f(0)=0$, and $|f'(x)|\leq|f(x)|$ for all $x$. Show $f\equiv 0$. <span class="rudin-tag">RUDIN</span></div>
+    <button class="sol-btn" onclick="toggleSol('rd2')">show solution</button>
+    <div id="rd2" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Proof</div>
+        <div class="box-body">Fix any $a>0$ and let $M=\sup_{x\in[0,a]}|f(x)|$. Since $f$ is continuous and $[0,a]$ is compact, $M$ is attained at some $x_0\in[0,a]$, so $M=|f(x_0)|$.<br><br>
+        By MVT on $[0,x_0]$: $f(x_0)-f(0)=f'(c)\cdot x_0$ for some $c\in(0,x_0)$. Since $f(0)=0$:
+        $$M=|f(x_0)|=|f'(c)|\cdot x_0\leq|f(c)|\cdot x_0\leq M\cdot a$$
+        So $M\leq Ma$. If $a<1$, then $M(1-a)\leq 0$, forcing $M=0$. Thus $f\equiv 0$ on $[0,a]$ for any $a<1$. By induction (shift the interval), $f\equiv 0$ on $[0,\infty)$. Similarly on $(-\infty,0]$. $\blacksquare$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">R3</span>Let $f$ be twice differentiable on $(a,b)$ with $f''(x)\geq 0$ (convex). Show that for any $x,y\in(a,b)$ and $t\in[0,1]$: $f(tx+(1-t)y)\leq tf(x)+(1-t)f(y)$. <span class="rudin-tag">RUDIN</span></div>
+    <button class="sol-btn" onclick="toggleSol('rd3')">show solution</button>
+    <div id="rd3" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Proof</div>
+        <div class="box-body">Let $z=tx+(1-t)y$. By Taylor at $z$ with $n=1$ (Lagrange remainder):
+        $$f(x)=f(z)+f'(z)(x-z)+\frac{f''(c_1)}{2}(x-z)^2\geq f(z)+f'(z)(x-z)$$
+        $$f(y)=f(z)+f'(z)(y-z)+\frac{f''(c_2)}{2}(y-z)^2\geq f(z)+f'(z)(y-z)$$
+        since $f''\geq 0$ makes the remainder terms non-negative. Multiply the first by $t$ and the second by $(1-t)$ and add:
+        $$tf(x)+(1-t)f(y)\geq f(z)+f'(z)[t(x-z)+(1-t)(y-z)]$$
+        But $t(x-z)+(1-t)(y-z)=tx+(1-t)y-z=z-z=0$. So $tf(x)+(1-t)f(y)\geq f(z)=f(tx+(1-t)y)$. $\blacksquare$</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page 4 -->
+
+<script>
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+document.addEventListener('scroll',function(){
+  var h=document.documentElement.scrollHeight-window.innerHeight;
+  var pct=h>0?(window.scrollY/h)*100:0;
+  document.getElementById('pf').style.width=pct+'%';
+});
+function toggleSol(id){
+  var el=document.getElementById(id);
+  var btn=el.previousElementSibling;
+  var hidden=el.style.display==='none'||el.style.display==='';
+  el.style.display=hidden?'block':'none';
+  btn.textContent=hidden?'hide solution':'show solution';
+}
+function answerTF(id,val){
+  var c=document.getElementById(id);
+  if(c.dataset.done)return;
+  c.dataset.done='1';
+  var ans=c.dataset.correct;
+  c.querySelectorAll('.tf-btn').forEach(function(b){
+    b.disabled=true;
+    if(b.dataset.val===ans)b.classList.add('correct');
+    else b.classList.add('wrong');
+  });
+  var e=c.querySelector('.drill-exp');
+  if(e)e.style.display='block';
+}
+function answerMC(id,el){
+  var c=document.getElementById(id);
+  if(c.dataset.done)return;
+  c.dataset.done='1';
+  c.querySelectorAll('.mc-opt').forEach(function(b){
+    b.disabled=true;
+    if(b.dataset.correct==='true')b.classList.add('correct');
+    else if(b===el)b.classList.add('wrong');
+  });
+  var e=c.querySelector('.drill-exp');
+  if(e)e.style.display='block';
+}
+
+/* ===== DRAG-AND-DROP ORDERING ===== */
+var _dragSrc=null,_touchDragEl=null,_touchClone=null,_touchOffX=0,_touchOffY=0;
+function dragStart(e){
+  var el=e.currentTarget;
+  if(el.classList.contains('correct-p')||el.classList.contains('wrong-p')){e.preventDefault();return;}
+  _dragSrc=el;e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','');
+  setTimeout(function(){el.classList.add('dragging');},0);
+}
+function dragEnd(e){
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+}
+function dragOver(e){
+  e.preventDefault();var t=e.currentTarget;
+  if(t!==_dragSrc)t.classList.add('drag-over');return false;
+}
+function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function drop(e){
+  e.stopPropagation();var t=e.currentTarget;
+  t.classList.remove('drag-over');
+  if(_dragSrc&&_dragSrc!==t&&_dragSrc.parentNode===t.parentNode){
+    var p=t.parentNode,si=Array.from(p.children).indexOf(_dragSrc),ti=Array.from(p.children).indexOf(t);
+    if(si<ti)p.insertBefore(_dragSrc,t.nextSibling);else p.insertBefore(_dragSrc,t);
+  }
+  return false;
+}
+function touchStart(e){
+  var el=e.currentTarget;
+  if(el.classList.contains('correct-p')||el.classList.contains('wrong-p'))return;
+  e.preventDefault();
+  _touchDragEl=el;
+  var r=el.getBoundingClientRect();
+  _touchOffX=e.touches[0].clientX-r.left;
+  _touchOffY=e.touches[0].clientY-r.top;
+  _touchClone=el.cloneNode(true);
+  ['ondragstart','ondragend','ondragover','ondragleave','ondrop','ontouchstart'].forEach(function(a){_touchClone.removeAttribute(a);});
+  _touchClone.style.cssText='position:fixed;width:'+r.width+'px;opacity:.72;z-index:9999;pointer-events:none;margin:0;border-radius:3px;box-shadow:0 6px 24px rgba(0,0,0,.5);left:'+(e.touches[0].clientX-_touchOffX)+'px;top:'+(e.touches[0].clientY-_touchOffY)+'px;';
+  document.body.appendChild(_touchClone);
+  el.classList.add('dragging');
+  document.body.style.overscrollBehavior='none';
+}
+/* touchmove and touchend registered at document level with passive:false
+   so e.preventDefault() reliably blocks iOS scroll/bounce during drag */
+document.addEventListener('touchmove',function(e){
+  if(!_touchDragEl)return;
+  e.preventDefault();
+  var tx=e.touches[0].clientX,ty=e.touches[0].clientY;
+  _touchClone.style.left=(tx-_touchOffX)+'px';
+  _touchClone.style.top=(ty-_touchOffY)+'px';
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+  _touchClone.style.display='none';
+  var hit=document.elementFromPoint(tx,ty);
+  _touchClone.style.display='';
+  var tgt=hit?hit.closest('.ord-step'):null;
+  if(tgt&&tgt!==_touchDragEl&&tgt.parentNode===_touchDragEl.parentNode)tgt.classList.add('drag-over');
+},{passive:false});
+document.addEventListener('touchend',function(e){
+  if(!_touchDragEl)return;
+  e.preventDefault();
+  var tx=e.changedTouches[0].clientX,ty=e.changedTouches[0].clientY;
+  _touchClone.style.display='none';
+  var hit=document.elementFromPoint(tx,ty);
+  document.body.removeChild(_touchClone);_touchClone=null;
+  _touchDragEl.classList.remove('dragging');
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+  var tgt=hit?hit.closest('.ord-step'):null;
+  if(tgt&&tgt!==_touchDragEl&&tgt.parentNode===_touchDragEl.parentNode){
+    var p=tgt.parentNode,si=Array.from(p.children).indexOf(_touchDragEl),ti=Array.from(p.children).indexOf(tgt);
+    if(si<ti)p.insertBefore(_touchDragEl,tgt.nextSibling);else p.insertBefore(_touchDragEl,tgt);
+  }
+  _touchDragEl=null;
+  document.body.style.overscrollBehavior='';
+},{passive:false});
+document.addEventListener('touchcancel',function(){
+  if(!_touchDragEl)return;
+  if(_touchClone&&_touchClone.parentNode)document.body.removeChild(_touchClone);
+  _touchClone=null;
+  if(_touchDragEl)_touchDragEl.classList.remove('dragging');
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+  _touchDragEl=null;
+  document.body.style.overscrollBehavior='';
+});
+function checkOrder(id){
+  var c=document.getElementById(id);
+  if(c.dataset.done)return;c.dataset.done='1';
+  var correct=c.dataset.answer.split(',');
+  var steps=c.querySelectorAll('.ord-steps .ord-step');
+  var ok=true;
+  steps.forEach(function(s,i){
+    s.removeAttribute('draggable');
+    if(s.dataset.label===correct[i])s.classList.add('correct-p');
+    else{s.classList.add('wrong-p');ok=false;}
+  });
+  var btn=c.querySelector('.check-btn');
+  if(btn){btn.disabled=true;btn.textContent=ok?'✓ Correct!':'✗ Not quite — answer revealed below';}
+  var ans=document.getElementById(id+'-ans');
+  if(ans)ans.style.display='block';
+}
+function initAll(){}
+</script>
+</body>
+</html>

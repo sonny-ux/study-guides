@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Analysis — Chapter 6: The Riemann-Darboux Integral</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="document.addEventListener('DOMContentLoaded',()=>{renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});initAll();})"></script>
+<style>
+:root{
+  --bg:#08080c;--surface:#0f0f14;--card:#141419;--border:#1e1e28;--border2:#2e2e3e;
+  --text:#e2dced;--muted:#5a5a7a;
+  --ch6:#7a4a9c;--ch6b:#aa7acc;
+  --green:#4a8c5a;--green2:#7abc8a;
+  --red:#9c4a4a;--red2:#cc7070;
+  --gold:#9c7a3a;--gold2:#ccaa6a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font-size:16px;line-height:1.8;overflow-x:hidden;}
+
+.topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(8,8,12,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0;}
+.nav-scroll{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0;scrollbar-width:none;}
+.nav-scroll::-webkit-scrollbar{display:none;}
+.nav-tab{flex-shrink:0;padding:13px 18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;}
+.nav-tab.active,.nav-tab:hover{color:var(--ch6b);border-bottom-color:var(--ch6);}
+
+.pbar{position:fixed;top:44px;left:0;right:0;height:2px;background:var(--border);z-index:199;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--ch6),var(--ch6b));width:0%;transition:width .1s;}
+
+.page{display:none;padding-top:52px;min-height:100vh;}
+.page.active{display:block;}
+
+.hero{padding:32px 20px 28px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(122,74,156,.07) 0%,transparent 60%);pointer-events:none;}
+.ch-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;padding:4px 10px;border-radius:2px;margin-bottom:12px;}
+.hero h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:600;line-height:1.2;margin-bottom:8px;}
+.hero-sub{font-size:.9rem;color:var(--muted);font-style:italic;line-height:1.7;}
+
+.sec{padding:28px 20px;border-bottom:1px solid var(--border);}
+.sec h2{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;}
+
+.main-idea{border-radius:4px;padding:18px 20px;margin-bottom:22px;}
+.mi-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:7px;}
+.mi-text{font-size:.95rem;line-height:1.78;}
+
+.def-box{border-left:3px solid;border-radius:0 3px 3px 0;padding:16px 18px;margin:14px 0;background:var(--card);}
+.box-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;}
+.box-title{font-family:'Cinzel',serif;font-size:.88rem;margin-bottom:8px;}
+.box-body{font-size:.88rem;color:#9aacbc;line-height:1.75;}
+.box-body strong{color:var(--text);}
+.box-body p{margin-bottom:8px;font-size:.88rem;color:#9aacbc;line-height:1.75;}
+.box-body p:last-child{margin-bottom:0;}
+.box-body ul{padding-left:18px;}
+.box-body li{margin-bottom:4px;}
+
+.explain{border-left:3px solid var(--gold2);border-radius:0 3px 3px 0;padding:14px 18px;margin:12px 0;background:#0e0e0a;}
+.explain .box-label{color:var(--gold2);}
+.explain .box-body{color:#9a9070;}
+.explain .box-body strong{color:#ccc080;}
+
+.thm{border-left:3px solid var(--green2);border-radius:0 3px 3px 0;padding:16px 18px;margin:14px 0;background:#0a100a;}
+.thm .box-label{color:var(--green2);}
+.thm .box-body{color:#8aac8a;}
+.thm .box-body strong{color:#aaccaa;}
+
+.warn{border-left:3px solid var(--red2);border-radius:0 3px 3px 0;padding:14px 18px;margin:12px 0;background:#100a0a;}
+.warn .box-label{color:var(--red2);}
+.warn .box-body{color:#ac8a8a;}
+
+.pw{background:var(--card);border:1px solid var(--border2);border-radius:4px;padding:18px;margin:14px 0;}
+.pw-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;}
+.pw-step{display:flex;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.pw-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.pw-n{font-family:'JetBrains Mono',monospace;font-size:10px;min-width:20px;padding-top:2px;}
+.pw-c{flex:1;}
+.pw-s{font-size:.9rem;margin-bottom:5px;line-height:1.6;}
+.pw-w{font-size:.82rem;color:var(--muted);font-style:italic;line-height:1.6;}
+.pw-w strong{color:#8898a8;font-style:normal;}
+
+.acc-wrap{display:flex;flex-direction:column;gap:8px;margin:14px 0;}
+.acc{background:var(--card);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+.acc-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;background:var(--surface);}
+.acc-title{font-size:.9rem;font-style:italic;}
+.acc-arrow{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);transition:transform .2s;}
+.acc.open .acc-arrow{transform:rotate(90deg);}
+.acc-body{display:none;padding:14px 16px;font-size:.86rem;color:#9aacbc;line-height:1.78;border-top:1px solid var(--border);}
+.acc.open .acc-body{display:block;}
+
+.drill-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:18px 20px;margin-bottom:10px;}
+.drill-tag{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.08em;border-radius:2px;padding:2px 7px;margin-right:7px;text-transform:uppercase;}
+.drill-tag.tf{background:rgba(122,74,156,.12);color:var(--ch6b);}
+.drill-tag.mc{background:rgba(74,140,90,.1);color:var(--green2);}
+.drill-tag.ord{background:rgba(156,170,106,.1);color:var(--gold2);}
+.drill-q{font-size:.9rem;color:var(--text);margin-bottom:14px;line-height:1.65;}
+.tf-row{display:flex;gap:8px;margin-bottom:0;}
+.tf-btn{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:10px 14px;min-height:44px;font-size:.85rem;font-family:'JetBrains Mono',monospace;color:var(--muted);cursor:pointer;transition:border-color .13s;-webkit-tap-highlight-color:transparent;}
+.tf-btn:hover:not(:disabled){border-color:var(--ch6b);}
+.tf-btn.correct{border-color:var(--green2)!important;background:rgba(74,140,90,.1)!important;color:var(--green2)!important;}
+.tf-btn.wrong{border-color:var(--red2)!important;background:rgba(156,74,74,.08)!important;color:var(--red2)!important;}
+.drill-exp{margin-top:10px;display:none;}
+.mc-opts{display:flex;flex-direction:column;gap:6px;}
+.mc-opt{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:11px 14px;min-height:44px;font-size:.85rem;color:var(--muted);cursor:pointer;text-align:left;font-family:'EB Garamond',serif;line-height:1.5;transition:border-color .13s;display:flex;align-items:flex-start;gap:10px;width:100%;-webkit-tap-highlight-color:transparent;}
+.mc-opt:hover:not(:disabled){border-color:var(--ch6b);}
+.mc-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);min-width:16px;padding-top:2px;flex-shrink:0;}
+.mc-opt.correct{border-color:var(--green2)!important;background:rgba(74,140,90,.1)!important;color:var(--green2)!important;}
+.mc-opt.wrong{border-color:var(--red2)!important;background:rgba(156,74,74,.08)!important;}
+
+.ord-steps{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.ord-step{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:9px 13px;font-size:.85rem;color:var(--muted);line-height:1.5;display:flex;gap:10px;align-items:flex-start;cursor:grab;transition:border-color .13s,opacity .13s;-webkit-tap-highlight-color:transparent;touch-action:none;}
+.ord-step.dragging{opacity:.3;cursor:grabbing;}
+.ord-step.drag-over{border-color:var(--ch6b)!important;}
+.ord-step.correct-p{border-color:var(--green2)!important;background:rgba(74,140,90,.1)!important;color:var(--green2)!important;cursor:default;}
+.ord-step.wrong-p{border-color:var(--red2)!important;background:rgba(156,74,74,.08)!important;cursor:default;}
+.drag-handle{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--border2);padding-right:4px;flex-shrink:0;user-select:none;}
+.ord-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);min-width:16px;padding-top:2px;flex-shrink:0;}
+
+.sol-btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;border:1px solid var(--border2);border-radius:2px;cursor:pointer;background:transparent;color:var(--muted);margin-top:12px;display:block;min-height:40px;-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s;}
+.sol-btn:active{border-color:var(--ch6b);color:var(--ch6b);}
+.sol-btn:disabled{opacity:.5;cursor:default;}
+.check-btn{margin-bottom:0;}
+
+.hw-num{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.08em;background:rgba(122,74,156,.12);color:var(--ch6b);border-radius:2px;padding:2px 7px;margin-right:7px;}
+.ps-tag{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--green2);background:rgba(74,140,90,.1);border-radius:2px;padding:2px 6px;margin-left:5px;}
+.rudin-tag{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--gold2);background:rgba(156,170,106,.1);border-radius:2px;padding:2px 6px;margin-left:5px;}
+
+@media(max-width:600px){
+  .sec{padding:22px 16px;}
+  .drill-card{padding:14px;}
+  .ord-step{padding:12px 10px;font-size:.84rem;}
+  .drag-handle{font-size:1.15rem;min-width:20px;text-align:center;}
+  .tf-btn,.sol-btn{min-height:48px;}
+  .nav-tab{padding:12px 14px;}
+  .hero{padding:24px 16px 20px;}
+  .box-body{font-size:.86rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-scroll">
+    <button class="nav-tab active" onclick="showPage('p1',this)">Darboux</button>
+    <button class="nav-tab" onclick="showPage('p2',this)">Properties &amp; FTC</button>
+    <button class="nav-tab" onclick="showPage('p3',this)">Advanced</button>
+    <button class="nav-tab" onclick="showPage('p4',this)">PS8 Problems</button>
+    <button class="nav-tab" onclick="showPage('p5',this)">Drills</button>
+  </div>
+</nav>
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+
+<!-- ==================== PAGE 1: DARBOUX ==================== -->
+<div class="page active" id="p1">
+
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(122,74,156,.1);color:var(--ch6b);border:1px solid var(--ch6);">Chapter 6</div>
+  <h1 style="color:var(--ch6b);">The Riemann-Darboux Integral</h1>
+  <p class="hero-sub">Rudin · PS8 Ex.1–8 · Spring 2026 · Due 04/22</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">01</span> The Big Picture</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
+    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
+    <div class="mi-text">Chapter 5 gave you derivatives — the local, infinitesimal structure of a function. Chapter 6 asks the opposite question: given a function, can we reconstruct its "total accumulation" over an interval? Rudin builds the integral from scratch using the Darboux approach: approximate the area with rectangles from above and below, and squeeze until they meet.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">The Core Logic</div>
+    <div class="box-body">Upper sums decrease as partitions get finer. Lower sums increase. Integrability means these two monotone sequences converge to the same value. Once you see that, the whole chapter unfolds naturally.<br><br>
+    <strong>Darboux vs. Riemann:</strong> Instead of picking arbitrary sample points (Riemann), Darboux uses the supremum and infimum of $f$ on each piece — the tallest and shortest possible rectangles. The two approaches are equivalent but Darboux is cleaner.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">02</span> Partitions and Darboux Sums</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
+    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
+    <div class="mi-text">A partition chops an interval into subintervals. On each piece, take the supremum (upper rectangle) and infimum (lower rectangle) of $f$. Sum them weighted by width. The gap between upper and lower sum measures how oscillatory $f$ is.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">Definition — Partition and Darboux Sums</div>
+    <div class="box-body">A <strong>partition</strong> of $[a,b]$ is a finite set $P = \{x_0, x_1, \ldots, x_n\}$ with $a = x_0 < x_1 < \cdots < x_n = b$.<br><br>
+    On each subinterval $[x_{k-1}, x_k]$, define $M_k = \sup f$ and $m_k = \inf f$. Then:
+    $$U(P, f) = \sum_{k=1}^n M_k(x_k - x_{k-1}), \qquad L(P, f) = \sum_{k=1}^n m_k(x_k - x_{k-1})$$
+    Always $L(P,f) \leq U(P,f)$ since $m_k \leq M_k$.</div>
+  </div>
+  <div class="explain" style="border-left-color:var(--ch6);">
+    <div class="box-label">The Geometric Picture — What the Sums Actually Look Like</div>
+    <div class="box-body">$U(P,f)$ is the area of a staircase of rectangles that lies <em>above</em> the graph of $f$ — on each piece $[x_{k-1},x_k]$, the rectangle has height $M_k = \sup f$, the tallest possible. $L(P,f)$ is a staircase lying <em>below</em> the graph — height $m_k = \inf f$, the shortest possible.<br><br>
+    The true area under $f$ is trapped: $L(P,f) \leq \int_a^b f \leq U(P,f)$. If you want a better approximation, use a finer partition — more, thinner rectangles force $M_k$ and $m_k$ closer together on each subinterval. Integrability is the statement that you can make the gap $U-L$ as small as you like by refining $P$.<br><br>
+    <strong>Why sup and inf instead of sample points?</strong> Darboux deliberately picks the worst-case heights (tallest above, shortest below), giving the tightest possible bounds without any arbitrary choice. Riemann's approach picks an arbitrary sample point in each subinterval — same limit, messier bookkeeping.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">Worked Example — $f(x)=x$ on $[0,1]$</div>
+    <div class="box-body">Uniform partition $P_n$: $x_k = k/n$. Since $f$ is increasing, $M_k = k/n$ and $m_k = (k-1)/n$.
+    $$U(P_n) = \frac{1}{n^2}\sum_{k=1}^n k = \frac{n+1}{2n} \to \tfrac{1}{2}, \qquad L(P_n) = \frac{n-1}{2n} \to \tfrac{1}{2}$$
+    Gap $= 1/n \to 0$. So $\int_0^1 x\,dx = 1/2$.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">03</span> Refinements and the Monotonicity Lemma</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
+    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
+    <div class="mi-text">Adding points to a partition can only make upper sums smaller and lower sums larger — the approximations tighten. This monotonicity is the engine behind integrability.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Refinement Lemma (Rudin §6.4)</div>
+    <div class="box-body">If $P^*$ is a refinement of $P$, then: $L(P, f) \leq L(P^*, f) \leq U(P^*, f) \leq U(P, f)$<br><br>
+    <strong>Why:</strong> Adding one point replaces one term $M_k\Delta x_k$ with two terms whose $M$-values are each $\leq M_k$. The upper sum can only decrease. Symmetrically, the lower sum can only increase.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Corollary — Any lower sum ≤ any upper sum</div>
+    <div class="box-body">For <em>any</em> two partitions $P_1$ and $P_2$: $L(P_1, f) \leq U(P_2, f)$.<br><br>
+    <strong>Proof:</strong> Let $P^* = P_1 \cup P_2$. Then $L(P_1) \leq L(P^*) \leq U(P^*) \leq U(P_2)$. This is crucial: the supremum of all lower sums and the infimum of all upper sums are well-defined.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">04</span> The Definition of Integrability</h2>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">Definition — Darboux Integrability (Rudin §6.1)</div>
+    <div class="box-body">The <strong>upper integral</strong> is $\overline{\int_a^b} f = \inf_P U(P,f)$ and the <strong>lower integral</strong> is $\underline{\int_a^b} f = \sup_P L(P,f)$. Always $\underline{\int} f \leq \overline{\int} f$.<br><br>
+    $f$ is <strong>Darboux integrable</strong> ($f \in \mathscr{R}$) if $\overline{\int_a^b} f = \underline{\int_a^b} f$. The common value is $\int_a^b f(x)\,dx$.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">The Riemann Criterion — the practical test (Rudin §6.6)</div>
+    <div class="box-body">$f \in \mathscr{R}$ if and only if: for every $\varepsilon > 0$, there exists a partition $P$ such that
+    $$U(P, f) - L(P, f) < \varepsilon$$
+    Every integrability proof works by constructing such a partition.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">05</span> Which Functions Are Integrable?</h2>
+  <div class="thm">
+    <div class="box-label">Theorem — Continuous ⟹ Integrable (Rudin §6.8)</div>
+    <div class="box-body">If $f: [a,b] \to \mathbb{R}$ is continuous, then $f \in \mathscr{R}$.<br><br>
+    <strong>Proof sketch:</strong> By compactness, $f$ is uniformly continuous. Given $\varepsilon > 0$, choose $\delta$ so $|x-y|<\delta \Rightarrow |f(x)-f(y)| < \varepsilon/(b-a)$. Take $P$ with all $\Delta x_k < \delta$. Then $M_k - m_k \leq \varepsilon/(b-a)$, giving $U-L \leq \varepsilon$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Theorem — Monotone ⟹ Integrable (Rudin §6.9)</div>
+    <div class="box-body">If $f: [a,b] \to \mathbb{R}$ is monotone, then $f \in \mathscr{R}$.<br><br>
+    <strong>Proof (increasing $f$):</strong> Uniform partition $P_n$: $U-L = \frac{b-a}{n}(f(b)-f(a)) \to 0$. Monotone functions can have jump discontinuities — they're still integrable.</div>
+  </div>
+  <div class="warn">
+    <div class="box-label">Non-example — Dirichlet function is NOT integrable</div>
+    <div class="box-body">Let $f(x) = 1$ if $x \in \mathbb{Q}$, $f(x) = 0$ otherwise. On any subinterval, $M_k = 1$ and $m_k = 0$ (both $\mathbb{Q}$ and irrationals are dense). So $U(P,f) = b-a$ and $L(P,f) = 0$ for every partition — the gap is always $b-a$. So $f \notin \mathscr{R}$.</div>
+  </div>
+</div>
+
+</div><!-- end p1 -->
+
+<!-- ==================== PAGE 2: PROPERTIES & FTC ==================== -->
+<div class="page" id="p2">
+
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(122,74,156,.1);color:var(--ch6b);border:1px solid var(--ch6);">Properties & FTC</div>
+  <h1 style="color:var(--ch6b);">Algebraic Properties &amp; the Fundamental Theorem</h1>
+  <p class="hero-sub">Linearity, monotonicity, triangle inequality, FTC, integration by parts, substitution.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">01</span> Algebraic Properties</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
+    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
+    <div class="mi-text">The Riemann integral is a linear functional on the space of integrable functions: you can add under the integral and pull out constants. These require proof — they're not free.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">Linearity (Rudin §6.12)</div>
+    <div class="box-body">If $f, g \in \mathscr{R}[a,b]$ and $c \in \mathbb{R}$, then $(f+g), (cf) \in \mathscr{R}$ and:
+    $$\int_a^b (f+g) = \int_a^b f + \int_a^b g, \qquad \int_a^b cf = c\int_a^b f$$
+    <strong>Proof idea:</strong> $\sup(f+g) \leq \sup f + \sup g$ gives $U(P,f+g) \leq U(P,f)+U(P,g)$. Similarly $L(P,f+g) \geq L(P,f)+L(P,g)$. These squeeze $\int(f+g)$ to equal $\int f + \int g$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Monotonicity</div>
+    <div class="box-body">If $f \leq g$ on $[a,b]$, then $\int_a^b f \leq \int_a^b g$.<br><br>
+    <strong>Proof:</strong> $h = g-f \geq 0$ implies $m_k(h) \geq 0$, so $L(P,h) \geq 0$ for all $P$, giving $\int h \geq 0$.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">Triangle Inequality for Integrals</div>
+    <div class="box-body">If $f \in \mathscr{R}[a,b]$, then $|f| \in \mathscr{R}[a,b]$ and $\left|\int_a^b f\right| \leq \int_a^b |f|$.<br><br>
+    <strong>Why $|f| \in \mathscr{R}$:</strong> $\big||f(x)|-|f(y)|\big| \leq |f(x)-f(y)|$, so oscillation of $|f|$ is no worse than $f$.<br>
+    <strong>Why the bound:</strong> From $-|f| \leq f \leq |f|$, monotonicity gives $-\int|f| \leq \int f \leq \int|f|$.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">02</span> Fundamental Theorem of Calculus</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
+    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
+    <div class="mi-text">The FTC reveals that integration and differentiation are inverse operations. Part 1: integrating produces a differentiable function — starting from $f$, you build $F(x)=\int_a^x f$ and recover $f$ by differentiating $F$. Part 2: you can evaluate integrals via antiderivatives — if you already know a function $F$ with $F'=f$, then $\int_a^b f = F(b)-F(a)$.</div>
+  </div>
+  <div class="explain" style="border-left-color:var(--ch6);">
+    <div class="box-label">Geometric Meaning — Why $F'(x_0) = f(x_0)$</div>
+    <div class="box-body">$F(x)=\int_a^x f(t)\,dt$ is the signed area under the graph of $f$ from $a$ to $x$ — a running total. When $x$ increases by a small amount $h$, the new area added is $\int_{x_0}^{x_0+h}f(t)\,dt$, which is approximately a thin rectangle of width $h$ and height $f(x_0)$, giving area $\approx f(x_0)\cdot h$. So:
+    $$\frac{F(x_0+h)-F(x_0)}{h}\approx\frac{f(x_0)\cdot h}{h}=f(x_0)$$
+    The approximation becomes exact as $h\to 0$, because continuity of $f$ at $x_0$ means the height of $f$ in $[x_0,x_0+h]$ is close to $f(x_0)$ for small $h$. This is why the continuity hypothesis on $f$ is necessary — without it, the "height of the thin strip" isn't well-defined, and $F$ may fail to be differentiable at that point.<br><br>
+    <strong>Geometric summary of Part 2:</strong> If $F$ is any antiderivative of $f$, then $F(b)-F(a)$ is the net change in $F$ over $[a,b]$, which equals the total signed area $\int_a^b f$. This works because $F$ and the Part 1 integral function $\int_a^x f$ differ by a constant (both have the same derivative $f$).</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">FTC Part 1 — The integral function is differentiable (Rudin §6.20)</div>
+    <div class="box-body">Let $f \in \mathscr{R}[a,b]$ and define $F(x) = \int_a^x f(t)\,dt$. Then:<br>
+    · $F$ is continuous on $[a,b]$.<br>
+    · If $f$ is continuous at $x_0$, then $F'(x_0) = f(x_0)$.<br><br>
+    <strong>Proof sketch:</strong> $\frac{F(x_0+h)-F(x_0)}{h} - f(x_0) = \frac{1}{h}\int_{x_0}^{x_0+h}(f(t)-f(x_0))\,dt$. By continuity of $f$ at $x_0$, the integrand is $< \varepsilon$ for $|h| < \delta$, so the whole expression is $< \varepsilon$.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">FTC Part 2 — Evaluation using antiderivatives (Rudin §6.21)</div>
+    <div class="box-body">If $f \in \mathscr{R}[a,b]$ and $F: [a,b] \to \mathbb{R}$ is continuous with $F' = f$ on $(a,b)$, then:
+    $$\int_a^b f(x)\,dx = F(b) - F(a)$$
+    <strong>Reading this:</strong> FTC Part 2 applies to ANY antiderivative $F$, not just the one defined by Part 1. This is what makes it useful for computation.</div>
+  </div>
+  <div class="warn">
+    <div class="box-label">Common error on FTC Part 1</div>
+    <div class="box-body">FTC Part 1 does NOT say $F'(x_0) = f(x_0)$ for all $x_0$ — only at points where $f$ is continuous. If $f$ has a jump at $x_0$, $F$ is still continuous there but may fail to be differentiable. $f \in \mathscr{R}$ is not enough to guarantee differentiability of $F$.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">03</span> Integration by Parts &amp; Substitution</h2>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">Integration by Parts (Rudin §6.22)</div>
+    <div class="box-body">Let $u, v: [a,b] \to \mathbb{R}$ be continuously differentiable. Then:
+    $$\int_a^b u'(x)v(x)\,dx = u(b)v(b) - u(a)v(a) - \int_a^b u(x)v'(x)\,dx$$
+    <strong>Proof:</strong> Apply FTC to the product rule $(uv)' = u'v + uv'$, then rearrange.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">Integration by Substitution (Rudin §6.19)</div>
+    <div class="box-body">Let $\varphi: [a,b] \to \mathbb{R}$ be $C^1$ and $f$ continuous on the range of $\varphi$. Then:
+    $$\int_a^b f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(a)}^{\varphi(b)} f(t)\,dt$$
+    <strong>Proof:</strong> Let $F$ be an antiderivative of $f$. Chain rule gives $(F\circ\varphi)' = f(\varphi(x))\varphi'(x)$. Apply FTC Part 2 to both sides.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">Exam trap — hypotheses matter</div>
+    <div class="box-body">Substitution requires $f$ continuous on the range of $\varphi$ AND $\varphi$ continuously differentiable — not just differentiable. Always state these hypotheses explicitly when writing proofs.</div>
+  </div>
+</div>
+
+</div><!-- end p2 -->
+
+<!-- ==================== PAGE 3: ADVANCED ==================== -->
+<div class="page" id="p3">
+
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(122,74,156,.1);color:var(--ch6b);border:1px solid var(--ch6);">Advanced Topics</div>
+  <h1 style="color:var(--ch6b);">Measure Zero, Hölder, Arc Length</h1>
+  <p class="hero-sub">Lebesgue's criterion, Hölder's inequality, arc length, calculus of variations fundamental lemma.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">01</span> Measure Zero and Lebesgue's Criterion</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
+    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
+    <div class="mi-text">The exact boundary of Riemann integrability: a bounded function is integrable if and only if its set of discontinuities has measure zero. This unifies and explains all the integrability theorems.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">Definition — Measure Zero (PS8 Ex.4)</div>
+    <div class="box-body">$A \subseteq \mathbb{R}$ has <strong>measure zero</strong> if for every $\varepsilon > 0$, there exist open intervals $\{O_n\}$ with $A \subseteq \bigcup O_n$ and $\sum \ell(O_n) < \varepsilon$.<br><br>
+    Finite sets are measure zero. Countable sets are measure zero. The Cantor set is measure zero despite being uncountable.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">Lebesgue's Criterion — complete characterization (PS8 Ex.4)</div>
+    <div class="box-body">A bounded $f: [a,b] \to \mathbb{R}$ is Darboux integrable $\iff$ the set of discontinuities of $f$ has measure zero.<br><br>
+    <strong>Why this matters:</strong> Explains why continuous $f$ (zero discontinuities) and monotone $f$ (at most countably many discontinuities = measure zero) are integrable, while the Dirichlet function (discontinuous everywhere — discontinuity set $= [a,b]$, measure $b-a > 0$) is not.</div>
+  </div>
+  <div class="pw">
+    <div class="pw-label" style="color:var(--ch6b);">Proof strategy for PS8 Ex.4</div>
+    <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">⇒</div><div class="pw-c"><div class="pw-s">Define $D_\alpha = \{x : \omega(f,x) \geq \alpha\}$ where $\omega(f,x)$ is the oscillation at $x$. Show $D_\alpha$ is compact. By the Riemann criterion, choose $P$ with $U-L < \alpha\varepsilon$. Intervals meeting $D_\alpha$ have $M_k - m_k \geq \alpha$, so their total length $\leq \varepsilon$.</div><div class="pw-w"><strong>Then:</strong> $D = \bigcup D_{1/n}$ is a countable union of measure-zero sets, hence measure zero.</div></div></div>
+    <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">⇐</div><div class="pw-c"><div class="pw-s">Cover discontinuity set $D$ by open intervals of total length $< \varepsilon/(4M)$. Let $K = [a,b] \setminus \text{cover}$. $K$ is compact and $f|_K$ is uniformly continuous. Handle $K$ by uniform continuity; handle the covering by bounding oscillation by $2M$. Combine to get $U-L < \varepsilon$.</div><div class="pw-w"><strong>Key:</strong> splitting into "good" (near $K$) and "bad" (near $D$) subintervals.</div></div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">02</span> Hölder's Inequality</h2>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">Hölder's Inequality (PS8 Ex.6)</div>
+    <div class="box-body">Let $f, g \in \mathscr{R}[a,b]$, $p, q > 1$ with $\frac{1}{p}+\frac{1}{q}=1$. Then:
+    $$\left|\int_a^b fg\,dx\right| \leq \left(\int_a^b |f|^p\right)^{1/p}\left(\int_a^b |g|^q\right)^{1/q}$$
+    The case $p = q = 2$ is the Cauchy-Schwarz inequality.</div>
+  </div>
+  <div class="pw">
+    <div class="pw-label" style="color:var(--ch6b);">Proof — via Young's inequality</div>
+    <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">1</div><div class="pw-c"><div class="pw-s"><strong>Young's inequality:</strong> $ab \leq a^p/p + b^q/q$ for $a,b \geq 0$.</div><div class="pw-w">Proof: fix $b$, minimize $g(a) = a^p/p + b^q/q - ab$ over $a \geq 0$. The minimum is $0$.</div></div></div>
+    <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">2</div><div class="pw-c"><div class="pw-s">Let $A = \|f\|_p$ and $B = \|g\|_q$. If either is $0$, done. Otherwise normalize: $\tilde{f} = |f|/A$, $\tilde{g} = |g|/B$, so $\int\tilde{f}^p = \int\tilde{g}^q = 1$.</div><div class="pw-w">This reduces to the case where both $L^p$-norms equal $1$.</div></div></div>
+    <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">3</div><div class="pw-c"><div class="pw-s">Apply Young's pointwise: $\tilde{f}(x)\tilde{g}(x) \leq \tilde{f}^p/p + \tilde{g}^q/q$. Integrate: $\int\tilde{f}\tilde{g} \leq 1/p + 1/q = 1$. Unscale: $\int|fg| \leq AB$. Then $|\int fg| \leq \int|fg| \leq AB$.</div></div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">03</span> Arc Length</h2>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">Definition — Arc Length (PS8 Ex.7)</div>
+    <div class="box-body">$$\mathcal{L}(f) = \sup_{P} \sum_{k=1}^n \sqrt{(x_k - x_{k-1})^2 + (f(x_k) - f(x_{k-1}))^2}$$</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Arc Length Formula for $C^1$ functions</div>
+    <div class="box-body">If $f \in C^1[a,b]$, then $\mathcal{L}(f) = \int_a^b\sqrt{1+f'(x)^2}\,dx$.<br><br>
+    <strong>Proof sketch:</strong> MVT gives $f(x_k)-f(x_{k-1}) = f'(c_k)\Delta x_k$. So each segment length $= \sqrt{1+f'(c_k)^2}\,\Delta x_k$ — a Riemann sum for the integral. Uniform continuity of $f'$ ensures convergence.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">Application — Circumference $= 2\pi r$</div>
+    <div class="box-body">Upper semicircle: $f(x) = \sqrt{r^2-x^2}$, $f'(x) = -x/\sqrt{r^2-x^2}$, $1+f'^2 = r^2/(r^2-x^2)$.
+    $$\int_{-r}^r \frac{r}{\sqrt{r^2-x^2}}\,dx = r\left[\arcsin\frac{x}{r}\right]_{-r}^r = r\pi$$
+    Total $= 2\pi r$.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">04</span> Fundamental Lemma of the Calculus of Variations</h2>
+  <div class="def-box" style="border-left-color:var(--ch6b);">
+    <div class="box-label" style="color:var(--ch6b);">Fundamental Lemma (PS8 Ex.8)</div>
+    <div class="box-body">Let $f: [a,b] \to \mathbb{R}$ be continuous. If $\int_a^b f(x)\phi(x)\,dx = 0$ for every continuous $\phi: [a,b] \to \mathbb{R}$, then $f \equiv 0$.</div>
+  </div>
+  <div class="pw">
+    <div class="pw-label" style="color:var(--ch6b);">Proof by contradiction</div>
+    <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">1</div><div class="pw-c"><div class="pw-s">Suppose $f(x_0) > 0$ for some $x_0$. By continuity, $f > 0$ on some interval $I = (x_0-\delta, x_0+\delta) \cap [a,b]$.</div></div></div>
+    <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">2</div><div class="pw-c"><div class="pw-s">Choose a bump function: $\phi(x) = \max(0, \delta - |x-x_0|)$ (a tent function). This is continuous, zero outside $I$, positive inside $I$.</div><div class="pw-w"><strong>Test function technique</strong> — ubiquitous in PDEs and distribution theory.</div></div></div>
+    <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">3</div><div class="pw-c"><div class="pw-s">Then $f(x)\phi(x) > 0$ on $I$ and $\geq 0$ elsewhere. So $\int_a^b f\phi > 0$ — contradiction. $\blacksquare$</div></div></div>
+  </div>
+</div>
+
+</div><!-- end p3 -->
+
+<!-- ==================== PAGE 4: PS8 PROBLEMS ==================== -->
+<div class="page" id="p4">
+
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(122,74,156,.1);color:var(--ch6b);border:1px solid var(--ch6);">PS8</div>
+  <h1 style="color:var(--ch6b);">Problem Set 8</h1>
+  <p class="hero-sub">Due 04/22/2026 · Exercises 1–8 with full solutions and Rudin exercises.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">01</span> PS8 Exercises</h2>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">PS8 Ex.1</span>Let $c > 0$. Evaluate $\int_0^c x\,dx$ using Darboux sums, without using FTC.<span class="ps-tag">PS8</span></div>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body">Take the uniform partition $P_n$. Since $f(x)=x$ is increasing, $M_k = kc/n$ and $m_k = (k-1)c/n$. Use $\sum_{k=1}^n k = n(n+1)/2$. Show both $U$ and $L$ converge to $c^2/2$.</div>
+    </div>
+    <button class="sol-btn" onclick="toggleSol('s1')">show solution</button>
+    <div id="s1" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Solution</div>
+        <div class="box-body">$U(P_n) = \frac{c^2}{n^2}\sum_{k=1}^n k = \frac{c^2(n+1)}{2n} = \frac{c^2}{2}+\frac{c^2}{2n}$<br><br>
+        $L(P_n) = \frac{c^2(n-1)}{2n} = \frac{c^2}{2}-\frac{c^2}{2n}$<br><br>
+        Gap $= c^2/n \to 0$. Since $L(P_n) \leq \underline{\int} \leq \overline{\int} \leq U(P_n)$ and both bounds $\to c^2/2$: $\int_0^c x\,dx = c^2/2$.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">PS8 Ex.2</span>Let $f,g \in \mathscr{R}[a,b]$. Prove linearity, monotonicity, and the triangle inequality for the Riemann integral.<span class="ps-tag">PS8</span></div>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body"><strong>Additivity:</strong> $\sup(f+g) \leq \sup f + \sup g$ gives $U(P,f+g) \leq U(P,f)+U(P,g)$. Squeeze.<br><strong>Scalar:</strong> Handle $c \geq 0$ and $c < 0$ separately ($\sup(cf) = c\inf f$ when $c < 0$).<br><strong>Monotonicity:</strong> $h = g-f \geq 0$ implies $L(P,h) \geq 0$ for all $P$.<br><strong>Triangle:</strong> Show $|f| \in \mathscr{R}$ via reverse triangle inequality, then apply $-|f| \leq f \leq |f|$.</div>
+    </div>
+    <button class="sol-btn" onclick="toggleSol('s2')">show solution</button>
+    <div id="s2" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Solution sketch</div>
+        <div class="box-body"><strong>Part 1 (Additivity):</strong> $U(P,f+g) \leq U(P,f)+U(P,g)$ and $L(P,f+g) \geq L(P,f)+L(P,g)$. Given $\varepsilon > 0$, choose $P$ so each of $U(P,f), U(P,g)$ is within $\varepsilon/2$ of its integral. Then $U(P,f+g) \leq \int f + \int g + \varepsilon$. Similarly from below. Squeeze gives $\int(f+g) = \int f + \int g$.<br><br>
+        <strong>Part 2:</strong> For $c \geq 0$: $\sup(cf) = c\sup f$, so $U(P,cf) = cU(P,f)$. For $c < 0$: $\sup(cf) = c\inf f = |c|\cdot(-\inf f)$, giving $U(P,cf) = -|c|L(P,f)$. Infimize/supremize to get $c\int f$ in both cases.<br><br>
+        <strong>Part 3:</strong> $h=g-f \geq 0$: on each subinterval $m_k(h) \geq 0$, so $\int h \geq 0$, i.e., $\int g \geq \int f$.<br><br>
+        <strong>Part 4:</strong> $|f| \in \mathscr{R}$: $\sup|f|-\inf|f| \leq \sup f - \inf f$ by reverse triangle inequality, so $U(P,|f|)-L(P,|f|) \leq U(P,f)-L(P,f) \to 0$. Then $-|f| \leq f \leq |f|$ gives $-\int|f| \leq \int f \leq \int|f|$. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">PS8 Ex.3</span>Prove that integration by parts and integration by substitution hold.<span class="ps-tag">PS8</span></div>
+    <button class="sol-btn" onclick="toggleSol('s3')">show solution</button>
+    <div id="s3" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">IBP</div>
+        <div class="box-body">$(uv)' = u'v + uv'$. Integrate over $[a,b]$ via FTC: $u(b)v(b)-u(a)v(a) = \int u'v + \int uv'$. Rearrange. $\square$</div>
+      </div>
+      <div class="thm" style="margin-top:8px;"><div class="box-label">Substitution</div>
+        <div class="box-body">Let $F$ be an antiderivative of $f$ (exists by FTC Part 1, $f$ continuous). Chain rule: $(F\circ\varphi)' = f(\varphi(x))\varphi'(x)$. By FTC Part 2: $\int_a^b f(\varphi(x))\varphi'(x)\,dx = F(\varphi(b))-F(\varphi(a)) = \int_{\varphi(a)}^{\varphi(b)} f(t)\,dt$. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">PS8 Ex.4</span>Prove Lebesgue's criterion: $f \in \mathscr{R}[a,b]$ iff the discontinuity set of $f$ has measure zero.<span class="ps-tag">PS8</span></div>
+    <button class="sol-btn" onclick="toggleSol('s4')">show solution</button>
+    <div id="s4" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">$(\Rightarrow)$ Integrability implies measure-zero discontinuities</div>
+        <div class="box-body">Fix $\alpha > 0$. Let $D_\alpha = \{x : \omega(f,x) \geq \alpha\}$. Note $D_\alpha$ is closed (upper semi-continuity of oscillation), hence compact. Given $\varepsilon > 0$, the Riemann criterion gives $P$ with $U-L < \alpha\varepsilon$. Intervals of $P$ meeting $D_\alpha$ satisfy $M_k-m_k \geq \alpha$, so their total length $\leq \varepsilon$. Thus $D_\alpha$ has measure zero. $D = \bigcup_{n=1}^\infty D_{1/n}$ is a countable union, hence measure zero. $\square$</div>
+      </div>
+      <div class="thm" style="margin-top:8px;"><div class="box-label">$(\Leftarrow)$ Measure-zero discontinuities implies integrability</div>
+        <div class="box-body">Let $M = \sup|f|$. Given $\varepsilon > 0$, cover discontinuity set $D$ by open intervals $\{O_j\}$ with $\sum\ell(O_j) < \varepsilon/(4M+1)$. Let $K = [a,b] \setminus \bigcup O_j$. $K$ is compact, $f|_K$ is uniformly continuous: choose $\delta$ so $|f(x)-f(y)| < \varepsilon/(2(b-a))$ on $K$ for $|x-y| < \delta$. Take partition $P$ with $\|P\| < \delta$ and all $O_j$-endpoints included. "Good" intervals (in $K$): oscillation $< \varepsilon/(2(b-a))$, contributing $\leq \varepsilon/2$. "Bad" intervals (in some $O_j$): oscillation $\leq 2M$, total length $< \varepsilon/(4M)$, contributing $< \varepsilon/2$. Total: $U-L < \varepsilon$. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">PS8 Ex.5</span>Compute $\int_0^1 x^2 e^x\,dx$ and $\int_{-1}^1\sqrt{1-x^2}\,dx$.<span class="ps-tag">PS8</span></div>
+    <button class="sol-btn" onclick="toggleSol('s5')">show solution</button>
+    <div id="s5" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">$\int_0^1 x^2 e^x\,dx$</div>
+        <div class="box-body"><strong>First IBP</strong> ($u=x^2$, $v'=e^x$): $\int_0^1 x^2 e^x\,dx = [x^2 e^x]_0^1 - 2\int_0^1 xe^x\,dx = e - 2\int_0^1 xe^x\,dx$<br><br>
+        <strong>Second IBP</strong> ($u=x$, $v'=e^x$): $\int_0^1 xe^x\,dx = [xe^x]_0^1 - \int_0^1 e^x\,dx = e - (e-1) = 1$<br><br>
+        Therefore: $\int_0^1 x^2 e^x\,dx = e - 2 \approx 0.718$.</div>
+      </div>
+      <div class="thm" style="margin-top:8px;"><div class="box-label">$\int_{-1}^1\sqrt{1-x^2}\,dx$</div>
+        <div class="box-body">Let $x = \sin\theta$, $dx = \cos\theta\,d\theta$, limits $-\pi/2$ to $\pi/2$:
+        $$\int_{-\pi/2}^{\pi/2}\cos^2\theta\,d\theta = \int_{-\pi/2}^{\pi/2}\frac{1+\cos 2\theta}{2}\,d\theta = \frac{\pi}{2}$$
+        Geometric check: area of unit semicircle $= \pi/2$. ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">PS8 Ex.6</span>Prove Hölder's inequality: $|\int fg| \leq \|f\|_p \|g\|_q$ for conjugate exponents $p, q > 1$.<span class="ps-tag">PS8</span></div>
+    <button class="sol-btn" onclick="toggleSol('s6')">show solution</button>
+    <div id="s6" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Solution</div>
+        <div class="box-body"><strong>Young's:</strong> $ab \leq a^p/p + b^q/q$ for $a,b \geq 0$. (Minimize $a^p/p + b^q/q - ab$ over $a$; minimum is $0$.)<br><br>
+        <strong>Normalize:</strong> Let $A = \|f\|_p$, $B = \|g\|_q$. If either is $0$: both sides are $0$. Otherwise set $\tilde{f} = |f|/A$, $\tilde{g} = |g|/B$, so $\int\tilde{f}^p = \int\tilde{g}^q = 1$.<br><br>
+        <strong>Apply Young's pointwise:</strong> $\tilde{f}(x)\tilde{g}(x) \leq \tilde{f}^p/p + \tilde{g}^q/q$. Integrate: $\int\tilde{f}\tilde{g} \leq 1/p + 1/q = 1$. Unscale: $\int|fg| \leq AB$. Then $|\int fg| \leq \int|fg| \leq AB$. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">PS8 Ex.7</span>Prove the arc length formula $\mathcal{L}(f) = \int_a^b\sqrt{1+f'(x)^2}\,dx$ and use it to show circumference $= 2\pi r$.<span class="ps-tag">PS8</span></div>
+    <button class="sol-btn" onclick="toggleSol('s7')">show solution</button>
+    <div id="s7" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Arc length formula</div>
+        <div class="box-body">For partition $P$: $S(P) = \sum\sqrt{\Delta x_k^2 + \Delta f_k^2}$. By MVT, $\Delta f_k = f'(c_k)\Delta x_k$, so $S(P) = \sum\sqrt{1+f'(c_k)^2}\,\Delta x_k$ — a Riemann sum for $\int_a^b\sqrt{1+f'^2}$. Since $f' \in C[a,b]$, $\sqrt{1+f'^2}$ is continuous, so Riemann sums converge to the integral. The sup of $S(P)$ equals this integral. $\square$</div>
+      </div>
+      <div class="thm" style="margin-top:8px;"><div class="box-label">Circumference $= 2\pi r$</div>
+        <div class="box-body">$f(x) = \sqrt{r^2-x^2}$: $1+f'^2 = r^2/(r^2-x^2)$. Arc length of upper semicircle:
+        $$\int_{-r}^r \frac{r}{\sqrt{r^2-x^2}}\,dx = r[\arcsin(x/r)]_{-r}^r = r\pi$$
+        Double for full circle: $2\pi r$. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">PS8 Ex.8</span>Let $f$ be continuous on $[a,b]$ with $\int_a^b f\phi = 0$ for every continuous $\phi$. Show $f \equiv 0$.<span class="ps-tag">PS8</span></div>
+    <button class="sol-btn" onclick="toggleSol('s8')">show solution</button>
+    <div id="s8" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Solution</div>
+        <div class="box-body">Suppose $f(x_0) > 0$. By continuity, $f > 0$ on some interval $I = (x_0-\delta, x_0+\delta) \cap [a,b]$. Define the tent function $\phi(x) = \max(0, \delta - |x-x_0|)$. This is continuous, $\phi > 0$ on $I$, and $\phi = 0$ outside $I$. Then $f\phi > 0$ on $I$ and $\geq 0$ elsewhere, so $\int_a^b f\phi > 0$ — contradiction. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="font-family:'Cinzel',serif;font-size:1.05rem;padding:20px 20px 8px;color:var(--ch6b);">Rudin Chapter 6 Exercises</h2>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Rudin 6.1</span>Suppose $f \in \mathscr{R}$ on $[a,b]$, $\alpha \leq f \leq \beta$, $\phi$ is continuous on $[\alpha,\beta]$, and $h = \phi\circ f$. Prove $h \in \mathscr{R}$.<span class="rudin-tag">RUDIN</span></div>
+    <button class="sol-btn" onclick="toggleSol('r1')">show solution</button>
+    <div id="r1" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Solution</div>
+        <div class="box-body">$\phi$ is uniformly continuous on $[\alpha,\beta]$: for $\varepsilon > 0$, get $\eta > 0$ with $|s-t| < \eta \Rightarrow |\phi(s)-\phi(t)| < \varepsilon/(2(b-a))$. Let $M = \sup|\phi|$. Since $f \in \mathscr{R}$, choose $P$ with $U(P,f)-L(P,f) < \eta\varepsilon/(4M)$.<br><br>
+        Split subintervals: <strong>good</strong> ($M_k(f)-m_k(f) < \eta$) contribute $\leq \varepsilon/2$ to $U(P,h)-L(P,h)$ by $|\phi$ oscillation $| \leq \varepsilon/(2(b-a))$. <strong>Bad</strong> intervals have total length $\leq U(P,f)-L(P,f))/\eta < \varepsilon/(4M)$, contributing $\leq 2M\cdot\varepsilon/(4M) = \varepsilon/2$. Total $< \varepsilon$. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Rudin 6.2</span>Suppose $f, g \in \mathscr{R}$ on $[a,b]$. Prove that $fg \in \mathscr{R}$.<span class="rudin-tag">RUDIN</span></div>
+    <button class="sol-btn" onclick="toggleSol('r2')">show solution</button>
+    <div id="r2" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Solution</div>
+        <div class="box-body">Use the identity $fg = \frac{1}{4}[(f+g)^2-(f-g)^2]$. By linearity, $f+g$ and $f-g$ are integrable. Apply Rudin 6.1 with $\phi(t) = t^2$ (continuous on any bounded interval): $(f+g)^2$ and $(f-g)^2$ are integrable. By linearity, $fg \in \mathscr{R}$. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Rudin 6.10</span>Let $p \geq 0$, $p \in \mathscr{R}$, and $f$ continuous on $[a,b]$. Show $\exists\,c \in [a,b]$ with $\int_a^b fp = f(c)\int_a^b p$.<span class="rudin-tag">RUDIN</span></div>
+    <button class="sol-btn" onclick="toggleSol('r3')">show solution</button>
+    <div id="r3" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Solution</div>
+        <div class="box-body">Let $m = \min f$, $M = \max f$ (attained since $f$ continuous on compact $[a,b]$). Since $p \geq 0$ and $m \leq f \leq M$: $m\int p \leq \int fp \leq M\int p$.<br><br>
+        If $\int p = 0$: then $p \equiv 0$ (since $p \geq 0$), so $\int fp = 0 = f(c)\int p$ for any $c$. If $\int p > 0$: $m \leq \frac{\int fp}{\int p} \leq M$. By IVT applied to $f$, $\exists\,c$ with $f(c) = \frac{\int fp}{\int p}$. $\square$</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end p4 -->
+
+<!-- ==================== PAGE 5: DRILLS ==================== -->
+<div class="page" id="p5">
+
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(122,74,156,.1);color:var(--ch6b);border:1px solid var(--ch6);">Drills</div>
+  <h1 style="color:var(--ch6b);">Quick Drills</h1>
+  <p class="hero-sub">True/false, proof ordering, and multiple choice. Tap to answer — explanation reveals immediately.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">01</span> True / False</h2>
+
+  <div class="drill-card" id="tf6-1" data-correct="true">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>Every continuous function on $[a,b]$ is Riemann integrable.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf6-1','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf6-1','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True — Rudin Thm 6.8</div><div class="box-body">Continuity on compact $[a,b]$ gives uniform continuity (Thm 4.19). Uniform continuity makes the oscillation $M_k - m_k$ uniformly small on all subintervals — exactly what the Riemann criterion requires.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf6-2" data-correct="false">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f \in \mathscr{R}[a,b]$, then $f$ is continuous on $[a,b]$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf6-2','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf6-2','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="warn"><div class="box-label">False — converse of Thm 6.8 fails</div><div class="box-body">Any monotone function is integrable but can have jump discontinuities. More generally, bounded functions with measure-zero discontinuity sets are integrable. The Dirichlet function $\mathbf{1}_\mathbb{Q}$ is bounded with dense discontinuities — NOT integrable ($U=1$, $L=0$).</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf6-3" data-correct="false">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>FTC Part 1: if $F(x) = \int_a^x f(t)\,dt$ and $f \in \mathscr{R}[a,b]$, then $F'(x) = f(x)$ for all $x \in [a,b]$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf6-3','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf6-3','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="warn"><div class="box-label">False — only where $f$ is continuous (Rudin §6.20)</div><div class="box-body">$F$ is always continuous (Lipschitz, since $f$ is bounded). But $F'(x_0) = f(x_0)$ holds only at points where $f$ is continuous. If $f$ has a jump at $x_0$, $F$ may fail to be differentiable there.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf6-4" data-correct="false">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>A refinement of a partition $P$ increases $U(f,P)$ and decreases $L(f,P)$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf6-4','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf6-4','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="warn"><div class="box-label">False — it's the opposite direction (Rudin Thm 6.4)</div><div class="box-body">Refinement <em>decreases</em> $U$ and <em>increases</em> $L$. Finer subintervals give tighter sup/inf on each piece. Monotonicity lemma: $L(P) \leq L(P^*) \leq U(P^*) \leq U(P)$ for any refinement $P^*$.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf6-5" data-correct="true">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f$ is monotone on $[a,b]$, then $f \in \mathscr{R}[a,b]$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf6-5','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf6-5','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True — Rudin Thm 6.9</div><div class="box-body">Uniform partition of $n$ pieces: $U-L = \frac{b-a}{n}(f(b)-f(a)) \to 0$. Regardless of how many jump discontinuities $f$ has, the total variation $f(b)-f(a)$ is bounded and can be spread over $n$ pieces.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf6-6" data-correct="true">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>For any bounded $f:[a,b]\to\mathbb{R}$ and any partition $P$: $L(f,P) \leq U(f,P)$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf6-6','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf6-6','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True — always, no integrability required</div><div class="box-body">On each subinterval: $m_k = \inf f \leq \sup f = M_k$, so $\sum m_k\Delta x_k \leq \sum M_k\Delta x_k$. This holds for any bounded $f$ and any partition. The stronger statement: $L(f,P_1) \leq U(f,P_2)$ for ANY two partitions (proved via common refinement).</div></div></div>
+  </div>
+
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">02</span> Proof Step Ordering</h2>
+  <p style="font-size:.88rem;color:var(--muted);margin-bottom:16px;font-style:italic;">Drag steps into the correct order, then press Check My Order.</p>
+
+  <div class="drill-card" id="ord6-1" data-answer="D,A,B,C,E">
+    <div class="drill-q"><span class="drill-tag ord">ORDER</span>Drag to arrange: prove that if $f \in \mathscr{R}[a,b]$, then for every $\varepsilon > 0$ there exists a partition $P$ with $U(f,P)-L(f,P) < \varepsilon$.</div>
+    <div class="ord-steps">
+      <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Since $f \in \mathscr{R}$: $\overline{\int} f = \underline{\int} f$. Unpack: $\overline{\int} f = \inf_P U(P)$ and $\underline{\int} f = \sup_P L(P)$.</span></div>
+      <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>By the approximation property of $\inf$/$\sup$: $\exists\,P_1, P_2$ with $U(P_2) < \overline{\int}f + \varepsilon/2$ and $L(P_1) > \underline{\int}f - \varepsilon/2$.</span></div>
+      <div class="ord-step" data-label="C" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">C</span><span>Let $P = P_1 \cup P_2$ (common refinement). By monotonicity: $U(P) \leq U(P_2)$ and $L(P) \geq L(P_1)$.</span></div>
+      <div class="ord-step" data-label="D" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">D</span><span>Given $\varepsilon > 0$.</span></div>
+      <div class="ord-step" data-label="E" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">E</span><span>Therefore $U(P)-L(P) \leq U(P_2)-L(P_1) < \varepsilon$. $\blacksquare$</span></div>
+    </div>
+    <button class="sol-btn check-btn" onclick="checkOrder('ord6-1')">Check My Order</button>
+    <div id="ord6-1-ans" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Correct order: D → A → B → C → E</div>
+        <div class="box-body"><strong>D:</strong> Fix $\varepsilon > 0$ — every $\varepsilon$-argument opens this way.<br><strong>A:</strong> Use the assumption $f \in \mathscr{R}$ and unpack definitions.<br><strong>B:</strong> Apply approximation property to get near-optimal $P_1, P_2$.<br><strong>C:</strong> Common refinement — monotonicity locks in both bounds simultaneously.<br><strong>E:</strong> Combine: $U-L \leq (\overline{\int}f+\varepsilon/2)-(\underline{\int}f-\varepsilon/2) = 0+\varepsilon$.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card" id="ord6-2" data-answer="B,A,C,D">
+    <div class="drill-q"><span class="drill-tag ord">ORDER</span>Drag to arrange: prove FTC Part 1 — if $f$ is continuous at $x_0$ and $F(x) = \int_a^x f$, then $F'(x_0) = f(x_0)$.</div>
+    <div class="ord-steps">
+      <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Write $\dfrac{F(x)-F(x_0)}{x-x_0} - f(x_0) = \dfrac{1}{x-x_0}\int_{x_0}^x(f(t)-f(x_0))\,dt$.</span></div>
+      <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Since $f$ is continuous at $x_0$: for any $\varepsilon > 0$, $\exists\,\delta > 0$ such that $|t-x_0|<\delta \Rightarrow |f(t)-f(x_0)|<\varepsilon$.</span></div>
+      <div class="ord-step" data-label="C" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">C</span><span>For $0 < |x-x_0| < \delta$: $\left|\dfrac{F(x)-F(x_0)}{x-x_0}-f(x_0)\right| \leq \dfrac{1}{|x-x_0|}\cdot\varepsilon|x-x_0| = \varepsilon$.</span></div>
+      <div class="ord-step" data-label="D" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">D</span><span>Since $\varepsilon > 0$ was arbitrary, $F'(x_0) = f(x_0)$. $\blacksquare$</span></div>
+    </div>
+    <button class="sol-btn check-btn" onclick="checkOrder('ord6-2')">Check My Order</button>
+    <div id="ord6-2-ans" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Correct order: B → A → C → D</div>
+        <div class="box-body"><strong>B:</strong> Invoke continuity of $f$ at $x_0$ — this gives the $\delta$ you'll use.<br><strong>A:</strong> Set up the difference quotient; key algebraic step subtracts $f(x_0)(x-x_0) = \int_{x_0}^x f(x_0)\,dt$.<br><strong>C:</strong> Apply the bound from B: integrand $&lt; \varepsilon$ on $[x_0, x]$, divide by $|x-x_0|$.<br><strong>D:</strong> Standard $\varepsilon$-argument close.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card" id="ord6-3" data-answer="A,D,C,E,B">
+    <div class="drill-q"><span class="drill-tag ord">ORDER</span><span class="ps-tag" style="margin-right:7px;">PS8 Ex.1</span>Drag to arrange: prove $\int_0^c x\,dx = c^2/2$ using Darboux sums on the uniform partition, without FTC.</div>
+    <div class="ord-steps">
+      <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Take the uniform partition $P_n = \{0, c/n, 2c/n, \ldots, c\}$, giving $n$ subintervals of width $\Delta x = c/n$.</span></div>
+      <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>The gap $U(P_n)-L(P_n) = c^2/n \to 0$, so $f \in \mathscr{R}$ and $\int_0^c x\,dx = c^2/2$. $\blacksquare$</span></div>
+      <div class="ord-step" data-label="C" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">C</span><span>Compute $U(P_n) = \sum_{k=1}^n \frac{kc}{n}\cdot\frac{c}{n} = \frac{c^2}{n^2}\cdot\frac{n(n+1)}{2} = \frac{c^2(n+1)}{2n}$.</span></div>
+      <div class="ord-step" data-label="D" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">D</span><span>Since $f(x)=x$ is increasing, $M_k = kc/n$ and $m_k = (k-1)c/n$ on the $k$-th subinterval.</span></div>
+      <div class="ord-step" data-label="E" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">E</span><span>Compute $L(P_n) = \frac{c^2(n-1)}{2n}$, so both $U(P_n)$ and $L(P_n)$ converge to $c^2/2$.</span></div>
+    </div>
+    <button class="sol-btn check-btn" onclick="checkOrder('ord6-3')">Check My Order</button>
+    <div id="ord6-3-ans" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Correct order: A → D → C → E → B</div>
+        <div class="box-body"><strong>A:</strong> Choose the specific partition — uniform is the natural choice when $f$ is simple.<br><strong>D:</strong> Identify $M_k$ and $m_k$ by exploiting monotonicity of $f$.<br><strong>C:</strong> Compute $U$; the key computation is $\sum k = n(n+1)/2$.<br><strong>E:</strong> Compute $L$; same sum shifted by one term.<br><strong>B:</strong> Both bounds squeeze to $c^2/2$ and the gap $\to 0$ confirms integrability.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card" id="ord6-4" data-answer="C,A,D,B">
+    <div class="drill-q"><span class="drill-tag ord">ORDER</span><span class="ps-tag" style="margin-right:7px;">PS8 Ex.8</span>Drag to arrange: prove that if $\int_a^b f\phi\,dx = 0$ for every continuous $\phi$, then $f \equiv 0$.</div>
+    <div class="ord-steps">
+      <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>By continuity of $f$ at $x_0$, $\exists\,\delta > 0$ such that $f > 0$ throughout $I = (x_0-\delta, x_0+\delta)\cap[a,b]$.</span></div>
+      <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Then $f(x)\phi(x) > 0$ on $I$ and $\geq 0$ elsewhere, so $\int_a^b f\phi > 0$ — contradiction. Therefore $f \equiv 0$. $\blacksquare$</span></div>
+      <div class="ord-step" data-label="C" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">C</span><span>Suppose for contradiction that $f(x_0) > 0$ for some $x_0 \in [a,b]$.</span></div>
+      <div class="ord-step" data-label="D" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">D</span><span>Define $\phi(x) = \max(0, \delta - |x - x_0|)$ — a tent function: continuous, positive on $I$, zero outside $I$.</span></div>
+    </div>
+    <button class="sol-btn check-btn" onclick="checkOrder('ord6-4')">Check My Order</button>
+    <div id="ord6-4-ans" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Correct order: C → A → D → B</div>
+        <div class="box-body"><strong>C:</strong> Open with the contradiction assumption — name a specific point where $f > 0$.<br><strong>A:</strong> Continuity promotes a pointwise fact to a neighborhood fact — gives the interval $I$.<br><strong>D:</strong> Construct the test function localized to $I$. The tent $\max(0,\delta-|x-x_0|)$ is the canonical choice: it's nonzero exactly where you need it and zero elsewhere.<br><strong>B:</strong> The hypothesis $\int f\phi = 0$ is violated by this specific $\phi$. The "test function" trick is ubiquitous in analysis and PDEs.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card" id="ord6-5" data-answer="D,B,E,A,C">
+    <div class="drill-q"><span class="drill-tag ord">ORDER</span><span class="ps-tag" style="margin-right:7px;">PS8 Ex.6</span>Drag to arrange: prove Hölder's inequality $|\int fg| \leq \|f\|_p\|g\|_q$ for conjugate exponents $p,q > 1$.</div>
+    <div class="ord-steps">
+      <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Integrate the Young bound: $\int_a^b \tilde{f}\tilde{g} \leq \frac{1}{p}\int\tilde{f}^p + \frac{1}{q}\int\tilde{g}^q = \frac{1}{p}+\frac{1}{q} = 1$.</span></div>
+      <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Normalize: set $\tilde{f} = |f|/\|f\|_p$ and $\tilde{g} = |g|/\|g\|_q$, so $\int\tilde{f}^p = \int\tilde{g}^q = 1$.</span></div>
+      <div class="ord-step" data-label="C" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">C</span><span>Unscale: $\int|fg| = \|f\|_p\|g\|_q\int\tilde{f}\tilde{g} \leq \|f\|_p\|g\|_q$. Then $|\int fg| \leq \int|fg|$ gives Hölder. $\blacksquare$</span></div>
+      <div class="ord-step" data-label="D" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">D</span><span>Recall Young's inequality: $ab \leq \frac{a^p}{p} + \frac{b^q}{q}$ for $a,b \geq 0$ and $\frac{1}{p}+\frac{1}{q}=1$.</span></div>
+      <div class="ord-step" data-label="E" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">E</span><span>Apply Young's pointwise: $\tilde{f}(x)\tilde{g}(x) \leq \frac{\tilde{f}(x)^p}{p} + \frac{\tilde{g}(x)^q}{q}$ for each $x$.</span></div>
+    </div>
+    <button class="sol-btn check-btn" onclick="checkOrder('ord6-5')">Check My Order</button>
+    <div id="ord6-5-ans" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Correct order: D → B → E → A → C</div>
+        <div class="box-body"><strong>D:</strong> State the key lemma (Young's) first — it's the engine of the whole proof.<br><strong>B:</strong> Normalize so both $L^p$ norms equal $1$: cleaner to work with $\tilde{f},\tilde{g}$ than constants everywhere.<br><strong>E:</strong> Apply Young pointwise — valid since $\tilde{f}(x), \tilde{g}(x) \geq 0$.<br><strong>A:</strong> Integrate and use $1/p+1/q=1$ — the normalization was exactly designed so both integrals are $1$.<br><strong>C:</strong> Undo the normalization to get the general statement.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card" id="ord6-6" data-answer="D,B,F,A,E,C">
+    <div class="drill-q"><span class="drill-tag ord">ORDER</span><span class="rudin-tag" style="margin-right:7px;">Rudin 6.1</span>Drag to arrange: prove that if $f \in \mathscr{R}[a,b]$ and $\phi$ is continuous on $[\alpha,\beta] \supseteq f([a,b])$, then $h = \phi \circ f \in \mathscr{R}[a,b]$.</div>
+    <div class="ord-steps">
+      <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>On <em>good</em> intervals ($M_k(f)-m_k(f) &lt; \eta$): $M_k(h)-m_k(h) &lt; \varepsilon/(2(b-a))$, so their total contribution to $U(P,h)-L(P,h)$ is $\leq \varepsilon/2$.</span></div>
+      <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Since $f \in \mathscr{R}$, choose a partition $P$ with $U(P,f)-L(P,f) &lt; \eta\varepsilon/(4M)$ where $M = \sup|\phi|$.</span></div>
+      <div class="ord-step" data-label="C" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">C</span><span>Combining: $U(P,h)-L(P,h) \leq \varepsilon/2 + \varepsilon/2 = \varepsilon$. So $h \in \mathscr{R}$ by the Riemann criterion. $\blacksquare$</span></div>
+      <div class="ord-step" data-label="D" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">D</span><span>Since $\phi$ is uniformly continuous on compact $[\alpha,\beta]$: get $\eta > 0$ with $|s-t| &lt; \eta \Rightarrow |\phi(s)-\phi(t)| &lt; \varepsilon/(2(b-a))$.</span></div>
+      <div class="ord-step" data-label="E" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">E</span><span>On <em>bad</em> intervals ($M_k(f)-m_k(f) \geq \eta$): total length $&lt; \varepsilon/(4M)$, oscillation of $h$ is $\leq 2M$, so their contribution is $&lt; \varepsilon/2$.</span></div>
+      <div class="ord-step" data-label="F" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">F</span><span>Call subinterval $k$ <em>good</em> if $M_k(f)-m_k(f) &lt; \eta$, and <em>bad</em> otherwise.</span></div>
+    </div>
+    <button class="sol-btn check-btn" onclick="checkOrder('ord6-6')">Check My Order</button>
+    <div id="ord6-6-ans" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Correct order: D → B → F → A → E → C</div>
+        <div class="box-body"><strong>D:</strong> Uniform continuity of $\phi$ gives the $\eta$ that controls oscillation of $h$ on good intervals.<br><strong>B:</strong> Use $f \in \mathscr{R}$ to get a partition where total oscillation of $f$ is small — the threshold $\eta\varepsilon/(4M)$ is chosen to make bad intervals short.<br><strong>F:</strong> Set up the good/bad dichotomy — the central structural idea of the proof.<br><strong>A:</strong> Good intervals: $f$ barely oscillates $\Rightarrow$ $h$ barely oscillates (via $\eta$ from D).<br><strong>E:</strong> Bad intervals: $f$ oscillates a lot, but compactness of $P$ forces their total length to be tiny.<br><strong>C:</strong> Add the two halves and invoke the Riemann criterion.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">03</span> Multiple Choice</h2>
+
+  <div class="drill-card" id="mc6-1">
+    <div class="drill-q"><span class="drill-tag mc">MULTI</span>The Riemann criterion says $f \in \mathscr{R}[a,b]$ if and only if:</div>
+    <div class="mc-opts">
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-1',this)"><span class="mc-lbl">A</span>$U(f,P) = L(f,P)$ for some partition $P$</button>
+      <button class="mc-opt" data-correct="true" onclick="answerMC('mc6-1',this)"><span class="mc-lbl">B</span>For every $\varepsilon > 0$, $\exists$ a partition $P$ with $U(f,P)-L(f,P) < \varepsilon$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-1',this)"><span class="mc-lbl">C</span>$f$ is continuous except on a finite set</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-1',this)"><span class="mc-lbl">D</span>There is a sequence of partitions $P_n$ with $U(f,P_n)\to\overline{\int}f$</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">B — Rudin §6.6</div><div class="box-body">The "for all $\varepsilon$, there exists $P$" form — not just for one $\varepsilon$ or one $P$. A is too strong (only constant functions have $U=L$ for a specific $P$). C is sufficient (finitely many discontinuities $\Rightarrow$ integrable) but not equivalent. D only pins $\overline{\int}f$, not $\underline{\int}f$.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="mc6-2">
+    <div class="drill-q"><span class="drill-tag mc">MULTI</span>FTC Part 2 ($\int_a^b f = F(b)-F(a)$) requires $F$ to satisfy:</div>
+    <div class="mc-opts">
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-2',this)"><span class="mc-lbl">A</span>$F'(x) = f(x)$ for all $x \in [a,b]$ including endpoints</button>
+      <button class="mc-opt" data-correct="true" onclick="answerMC('mc6-2',this)"><span class="mc-lbl">B</span>$F$ continuous on $[a,b]$, $F'(x) = f(x)$ for all $x \in (a,b)$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-2',this)"><span class="mc-lbl">C</span>$F$ is defined by $F(x) = \int_a^x f(t)\,dt$ specifically</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-2',this)"><span class="mc-lbl">D</span>$F$ is twice differentiable with $F'' = f'$ on $(a,b)$</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">B — Rudin §6.21</div><div class="box-body">$F$ continuous on $[a,b]$, $F' = f$ on the open $(a,b)$. Differentiability at endpoints isn't required. C is only one specific antiderivative from Part 1 — Part 2 applies to ANY $F$ satisfying the conditions, making it useful for computation.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="mc6-3">
+    <div class="drill-q"><span class="drill-tag mc">MULTI</span>Which function is NOT guaranteed to be in $\mathscr{R}[0,1]$?</div>
+    <div class="mc-opts">
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-3',this)"><span class="mc-lbl">A</span>A monotone increasing function $f:[0,1]\to\mathbb{R}$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-3',this)"><span class="mc-lbl">B</span>A continuous function $f:[0,1]\to\mathbb{R}$</button>
+      <button class="mc-opt" data-correct="true" onclick="answerMC('mc6-3',this)"><span class="mc-lbl">C</span>A bounded function with a dense set of discontinuities</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-3',this)"><span class="mc-lbl">D</span>A bounded function with exactly one discontinuity</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">C — dense discontinuities break integrability</div><div class="box-body">The Dirichlet function $\mathbf{1}_\mathbb{Q}$: bounded, discontinuous everywhere, $U=1$ and $L=0$ for every partition — not integrable. A: Thm 6.9. B: Thm 6.8. D: one discontinuity contributes $\leq 2\|f\|_\infty\delta$ which can be made $< \varepsilon$ by choosing a small subinterval.</div></div></div>
+  </div>
+
+</div>
+
+</div><!-- end p5 -->
+
+<script>
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+document.addEventListener('scroll',function(){
+  var h=document.documentElement.scrollHeight-window.innerHeight;
+  var pct=h>0?(window.scrollY/h)*100:0;
+  document.getElementById('pf').style.width=pct+'%';
+});
+function toggleSol(id){
+  var el=document.getElementById(id);
+  var btn=el.previousElementSibling;
+  var hidden=el.style.display==='none'||el.style.display==='';
+  el.style.display=hidden?'block':'none';
+  if(btn&&btn.classList.contains('sol-btn'))btn.textContent=hidden?'hide solution':'show solution';
+}
+function answerTF(id,val){
+  var c=document.getElementById(id);
+  if(c.dataset.done)return;
+  c.dataset.done='1';
+  var ans=c.dataset.correct;
+  c.querySelectorAll('.tf-btn').forEach(function(b){
+    b.disabled=true;
+    if(b.dataset.val===ans)b.classList.add('correct');
+    else b.classList.add('wrong');
+  });
+  var e=c.querySelector('.drill-exp');
+  if(e)e.style.display='block';
+}
+function answerMC(id,el){
+  var c=document.getElementById(id);
+  if(c.dataset.done)return;
+  c.dataset.done='1';
+  c.querySelectorAll('.mc-opt').forEach(function(b){
+    b.disabled=true;
+    if(b.dataset.correct==='true')b.classList.add('correct');
+    else if(b===el)b.classList.add('wrong');
+  });
+  var e=c.querySelector('.drill-exp');
+  if(e)e.style.display='block';
+}
+
+/* ===== DRAG-AND-DROP ORDERING ===== */
+var _dragSrc=null,_touchDragEl=null,_touchClone=null,_touchOffX=0,_touchOffY=0;
+function dragStart(e){
+  var el=e.currentTarget;
+  if(el.classList.contains('correct-p')||el.classList.contains('wrong-p')){e.preventDefault();return;}
+  _dragSrc=el;e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','');
+  setTimeout(function(){el.classList.add('dragging');},0);
+}
+function dragEnd(e){
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+}
+function dragOver(e){
+  e.preventDefault();var t=e.currentTarget;
+  if(t!==_dragSrc)t.classList.add('drag-over');return false;
+}
+function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function drop(e){
+  e.stopPropagation();var t=e.currentTarget;
+  t.classList.remove('drag-over');
+  if(_dragSrc&&_dragSrc!==t&&_dragSrc.parentNode===t.parentNode){
+    var p=t.parentNode,si=Array.from(p.children).indexOf(_dragSrc),ti=Array.from(p.children).indexOf(t);
+    if(si<ti)p.insertBefore(_dragSrc,t.nextSibling);else p.insertBefore(_dragSrc,t);
+  }
+  return false;
+}
+function touchStart(e){
+  var el=e.currentTarget;
+  if(el.classList.contains('correct-p')||el.classList.contains('wrong-p'))return;
+  e.preventDefault();
+  _touchDragEl=el;
+  var r=el.getBoundingClientRect();
+  _touchOffX=e.touches[0].clientX-r.left;
+  _touchOffY=e.touches[0].clientY-r.top;
+  _touchClone=el.cloneNode(true);
+  ['ondragstart','ondragend','ondragover','ondragleave','ondrop','ontouchstart'].forEach(function(a){_touchClone.removeAttribute(a);});
+  _touchClone.style.cssText='position:fixed;width:'+r.width+'px;opacity:.72;z-index:9999;pointer-events:none;margin:0;border-radius:3px;box-shadow:0 6px 24px rgba(0,0,0,.5);left:'+(e.touches[0].clientX-_touchOffX)+'px;top:'+(e.touches[0].clientY-_touchOffY)+'px;';
+  document.body.appendChild(_touchClone);
+  el.classList.add('dragging');
+  document.body.style.overscrollBehavior='none';
+}
+/* touchmove and touchend registered at document level with passive:false
+   so e.preventDefault() reliably blocks iOS scroll/bounce during drag */
+document.addEventListener('touchmove',function(e){
+  if(!_touchDragEl)return;
+  e.preventDefault();
+  var tx=e.touches[0].clientX,ty=e.touches[0].clientY;
+  _touchClone.style.left=(tx-_touchOffX)+'px';
+  _touchClone.style.top=(ty-_touchOffY)+'px';
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+  _touchClone.style.display='none';
+  var hit=document.elementFromPoint(tx,ty);
+  _touchClone.style.display='';
+  var tgt=hit?hit.closest('.ord-step'):null;
+  if(tgt&&tgt!==_touchDragEl&&tgt.parentNode===_touchDragEl.parentNode)tgt.classList.add('drag-over');
+},{passive:false});
+document.addEventListener('touchend',function(e){
+  if(!_touchDragEl)return;
+  e.preventDefault();
+  var tx=e.changedTouches[0].clientX,ty=e.changedTouches[0].clientY;
+  _touchClone.style.display='none';
+  var hit=document.elementFromPoint(tx,ty);
+  document.body.removeChild(_touchClone);_touchClone=null;
+  _touchDragEl.classList.remove('dragging');
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+  var tgt=hit?hit.closest('.ord-step'):null;
+  if(tgt&&tgt!==_touchDragEl&&tgt.parentNode===_touchDragEl.parentNode){
+    var p=tgt.parentNode,si=Array.from(p.children).indexOf(_touchDragEl),ti=Array.from(p.children).indexOf(tgt);
+    if(si<ti)p.insertBefore(_touchDragEl,tgt.nextSibling);else p.insertBefore(_touchDragEl,tgt);
+  }
+  _touchDragEl=null;
+  document.body.style.overscrollBehavior='';
+},{passive:false});
+document.addEventListener('touchcancel',function(){
+  if(!_touchDragEl)return;
+  if(_touchClone&&_touchClone.parentNode)document.body.removeChild(_touchClone);
+  _touchClone=null;
+  if(_touchDragEl)_touchDragEl.classList.remove('dragging');
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+  _touchDragEl=null;
+  document.body.style.overscrollBehavior='';
+});
+function checkOrder(id){
+  var c=document.getElementById(id);
+  if(c.dataset.done)return;c.dataset.done='1';
+  var correct=c.dataset.answer.split(',');
+  var steps=c.querySelectorAll('.ord-steps .ord-step');
+  var ok=true;
+  steps.forEach(function(s,i){
+    s.removeAttribute('draggable');
+    if(s.dataset.label===correct[i])s.classList.add('correct-p');
+    else{s.classList.add('wrong-p');ok=false;}
+  });
+  var btn=c.querySelector('.check-btn');
+  if(btn){btn.disabled=true;btn.textContent=ok?'✓ Correct!':'✗ Not quite — answer revealed below';}
+  var ans=document.getElementById(id+'-ans');
+  if(ans)ans.style.display='block';
+}
+function initAll(){}
+</script>
+</body>
+</html>

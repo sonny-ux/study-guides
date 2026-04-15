@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Analysis — Chapter 4: Continuity</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="document.addEventListener('DOMContentLoaded',()=>{renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});initAll();})"></script>
+<style>
+:root{
+  --bg:#08080c;--surface:#0f0f14;--card:#141419;--border:#1e1e28;--border2:#2e2e3e;
+  --text:#e2dced;--muted:#5a5a7a;
+  --ch4:#3a6a9c;--ch4b:#6a9acc;
+  --green:#4a8c5a;--green2:#7abc8a;
+  --red:#9c4a4a;--red2:#cc7070;
+  --gold:#9c7a3a;--gold2:#ccaa6a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font-size:16px;line-height:1.8;overflow-x:hidden;}
+
+.topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(8,8,12,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0;}
+.nav-scroll{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0;scrollbar-width:none;}
+.nav-scroll::-webkit-scrollbar{display:none;}
+.nav-tab{flex-shrink:0;padding:13px 18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;}
+.nav-tab.active,.nav-tab:hover{color:var(--ch4b);border-bottom-color:var(--ch4);}
+
+.pbar{position:fixed;top:44px;left:0;right:0;height:2px;background:var(--border);z-index:199;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--ch4),var(--ch4b));width:0%;transition:width .1s;}
+
+.page{display:none;padding-top:52px;min-height:100vh;}
+.page.active{display:block;}
+
+.hero{padding:32px 20px 28px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(58,106,156,.07) 0%,transparent 60%);pointer-events:none;}
+.ch-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;padding:4px 10px;border-radius:2px;margin-bottom:12px;}
+.hero h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:600;line-height:1.2;margin-bottom:8px;}
+.hero-sub{font-size:.9rem;color:var(--muted);font-style:italic;line-height:1.7;}
+
+.sec{padding:28px 20px;border-bottom:1px solid var(--border);}
+.sec h2{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;}
+
+.main-idea{border-radius:4px;padding:18px 20px;margin-bottom:22px;}
+.mi-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:7px;}
+.mi-text{font-size:.95rem;line-height:1.78;}
+
+.def-box{border-left:3px solid;border-radius:0 3px 3px 0;padding:16px 18px;margin:14px 0;background:var(--card);}
+.box-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;}
+.box-title{font-family:'Cinzel',serif;font-size:.88rem;margin-bottom:8px;}
+.box-body{font-size:.88rem;color:#9aacbc;line-height:1.75;}
+.box-body strong{color:var(--text);}
+.box-body p{margin-bottom:6px;}
+.box-body p:last-child{margin-bottom:0;}
+
+.thm{border-left:3px solid var(--green2);border-radius:0 3px 3px 0;padding:16px 18px;margin:14px 0;background:#0a100a;}
+.thm .box-label{color:var(--green2);}
+.thm .box-body{color:#8aac8a;}
+.thm .box-body strong{color:#aaccaa;}
+.thm .box-body p{margin-bottom:6px;}
+.thm .box-body p:last-child{margin-bottom:0;}
+
+.warn{border-left:3px solid var(--red2);border-radius:0 3px 3px 0;padding:14px 18px;margin:12px 0;background:#100a0a;}
+.warn .box-label{color:var(--red2);}
+.warn .box-body{color:#ac8a8a;}
+.warn .box-body p{margin-bottom:6px;}
+.warn .box-body p:last-child{margin-bottom:0;}
+
+.explain{border-left:3px solid var(--gold2);border-radius:0 3px 3px 0;padding:14px 18px;margin:12px 0;background:#0e0e0a;}
+.explain .box-label{color:var(--gold2);}
+.explain .box-body{color:#9a9070;}
+.explain .box-body strong{color:#ccc080;}
+.explain .box-body p{margin-bottom:6px;}
+.explain .box-body p:last-child{margin-bottom:0;}
+
+.pw{background:var(--card);border:1px solid var(--border2);border-radius:4px;padding:18px;margin:14px 0;}
+.pw-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;color:var(--ch4b);}
+.pw-step{display:flex;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.pw-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.pw-n{font-family:'JetBrains Mono',monospace;font-size:10px;min-width:20px;padding-top:2px;color:var(--ch4b);}
+.pw-c{flex:1;}
+.pw-s{font-size:.9rem;margin-bottom:5px;line-height:1.6;}
+.pw-w{font-size:.82rem;color:var(--muted);font-style:italic;line-height:1.6;}
+.pw-w strong{color:#8898a8;font-style:normal;}
+
+.acc-wrap{display:flex;flex-direction:column;gap:8px;margin:14px 0;}
+.acc{background:var(--card);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+.acc-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;background:var(--surface);}
+.acc-title{font-size:.9rem;font-style:italic;}
+.acc-arrow{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);transition:transform .2s;}
+.acc.open .acc-arrow{transform:rotate(90deg);}
+.acc-body{display:none;padding:14px 16px;font-size:.86rem;color:#9aacbc;line-height:1.78;border-top:1px solid var(--border);}
+.acc.open .acc-body{display:block;}
+
+.row-item{display:flex;gap:8px;align-items:baseline;font-size:.88rem;color:#9aacbc;padding:6px 0;border-bottom:1px solid var(--border);}
+.row-item:last-child{border-bottom:none;}
+.row-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--muted);min-width:140px;flex-shrink:0;letter-spacing:.08em;}
+
+/* HW tags */
+.hw-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--ch4b);background:rgba(58,106,156,.12);border:1px solid var(--ch4);border-radius:2px;padding:2px 7px;margin-right:7px;}
+.ps-tag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.06em;color:var(--green2);background:rgba(74,140,90,.1);border:1px solid var(--green);border-radius:2px;padding:2px 6px;margin-left:6px;}
+.rudin-tag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.06em;color:var(--gold2);background:rgba(156,122,58,.1);border:1px solid var(--gold);border-radius:2px;padding:2px 6px;margin-left:6px;}
+
+/* Sol button */
+.sol-btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;border:1px solid var(--border2);border-radius:2px;cursor:pointer;background:transparent;color:var(--muted);margin-top:12px;display:block;min-height:40px;-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s;}
+.sol-btn:active{border-color:var(--ch4b);color:var(--ch4b);}
+
+/* Drills */
+.drill-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:18px 20px;margin-bottom:10px;}
+.drill-tag{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.08em;border-radius:2px;padding:2px 7px;margin-right:7px;text-transform:uppercase;}
+.drill-tag.tf{background:rgba(58,106,156,.12);color:var(--ch4b);}
+.drill-tag.mc{background:rgba(74,140,90,.1);color:var(--green2);}
+.drill-tag.ord{background:rgba(156,170,106,.1);color:var(--gold2);}
+.drill-q{font-size:.9rem;color:var(--text);margin-bottom:14px;line-height:1.65;}
+.tf-row{display:flex;gap:8px;}
+.tf-btn{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:10px 14px;min-height:44px;font-size:.85rem;font-family:'JetBrains Mono',monospace;color:var(--muted);cursor:pointer;transition:border-color .13s;-webkit-tap-highlight-color:transparent;}
+.tf-btn:hover:not(:disabled){border-color:var(--ch4b);}
+.tf-btn.correct{border-color:var(--green2)!important;background:rgba(74,140,90,.1)!important;color:var(--green2)!important;}
+.tf-btn.wrong{border-color:var(--red2)!important;background:rgba(156,74,74,.08)!important;color:var(--red2)!important;}
+.drill-exp{margin-top:10px;display:none;}
+.mc-opts{display:flex;flex-direction:column;gap:6px;}
+.mc-opt{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:11px 14px;min-height:44px;font-size:.85rem;color:var(--muted);cursor:pointer;text-align:left;font-family:'EB Garamond',serif;line-height:1.5;transition:border-color .13s;display:flex;align-items:flex-start;gap:10px;width:100%;-webkit-tap-highlight-color:transparent;}
+.mc-opt:hover:not(:disabled){border-color:var(--ch4b);}
+.mc-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);min-width:16px;flex-shrink:0;padding-top:2px;}
+.mc-opt.correct{border-color:var(--green2)!important;background:rgba(74,140,90,.1)!important;color:var(--green2)!important;}
+.mc-opt.wrong{border-color:var(--red2)!important;background:rgba(156,74,74,.08)!important;}
+.ord-steps{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.ord-step{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:9px 13px;font-size:.85rem;color:var(--muted);line-height:1.5;display:flex;gap:10px;align-items:flex-start;cursor:grab;transition:border-color .13s,opacity .13s;-webkit-tap-highlight-color:transparent;touch-action:none;}
+.ord-step.dragging{opacity:.3;cursor:grabbing;}
+.ord-step.drag-over{border-color:var(--ch4b)!important;}
+.ord-step.correct-p{border-color:var(--green2)!important;background:rgba(74,140,90,.1)!important;color:var(--green2)!important;cursor:default;}
+.ord-step.wrong-p{border-color:var(--red2)!important;background:rgba(156,74,74,.08)!important;cursor:default;}
+.drag-handle{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--border2);padding-right:4px;flex-shrink:0;user-select:none;}
+.ord-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch4b);min-width:16px;padding-top:2px;flex-shrink:0;}
+.check-btn{margin-bottom:0;}
+
+@media(max-width:600px){
+  .sec{padding:22px 16px;}
+  .drill-card{padding:14px;}
+  .ord-step{padding:12px 10px;font-size:.84rem;}
+  .drag-handle{font-size:1.15rem;min-width:20px;text-align:center;}
+  .tf-btn,.sol-btn{min-height:48px;}
+  .nav-tab{padding:12px 14px;}
+  .hero{padding:24px 16px 20px;}
+  .box-body{font-size:.86rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-scroll">
+    <button class="nav-tab active" onclick="showPage('p1',this)">Limits &amp; Continuity</button>
+    <button class="nav-tab" onclick="showPage('p2',this)">Compactness &amp; Connectedness</button>
+    <button class="nav-tab" onclick="showPage('p3',this)">Discontinuities &amp; Monotone</button>
+    <button class="nav-tab" onclick="showPage('p4',this)">Practice</button>
+  </div>
+</nav>
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+
+<!-- ==================== PAGE 1 ==================== -->
+<div class="page active" id="p1">
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(58,106,156,.1);color:var(--ch4b);border:1px solid var(--ch4);">Chapter 4</div>
+  <h1 style="color:var(--ch4b);">Continuity</h1>
+  <p class="hero-sub">Rudin · PS6 Ex.8 · PS7 Ex.1,2,5,6 · Spring 2026. From limits to uniform continuity — the first study of functions rather than sets.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">01</span> What Chapter 4 Is About</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,106,156,.07),rgba(74,140,90,.03));border:1px solid var(--ch4);">
+    <div class="mi-label" style="color:var(--ch4b);">Main Idea</div>
+    <div class="mi-text">Chapters 1–3 built the infrastructure: metric spaces, sequences, compactness, completeness, series. Chapter 4 is where you first study functions rather than just sets and sequences. The central question is what it means for a function to be "well-behaved" near a point. The answer is continuity — and the chapter systematically explores what continuity implies, what breaks it, and how it interacts with compactness and connectedness.</div>
+  </div>
+  <p style="font-size:.9rem;color:#9aacbc;line-height:1.75;">The deepest results here — the Extreme Value Theorem, the Intermediate Value Theorem, and uniform continuity on compact sets — are not just facts to memorize. They are the payoff of everything built in Chapters 1–3. Understanding why they require compactness or connectedness is the real content of the chapter.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">02</span> Limits of Functions</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,106,156,.07),rgba(74,140,90,.03));border:1px solid var(--ch4);">
+    <div class="mi-label" style="color:var(--ch4b);">Main Idea</div>
+    <div class="mi-text">The limit $\lim_{x\to p} f(x) = q$ describes the behavior of $f$ as $x$ approaches $p$ — never at $p$ itself. The function need not even be defined at $p$. Why must $p$ be a limit point? Because if $p$ is isolated, the limit is vacuously true for any $q$ — meaningless.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch4b);">
+    <div class="box-label" style="color:var(--ch4b);">Definition — Limit at a Point</div>
+    <div class="box-body">Let $(X,d_X)$ and $(Y,d_Y)$ be metric spaces, $E\subseteq X$, $p$ a limit point of $E$, $f:E\to Y$. Then $\lim_{x\to p}f(x)=q$ if:<br><br>
+    $\forall\,\varepsilon>0\;\exists\,\delta>0$ such that $d_X(x,p)<\delta$ and $x\in E\setminus\{p\}$ $\Rightarrow$ $d_Y(f(x),q)<\varepsilon$</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Uniqueness of Limits</div>
+    <div class="box-body">If $\lim_{x\to p}f(x)=q$ and $\lim_{x\to p}f(x)=q'$, then $q=q'$. Proof: for any $\varepsilon>0$, get $\delta$ so $f(x)$ is within $\varepsilon$ of both. Then $d(q,q')\leq d(q,f(x))+d(f(x),q')<2\varepsilon$. Since $\varepsilon$ was arbitrary, $d(q,q')=0$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Sequential Criterion (Rudin §4.2)</div>
+    <div class="box-body">$\lim_{x\to p}f(x)=q$ $\;\Longleftrightarrow\;$ for every sequence $\{p_n\}$ in $E\setminus\{p\}$ with $p_n\to p$, we have $f(p_n)\to q$.<br><br>
+    <strong>To disprove a limit:</strong> find two sequences approaching $p$ along which $f$ approaches different values. Classic: $f(x)=\sin(1/x)$ as $x\to 0$. Along $x_n=1/(2\pi n)$: $f\to 0$. Along $x_n=1/(\pi/2+2\pi n)$: $f\to 1$. No limit exists.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">Arithmetic of Limits</div>
+    <div class="box-body">If $\lim_{x\to p}f(x)=A$ and $\lim_{x\to p}g(x)=B$, then $\lim(f+g)=A+B$, $\lim(fg)=AB$, $\lim(f/g)=A/B$ (if $B\neq 0$). These follow immediately from the sequential criterion and the corresponding theorems for sequences.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">03</span> Continuity</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,106,156,.07),rgba(74,140,90,.03));border:1px solid var(--ch4);">
+    <div class="mi-label" style="color:var(--ch4b);">Main Idea</div>
+    <div class="mi-text">Continuity at $p$ is the statement that the limit and the function value agree: $\lim_{x\to p}f(x)=f(p)$. If $p$ is an isolated point, $f$ is automatically continuous there. Continuity is only a real constraint at limit points.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch4b);">
+    <div class="box-label" style="color:var(--ch4b);">Definition — Continuity at $p$</div>
+    <div class="box-body">$f:E\to Y$ is <strong>continuous at $p\in E$</strong> if $\forall\,\varepsilon>0\;\exists\,\delta>0$ such that $d_X(x,p)<\delta$ and $x\in E$ $\Rightarrow$ $d_Y(f(x),f(p))<\varepsilon$.<br><br>
+    Unlike the limit definition, $x=p$ is allowed — it's automatically fine since $d_Y(f(p),f(p))=0<\varepsilon$.</div>
+  </div>
+  <div class="explain" style="border-left-color:var(--ch4);">
+    <div class="box-label">Scratch Work — How to Read and Write a Continuity Proof</div>
+    <div class="box-body">The $\varepsilon$-$\delta$ definition looks like it requires you to magically produce $\delta$. In practice you always find $\delta$ by working backwards first, then writing the proof forwards.<br><br>
+    <strong>Template:</strong> (1) Write what you want to show: $|f(x)-f(p)|&lt;\varepsilon$. (2) Expand using the formula for $f$. (3) Simplify until you see something like $C\cdot|x-p|$ on the right. (4) Set $\delta=\varepsilon/C$ (or smaller if needed). (5) Re-read the proof forward with this $\delta$.<br><br>
+    <strong>Example: $f(x)=x^2$ is continuous at $p$.}</strong> Scratch work: $|x^2-p^2|=|x+p|\cdot|x-p|$. I need $|x+p|$ bounded. Restrict: if $|x-p|&lt;1$, then $|x|&lt;|p|+1$, so $|x+p|\leq|x|+|p|&lt;2|p|+1$. Then $|x^2-p^2|&lt;(2|p|+1)|x-p|$. Set $\delta=\min(1,\varepsilon/(2|p|+1))$. Now write the proof forward using this $\delta$. Notice $\delta$ depends on both $\varepsilon$ and $p$ — this is ordinary continuity, not uniform.<br><br>
+    <strong>Why we "restrict $\delta\leq 1$" first:</strong> Bounding $|x+p|$ requires knowing roughly where $x$ is. By first restricting $|x-p|&lt;1$, we localize $x$ near $p$ and get a useful bound on $|x+p|$. This "two-part $\delta$" technique is standard and should become automatic.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Composition (Rudin §4.7)</div>
+    <div class="box-body">If $f:E\to Y$ is continuous at $p$, and $g:f(E)\to Z$ is continuous at $f(p)$, then $g\circ f:E\to Z$ is continuous at $p$.<br><br>
+    <strong>Example:</strong> $h(x)=\sin(x^2)$ is continuous everywhere, since $x^2$ is continuous and $\sin$ is continuous.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Arithmetic (Rudin §4.9)</div>
+    <div class="box-body">If $f,g:E\to\mathbb{R}$ are continuous at $p$, then so are $f+g$, $f-g$, $fg$, and $f/g$ (provided $g(p)\neq 0$). All polynomials are continuous everywhere. All rational functions are continuous wherever the denominator is nonzero.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch4b);">
+    <div class="box-label" style="color:var(--ch4b);">Topological Characterization (Rudin §4.8)</div>
+    <div class="box-body">$f:X\to Y$ is continuous on all of $X$ $\;\Longleftrightarrow\;$ for every open set $V\subseteq Y$, the preimage $f^{-1}(V)$ is open in $X$.<br><br>
+    This reformulation is purely in terms of open sets — no $\varepsilon$, no $\delta$. It is the definition used in topology. It reveals the deepest structure: continuity is about how open sets pull back.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">04</span> Uniform Continuity</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,106,156,.07),rgba(74,140,90,.03));border:1px solid var(--ch4);">
+    <div class="mi-label" style="color:var(--ch4b);">Main Idea</div>
+    <div class="mi-text">Ordinary continuity lets $\delta$ depend on both $\varepsilon$ and the point $p$. Uniform continuity demands a single $\delta$ that works everywhere simultaneously. This is a much stronger condition, and it is the one that plays well with limits, integrals, and approximations.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch4b);">
+    <div class="box-label" style="color:var(--ch4b);">Definition — Uniform Continuity</div>
+    <div class="box-body">$f:E\to Y$ is <strong>uniformly continuous</strong> on $E$ if:<br><br>
+    $\forall\,\varepsilon>0\;\exists\,\delta>0$ such that $d_X(x,y)<\delta$ $\Rightarrow$ $d_Y(f(x),f(y))<\varepsilon$ for <em>all</em> $x,y\in E$.<br><br>
+    <strong>Key difference:</strong> $\delta$ depends only on $\varepsilon$, not on the specific points $x$ and $y$.</div>
+  </div>
+  <div class="explain" style="border-left-color:var(--ch4);">
+    <div class="box-label">Scratch Work — How to Find $\delta$ from $\varepsilon$</div>
+    <div class="box-body">You are never "given" the right $\delta$ — you have to derive it by working backwards. The template: start with the goal $|f(x)-f(y)|&lt;\varepsilon$ and manipulate until you isolate $|x-y|$. Whatever bound on $|x-y|$ makes the inequality work becomes your $\delta$.<br><br>
+    <strong>Example: $f(x)=3x+1$ on $\mathbb{R}$.</strong> Goal: $|f(x)-f(y)|=|3x+1-(3y+1)|=3|x-y|&lt;\varepsilon$. This requires $|x-y|&lt;\varepsilon/3$. So set $\delta=\varepsilon/3$. Done — no dependence on $x$ or $y$, hence uniformly continuous.<br><br>
+    <strong>Example: $g(x)=\sqrt{x}$ on $[0,\infty)$.</strong> Goal: $|\sqrt{x}-\sqrt{y}|&lt;\varepsilon$. Rationalize: $|\sqrt{x}-\sqrt{y}|=\frac{|x-y|}{\sqrt{x}+\sqrt{y}}\leq\sqrt{|x-y|}$ (since $\sqrt{x}+\sqrt{y}\geq\sqrt{|x-y|}$ by AM-type reasoning, or just use $(\sqrt{a}-\sqrt{b})^2\leq|a-b|$). So $\sqrt{|x-y|}&lt;\varepsilon$ requires $|x-y|&lt;\varepsilon^2$. Set $\delta=\varepsilon^2$. The key step was rationalizing; the key insight was that the $\sqrt{x}+\sqrt{y}$ denominator helps when $x,y$ are large but the bound $\leq\sqrt{|x-y|}$ is the clean uniform estimate.<br><br>
+    <strong>When $\delta$ ends up depending on the point</strong>, you do <em>not</em> have uniform continuity. For $f(x)=x^2$: $|x^2-y^2|=|x+y|\cdot|x-y|$. To make this $&lt;\varepsilon$, you need $|x-y|&lt;\varepsilon/|x+y|$. But $|x+y|$ grows without bound, so no single $\delta$ works everywhere.</div>
+  </div>
+  <div class="warn">
+    <div class="box-label">$f(x)=x^2$ is NOT uniformly continuous on $\mathbb{R}$</div>
+    <div class="box-body">Take $\varepsilon=1$. For any $\delta>0$, pick $x=n$ and $y=n+\delta/2$ with $n$ large. Then $|x-y|=\delta/2<\delta$, but $|x^2-y^2|=n\delta+\delta^2/4>n\delta$, which exceeds $1$ once $n>1/\delta$. No single $\delta$ works for all $x$. The problem: as $x\to\infty$, small changes in $x$ produce large changes in $x^2$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">$g(x)=\sqrt{x}$ IS uniformly continuous on $[0,\infty)$</div>
+    <div class="box-body">Set $\delta=\varepsilon^2$. For any $x,y\geq 0$ with $|x-y|<\delta$:
+    $$|\sqrt{x}-\sqrt{y}|=\frac{|x-y|}{\sqrt{x}+\sqrt{y}}\leq\sqrt{|x-y|}<\sqrt{\delta}=\varepsilon$$
+    One $\delta$ works for all $x,y\geq 0$. But $g$ is <em>not Lipschitz</em> at $0$: $|\sqrt{x}-0|/|x-0|=1/\sqrt{x}\to\infty$.</div>
+  </div>
+  <p style="font-size:.9rem;color:#9aacbc;line-height:1.75;margin-bottom:10px;">Three conditions from strongest to weakest:</p>
+  <div class="row-item"><span class="row-lbl">Lipschitz</span><span>$|f(x)-f(y)|\leq L|x-y|$ for some fixed $L$ and all $x,y\in E$. Implies uniform continuity.</span></div>
+  <div class="row-item"><span class="row-lbl">Unif. continuous</span><span>One $\delta$ works for all points. Implies ordinary continuity.</span></div>
+  <div class="row-item"><span class="row-lbl">Continuous</span><span>$\delta$ may depend on the point. The weakest condition.</span></div>
+  <p style="font-size:.85rem;color:var(--muted);margin-top:10px;font-style:italic;">$\sqrt{x}$ is uniformly continuous but not Lipschitz; $x^2$ is continuous but not uniformly continuous on $\mathbb{R}$.</p>
+</div>
+
+</div><!-- end page 1 -->
+
+<!-- ==================== PAGE 2 ==================== -->
+<div class="page" id="p2">
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(58,106,156,.1);color:var(--ch4b);border:1px solid var(--ch4);">Chapter 4</div>
+  <h1 style="color:var(--ch4b);">Compactness &amp; Connectedness</h1>
+  <p class="hero-sub">The payoff of Chapters 2–3: continuous functions preserve topological structure, yielding EVT and IVT.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">01</span> Continuous Images of Compact Sets</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,106,156,.07),rgba(74,140,90,.03));border:1px solid var(--ch4);">
+    <div class="mi-label" style="color:var(--ch4b);">Main Idea</div>
+    <div class="mi-text">Continuity alone doesn't tell you much globally. The additional structure of compactness and connectedness constrains continuous functions to behave well everywhere. The central principle: continuous functions preserve topological structure — the continuous image of a compact set is compact, and the continuous image of a connected set is connected.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch4b);">
+    <div class="box-label" style="color:var(--ch4b);">Theorem (Rudin §4.14)</div>
+    <div class="box-body">Let $f:X\to Y$ be continuous. If $K\subseteq X$ is compact, then $f(K)$ is compact.<br><br>
+    <strong>Proof idea:</strong> Let $\{V_\alpha\}$ be an open cover of $f(K)$. Then $\{f^{-1}(V_\alpha)\}$ is an open cover of $K$ (each preimage is open by continuity). Since $K$ is compact, finitely many preimages cover $K$. The corresponding $V_\alpha$'s cover $f(K)$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Corollary: Extreme Value Theorem (Rudin §4.16)</div>
+    <div class="box-body">Let $f:K\to\mathbb{R}$ be continuous with $K$ compact. Then $f$ attains its maximum and minimum: there exist $p,q\in K$ such that $f(q)\leq f(x)\leq f(p)$ for all $x\in K$.<br><br>
+    <strong>Why:</strong> $f(K)$ is compact in $\mathbb{R}$, hence closed and bounded. A closed bounded subset of $\mathbb{R}$ has a supremum and an infimum, and since it is closed, these are attained.<br><br>
+    <strong>Example:</strong> $f(x)=x^2$ on $[-3,2]$ attains max $9$ at $x=-3$ and min $0$ at $x=0$. On the open interval $(-3,2)$, neither extremum need be attained.</div>
+  </div>
+  <div class="warn">
+    <div class="box-label">Why Compactness Is Necessary</div>
+    <div class="box-body">$f(x)=1/x$ on $(0,1)$: continuous, but $f(0,1)=(1,\infty)$ is not compact. No maximum.<br>$f(x)=x$ on $\mathbb{R}$: continuous, but $f(\mathbb{R})=\mathbb{R}$ is not bounded. No extrema at all.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch4b);">
+    <div class="box-label" style="color:var(--ch4b);">Theorem (Rudin §4.19) — Uniform Continuity on Compact Sets</div>
+    <div class="box-body">If $f:K\to Y$ is continuous and $K$ is compact, then $f$ is uniformly continuous on $K$.<br><br>
+    <strong>Proof idea:</strong> Fix $\varepsilon>0$. For each $p\in K$, get $\delta(p)>0$ from continuity. Cover $K$ by balls $B(p,\delta(p)/2)$; extract a finite subcover. Set $\delta=\min(\delta_i/2)$. Any two points within $\delta$ lie in a common ball $B(p_i,\delta_i)$, giving $d(f(x),f(y))<\varepsilon$.</div>
+  </div>
+  <div class="pw">
+    <div class="pw-label">Proof Walk — Compact Image is Compact</div>
+    <div class="pw-step"><div class="pw-n">1</div><div class="pw-c"><div class="pw-s">Let $\{V_\alpha\}$ be an arbitrary open cover of $f(K)$.</div><div class="pw-w"><strong>Strategy.</strong> Every compactness proof opens by fixing an arbitrary cover.</div></div></div>
+    <div class="pw-step"><div class="pw-n">2</div><div class="pw-c"><div class="pw-s">By continuity of $f$, each preimage $f^{-1}(V_\alpha)$ is open in $X$.</div><div class="pw-w"><strong>Key step.</strong> Uses topological characterization of continuity (preimages of opens are open).</div></div></div>
+    <div class="pw-step"><div class="pw-n">3</div><div class="pw-c"><div class="pw-s">$\{f^{-1}(V_\alpha)\}$ covers $K$, so by compactness finitely many suffice: $f^{-1}(V_{\alpha_1}),\ldots,f^{-1}(V_{\alpha_n})$.</div><div class="pw-w"><strong>Apply compactness</strong> of $K$.</div></div></div>
+    <div class="pw-step"><div class="pw-n">4</div><div class="pw-c"><div class="pw-s">Then $V_{\alpha_1},\ldots,V_{\alpha_n}$ cover $f(K)$. Every open cover has a finite subcover. $\blacksquare$</div><div class="pw-w"><strong>Push forward.</strong> The corresponding original sets cover the image.</div></div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">02</span> Continuity and Connectedness</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,106,156,.07),rgba(74,140,90,.03));border:1px solid var(--ch4);">
+    <div class="mi-label" style="color:var(--ch4b);">Main Idea</div>
+    <div class="mi-text">A metric space $E$ is connected if it cannot be split into two nonempty disjoint open sets. The connected subsets of $\mathbb{R}$ are exactly the intervals. Since continuous functions preserve connectedness, a continuous function on an interval produces an interval — which is the Intermediate Value Theorem.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Connected Subsets of $\mathbb{R}$ (Rudin §2.47)</div>
+    <div class="box-body">$E\subseteq\mathbb{R}$ is connected if and only if $E$ is an interval (any convex subset: $[a,b]$, $(a,b)$, $[a,\infty)$, $(-\infty,b)$, or $\mathbb{R}$ itself).</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch4b);">
+    <div class="box-label" style="color:var(--ch4b);">Theorem (Rudin §4.22)</div>
+    <div class="box-body">If $f:X\to Y$ is continuous and $E\subseteq X$ is connected, then $f(E)$ is connected.<br><br>
+    <strong>Proof:</strong> Suppose $f(E)=A\cup B$ with $A,B$ nonempty, open, and disjoint. Then $E=f^{-1}(A)\cup f^{-1}(B)$. Each preimage is open (by continuity), they're disjoint and nonempty, and they cover $E$ — contradicting connectedness of $E$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Corollary: Intermediate Value Theorem (Rudin §4.23)</div>
+    <div class="box-body">Let $f:[a,b]\to\mathbb{R}$ be continuous with $f(a)\neq f(b)$. Then for every $c$ between $f(a)$ and $f(b)$, there exists $x\in(a,b)$ such that $f(x)=c$.<br><br>
+    <strong>Why:</strong> $[a,b]$ is connected, so $f([a,b])$ is connected, so it is an interval. Any interval containing $f(a)$ and $f(b)$ contains everything between them.<br><br>
+    <strong>Example:</strong> $f(x)=x^3-x-1$ on $[1,2]$. $f(1)=-1<0$, $f(2)=5>0$. By IVT, $\exists\, x\in(1,2)$ with $f(x)=0$.</div>
+  </div>
+  <div class="warn">
+    <div class="box-label">IVT Does NOT Guarantee Uniqueness</div>
+    <div class="box-body">$f(x)=\sin x$ on $[0,3\pi]$ satisfies $f(0)=f(3\pi)=0$. The intermediate value $c=0$ is achieved at $x=0,\pi,2\pi,3\pi$. IVT gives existence, not uniqueness.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">03</span> Path-Connectedness</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,106,156,.07),rgba(74,140,90,.03));border:1px solid var(--ch4);">
+    <div class="mi-label" style="color:var(--ch4b);">Main Idea</div>
+    <div class="mi-text">Path-connectedness is stronger than connectedness: for any two points $p,q\in E$ there is a continuous path $\gamma:[0,1]\to E$ with $\gamma(0)=p$ and $\gamma(1)=q$. Path-connected always implies connected, but the converse fails — the Topologist's Sine Curve is the canonical counterexample.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">The Topologist's Sine Curve</div>
+    <div class="box-body">Let $T=\{(x,\sin(1/x)):x\in(0,1]\}\cup(\{0\}\times[-1,1])$.<br><br>
+    <strong>Connected:</strong> The graph $S=\{(x,\sin(1/x))\}$ is the continuous image of the connected set $(0,1]$, hence connected. The segment $\{0\}\times[-1,1]\subseteq\overline{S}$ (sequences $x_n=1/(2\pi n)$ approach $(0,0)$). The closure of a connected set is connected, so $T=\overline{S}$ is connected.<br><br>
+    <strong>NOT path-connected:</strong> Any path from $(0,0)$ to a point on $S$ forces $1/\gamma_1(t)\to\infty$ near the starting time, making $\gamma_2(t)=\sin(1/\gamma_1(t))$ oscillate — no limit exists, contradicting continuity of $\gamma_2$.</div>
+  </div>
+</div>
+
+</div><!-- end page 2 -->
+
+<!-- ==================== PAGE 3 ==================== -->
+<div class="page" id="p3">
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(58,106,156,.1);color:var(--ch4b);border:1px solid var(--ch4);">Chapter 4</div>
+  <h1 style="color:var(--ch4b);">Discontinuities &amp; Monotone Functions</h1>
+  <p class="hero-sub">Classifying how continuity fails, and why monotone functions are uniquely well-controlled.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">01</span> Types of Discontinuities</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,106,156,.07),rgba(74,140,90,.03));border:1px solid var(--ch4);">
+    <div class="mi-label" style="color:var(--ch4b);">Main Idea</div>
+    <div class="mi-text">Not all discontinuities are created equal. Rudin classifies them using one-sided limits. For $f:(a,b)\to\mathbb{R}$ and $p\in(a,b)$: $f(p^+)=\lim_{x\to p^+}f(x)$ and $f(p^-)=\lim_{x\to p^-}f(x)$ — if these exist. Understanding the taxonomy matters for problem sets.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch4b);">
+    <div class="box-label" style="color:var(--ch4b);">The Three Types</div>
+    <div class="box-body"><strong>Removable discontinuity:</strong> Both one-sided limits exist and are equal, $f(p^+)=f(p^-)$, but this common value $\neq f(p)$. "Removable" because redefining $f(p)$ fixes it.<br><br>
+    <strong>Jump discontinuity (first kind):</strong> Both one-sided limits exist but $f(p^+)\neq f(p^-)$. There is a "jump."<br><br>
+    <strong>Discontinuity of the second kind (oscillation):</strong> At least one one-sided limit fails to exist. The most severe — the function doesn't settle from at least one side.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Examples of Each Type</div>
+    <div class="box-body"><strong>Removable:</strong> $f(x)=\sin(x)/x$ at $x=0$ (limit is $1$, but $f(0)$ undefined or wrong).<br><br>
+    <strong>Jump:</strong> $h(x)=|x|/x=\text{sgn}(x)$ at $x=0$. $h(0^+)=1$, $h(0^-)=-1$. Jump of size $2$.<br><br>
+    <strong>Oscillation:</strong> $f(x)=\sin(1/x)$ at $x=0$. Neither $f(0^+)$ nor $f(0^-)$ exists.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">The Popcorn Function — a Subtle Example (PS6)</div>
+    <div class="box-body">Define $p:[0,1]\to[0,1]$ by $p(x)=1/q$ if $x=m/q$ in lowest terms, $p(x)=0$ if $x$ is irrational. Continuous at every irrational, discontinuous at every rational. The discontinuities at rationals are all removable (the limit is $0$). Striking: continuous on a dense set but discontinuous on another dense set.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">02</span> Monotone Functions</h2>
+  <div class="main-idea" style="background:linear-gradient(135deg,rgba(58,106,156,.07),rgba(74,140,90,.03));border:1px solid var(--ch4);">
+    <div class="mi-label" style="color:var(--ch4b);">Main Idea</div>
+    <div class="mi-text">Monotone functions are extraordinarily well-controlled: their discontinuities can only be of jump type, and there cannot be too many of them. The key tool: each jump at $x$ creates a nonempty open interval $(f(x^-),f(x^+))$ in the range. Different jumps give disjoint intervals — which forces countability.</div>
+  </div>
+  <div class="def-box" style="border-left-color:var(--ch4b);">
+    <div class="box-label" style="color:var(--ch4b);">One-Sided Limits Always Exist (Rudin §4.29)</div>
+    <div class="box-body">Let $f$ be monotonically increasing on $(a,b)$. Then for every $x\in(a,b)$:
+    $$f(x^-)=\sup_{t&lt;x}f(t)\leq f(x)\leq\inf_{t&gt;x}f(t)=f(x^+)$$
+    The sandwich $f(x^-)\leq f(x)\leq f(x^+)$ shows monotone functions can only have <em>jump</em> discontinuities — no oscillation possible.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">Theorem (Rudin §4.30) — At Most Countably Many Discontinuities</div>
+    <div class="box-body">Let $f$ be monotonically increasing on $(a,b)$. The set of discontinuities of $f$ is at most countable.<br><br>
+    <strong>Proof:</strong> At each discontinuity $x$, define $I_x=(f(x^-),f(x^+))$. If $x&lt;y$ are two discontinuities, $f(x^+)\leq f(y^-)$ (since $f$ is increasing), so $I_x$ and $I_y$ are disjoint. Each $I_x$ contains a rational $q_x\in\mathbb{Q}$ (by density). This gives an injection from discontinuities into $\mathbb{Q}$. Since $\mathbb{Q}$ is countable, the set of discontinuities is countable.</div>
+  </div>
+  <div class="warn">
+    <div class="box-label">Why This Is Surprising</div>
+    <div class="box-body">Monotone functions can be discontinuous at every rational and continuous at every irrational — or discontinuous at any countable set you choose. But you can never have uncountably many: the jumps force disjoint intervals in the range, and $\mathbb{R}$ can only contain countably many disjoint intervals with positive length.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">03</span> The PS6 Examples</h2>
+  <p style="font-size:.9rem;color:#9aacbc;line-height:1.75;margin-bottom:14px;">PS6 Exercise 8 asks you to analyze several functions. Here is the complete picture for each.</p>
+  <div class="thm">
+    <div class="box-label">$f(x)=|x|$ — continuous everywhere</div>
+    <div class="box-body">$||x|-|p||\leq|x-p|$ (reverse triangle inequality). Take $\delta=\varepsilon$. Lipschitz with $L=1$.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">$g(x)=0$ for $x\in\mathbb{Q}$, $g(x)=x$ for $x\notin\mathbb{Q}$ — continuous only at $0$</div>
+    <div class="box-body"><strong>At $x=0$:</strong> $|g(x)|\leq|x|<\varepsilon$ whenever $|x|<\varepsilon$. <strong>At $p\neq 0$:</strong> approach along rationals ($g\to 0$) and irrationals ($g\to p\neq 0$). Sequential criterion fails.</div>
+  </div>
+  <div class="thm">
+    <div class="box-label">$h(x)=|x|/x$ — continuous on $\mathbb{R}\setminus\{0\}$, jump at $0$</div>
+    <div class="box-body">$h(x)=1$ for $x>0$ and $h(x)=-1$ for $x<0$ (constant on each half-line). At $0$: $h(0^+)=1\neq-1=h(0^-)$. Jump discontinuity of size $2$.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">$d:X\times X\to\mathbb{R}$ — continuous everywhere</div>
+    <div class="box-body">$|d(x,y)-d(p,q)|\leq d(x,p)+d(y,q)$ by the triangle inequality. Take $\delta=\varepsilon/2$ in each coordinate.</div>
+  </div>
+  <div class="acc-wrap">
+    <div class="acc" onclick="this.classList.toggle('open')">
+      <div class="acc-hdr"><div class="acc-title" style="color:var(--ch4b);">Cantor function and Popcorn function</div><div class="acc-arrow">▶</div></div>
+      <div class="acc-body">
+        <strong>Cantor function:</strong> Monotone increasing, maps $[0,1]$ onto $[0,1]$, constant on each interval removed from the Cantor set. By monotonicity one-sided limits exist everywhere; one can show $c(x^+)=c(x^-)$ at every point, so all discontinuities are removable — in fact there are none. Uniformly continuous on $[0,1]$, yet $c'=0$ almost everywhere.<br><br>
+        <strong>Popcorn function:</strong> $p(x)=1/q$ if $x=m/q$ in lowest terms, $p(x)=0$ if $x$ irrational. At any irrational $t$: for given $\varepsilon$, only finitely many rationals $m/q$ in $[0,1]$ have $1/q\geq\varepsilon$ (since $q\leq 1/\varepsilon$). Choose $\delta$ so $(t-\delta,t+\delta)$ avoids all these. Then $p(x)<\varepsilon=p(t)+\varepsilon$. At any rational $r$: approach along irrationals $x_n\to r$ — $p(x_n)=0\not\to p(r)=1/q>0$.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page 3 -->
+
+<!-- ==================== PAGE 4: PRACTICE ==================== -->
+<div class="page" id="p4">
+<div class="hero">
+  <div class="ch-badge" style="background:rgba(58,106,156,.1);color:var(--ch4b);border:1px solid var(--ch4);">Chapter 4</div>
+  <h1 style="color:var(--ch4b);">Practice</h1>
+  <p class="hero-sub">PS6, PS7 problems with background, step-by-step approach, and full solutions. Includes quick drills.</p>
+</div>
+
+<!-- Drills -->
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">01</span> Quick Drills — True / False</h2>
+
+  <div class="drill-card" id="tf4-1" data-correct="false">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $\lim_{x\to p}f(x)=L$, then $f(p)=L$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf4-1','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf4-1','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="warn"><div class="box-label">False</div><div class="box-body">The limit describes behavior as $x\to p$ while avoiding $x=p$. The function need not even be defined at $p$. Continuity at $p$ is exactly the extra condition that forces $f(p)=L$.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf4-2" data-correct="false">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f$ and $g$ are each discontinuous at $p$, then $f+g$ is discontinuous at $p$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf4-2','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf4-2','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="warn"><div class="box-label">False — discontinuities can cancel</div><div class="box-body">Let $f=\mathbf{1}_\mathbb{Q}$ and $g=1-\mathbf{1}_\mathbb{Q}$. Both are discontinuous everywhere, but $f+g\equiv 1$ is continuous everywhere.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf4-3" data-correct="true">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>Every uniformly continuous function on $(0,1)$ is bounded.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf4-3','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf4-3','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True</div><div class="box-body">Apply uniform continuity with $\varepsilon=1$ to get $\delta>0$. Cover $(0,1)$ by finitely many intervals of width $\delta/2$. On each, $|f|$ is bounded by $|f(\text{ref point})|+1$. The max over finitely many reference points plus $1$ gives a global bound.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf4-4" data-correct="true">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f:[a,b]\to[a,b]$ is continuous, then $f$ has a fixed point.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf4-4','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf4-4','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True — apply IVT to $g(x)=f(x)-x$</div><div class="box-body">$g(a)=f(a)-a\geq 0$ (since $f(a)\in[a,b]$) and $g(b)=f(b)-b\leq 0$. By IVT, $\exists\,c$ with $g(c)=0$, i.e., $f(c)=c$.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf4-5" data-correct="true">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f$ is continuous on a compact set $K$, then $f$ is uniformly continuous on $K$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf4-5','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf4-5','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True — Rudin Thm 4.19</div><div class="box-body">For each $p\in K$ there is $\delta(p)$ that works locally. Open balls $N_{\delta(p)/2}(p)$ cover $K$; extract a finite subcover; the minimum of finitely many half-widths works uniformly. Compactness is essential — $f(x)=x^2$ is continuous but not uniformly continuous on $\mathbb{R}$.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="tf4-6" data-correct="false">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>$\lim_{x\to 0}\sin(1/x)$ exists.</div>
+    <div class="tf-row">
+      <button class="tf-btn" data-val="true" onclick="answerTF('tf4-6','true')">True</button>
+      <button class="tf-btn" data-val="false" onclick="answerTF('tf4-6','false')">False</button>
+    </div>
+    <div class="drill-exp"><div class="warn"><div class="box-label">False — sequential criterion</div><div class="box-body">Along $x_n=1/(2\pi n)\to 0$: $\sin(1/x_n)=0$. Along $y_n=1/(\pi/2+2\pi n)\to 0$: $\sin(1/y_n)=1$. Two sequences, two limits. No limit exists.</div></div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">02</span> Proof Ordering</h2>
+
+  <div class="drill-card" id="ord4-1" data-answer="B,C,D,E,A,F">
+    <div class="drill-q"><span class="drill-tag ord">ORDER</span>Drag to arrange: prove that if $K$ is compact and $f:K\to Y$ is continuous, then $f(K)$ is compact.</div>
+    <div class="ord-steps">
+      <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>The corresponding finite subcollection $V_{\alpha_1},\ldots,V_{\alpha_n}$ covers $f(K)$.</span></div>
+      <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Let $\{V_\alpha\}$ be an arbitrary open cover of $f(K)$.</span></div>
+      <div class="ord-step" data-label="C" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">C</span><span>By continuity of $f$, each $f^{-1}(V_\alpha)$ is open in $K$.</span></div>
+      <div class="ord-step" data-label="D" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">D</span><span>So $\{f^{-1}(V_\alpha)\}$ is an open cover of $K$.</span></div>
+      <div class="ord-step" data-label="E" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">E</span><span>Since $K$ is compact, finitely many preimages $f^{-1}(V_{\alpha_1}),\ldots,f^{-1}(V_{\alpha_n})$ cover $K$.</span></div>
+      <div class="ord-step" data-label="F" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">F</span><span>Therefore $f(K)$ is compact. $\blacksquare$</span></div>
+    </div>
+    <button class="sol-btn check-btn" onclick="checkOrder('ord4-1')">Check My Order</button>
+    <div id="ord4-1-ans" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Correct order: B → C → D → E → A → F</div>
+        <div class="box-body"><strong>B:</strong> Fix an arbitrary open cover — every compactness proof opens this way.<br><strong>C:</strong> Pull back via continuity (preimages of opens are open — Thm 4.8).<br><strong>D:</strong> These preimages cover $K$ since $\bigcup f^{-1}(V_\alpha)\supseteq K$.<br><strong>E:</strong> Apply compactness of $K$.<br><strong>A:</strong> Push forward — the corresponding original sets cover $f(K)$.<br><strong>F:</strong> Conclude.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card" id="ord4-2" data-answer="C,A,D,B,E">
+    <div class="drill-q"><span class="drill-tag ord">ORDER</span>Drag to arrange: prove the IVT — if $f:[a,b]\to\mathbb{R}$ is continuous and $f(a)&lt;0&lt;f(b)$, then $\exists\,x_0\in(a,b)$ with $f(x_0)=0$.</div>
+    <div class="ord-steps">
+      <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Let $x_0=\sup S$; since $S\neq\emptyset$ and $S$ is bounded above by $b$, $x_0$ exists in $\mathbb{R}$.</span></div>
+      <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>By continuity of $f$ at $x_0$ and the approximation property of $\sup$, show $f(x_0)\geq 0$ from the left and $f(x_0)\leq 0$ from the right. Hence $f(x_0)=0$.</span></div>
+      <div class="ord-step" data-label="C" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">C</span><span>Define $S=\{x\in[a,b]:f(x)<0\}$. Then $a\in S$, so $S\neq\emptyset$.</span></div>
+      <div class="ord-step" data-label="D" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">D</span><span>Verify $x_0\in(a,b)$: continuity at $a$ and $b$ and the signs of $f$ at endpoints force $x_0\neq a$ and $x_0\neq b$.</span></div>
+      <div class="ord-step" data-label="E" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">E</span><span>Therefore $x_0\in(a,b)$ satisfies $f(x_0)=0$. $\blacksquare$</span></div>
+    </div>
+    <button class="sol-btn check-btn" onclick="checkOrder('ord4-2')">Check My Order</button>
+    <div id="ord4-2-ans" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Correct order: C → A → D → B → E</div>
+        <div class="box-body"><strong>C:</strong> Define the candidate set $S$ — your $\sup$-based proof needs something to take the sup of.<br><strong>A:</strong> Apply the LUB axiom to get $x_0=\sup S\in\mathbb{R}$.<br><strong>D:</strong> Show $x_0$ is interior.<br><strong>B:</strong> Pin $f(x_0)=0$ by squeezing from both sides.<br><strong>E:</strong> Conclude.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">03</span> Multiple Choice</h2>
+
+  <div class="drill-card" id="mc4-1">
+    <div class="drill-q"><span class="drill-tag mc">MULTI</span>Prove $f(x)=2x+5$ is continuous at $p=3$. Which $\delta$ works for any $\varepsilon>0$?</div>
+    <div class="mc-opts">
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-1',this)"><span class="mc-lbl">A</span>$\delta=\varepsilon$</button>
+      <button class="mc-opt" data-correct="true" onclick="answerMC('mc4-1',this)"><span class="mc-lbl">B</span>$\delta=\varepsilon/2$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-1',this)"><span class="mc-lbl">C</span>$\delta=2\varepsilon$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-1',this)"><span class="mc-lbl">D</span>$\delta=\min(1,\varepsilon/2)$</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">B — $\delta=\varepsilon/2$</div><div class="box-body">$|2x+5-11|=2|x-3|$. We need $2|x-3|<\varepsilon$, so $|x-3|<\varepsilon/2$. The factor $2$ is constant, so no $\min$ trick is needed. (D adds a $\min(1,\cdot)$ only necessary when you have a factor like $|x+p|$ that grows with $x$.)</div></div></div>
+  </div>
+
+  <div class="drill-card" id="mc4-2">
+    <div class="drill-q"><span class="drill-tag mc">MULTI</span>Prove $f(x)=x^2$ is continuous at $p=3$. What is the correct $\delta$?</div>
+    <div class="mc-opts">
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-2',this)"><span class="mc-lbl">A</span>$\delta=\varepsilon/6$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-2',this)"><span class="mc-lbl">B</span>$\delta=\sqrt{\varepsilon}$</button>
+      <button class="mc-opt" data-correct="true" onclick="answerMC('mc4-2',this)"><span class="mc-lbl">C</span>$\delta=\min(1,\varepsilon/7)$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-2',this)"><span class="mc-lbl">D</span>$\delta=\varepsilon$</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">C — the min trick is required</div><div class="box-body">$|x^2-9|=|x-3|\cdot|x+3|$. The factor $|x+3|$ depends on $x$ — bound it first. Restrict $|x-3|<1$: then $|x|<4$, so $|x+3|<7$. Thus $|x^2-9|\leq 7|x-3|$. Taking $\delta=\min(1,\varepsilon/7)$ enforces both the bounding step and the final $\varepsilon$ condition. This is the standard template for polynomials.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="mc4-3">
+    <div class="drill-q"><span class="drill-tag mc">MULTI</span>$f:[0,1]\to\mathbb{R}$ is continuous with $f(0)=-2$, $f(1)=3$. Which theorem gives $\exists\,c$ with $f(c)=0$?</div>
+    <div class="mc-opts">
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-3',this)"><span class="mc-lbl">A</span>Extreme Value Theorem</button>
+      <button class="mc-opt" data-correct="true" onclick="answerMC('mc4-3',this)"><span class="mc-lbl">B</span>Intermediate Value Theorem</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-3',this)"><span class="mc-lbl">C</span>Uniform Continuity Theorem (Thm 4.19)</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-3',this)"><span class="mc-lbl">D</span>Heine-Borel</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">B — IVT (Rudin §4.23)</div><div class="box-body">$f(0)=-2<0<3=f(1)$, so $0$ is between the endpoint values. IVT says every intermediate value is attained. EVT tells you the max and min are attained — useful for bounding $f$, but not for hitting a specific intermediate value.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="mc4-4">
+    <div class="drill-q"><span class="drill-tag mc">MULTI</span>To disprove $\lim_{x\to 0}f(x)=L$ using the sequential criterion, you exhibit:</div>
+    <div class="mc-opts">
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-4',this)"><span class="mc-lbl">A</span>A sequence $x_n\to 0$ with $f(x_n)\not\to L$ for this specific $L$</button>
+      <button class="mc-opt" data-correct="true" onclick="answerMC('mc4-4',this)"><span class="mc-lbl">B</span>Two sequences $x_n,y_n\to 0$ along which $f$ approaches two different values</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-4',this)"><span class="mc-lbl">C</span>A sequence $x_n\to 0$ along which $|f(x_n)|\to\infty$</button>
+      <button class="mc-opt" data-correct="false" onclick="answerMC('mc4-4',this)"><span class="mc-lbl">D</span>An $\varepsilon$-$\delta$ argument showing no $\delta$ works</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">B — disprove existence of any limit</div><div class="box-body">A shows the limit is not this specific $L$, but doesn't rule out a different limit. B shows no $L$ can work: the two sequences give conflicting requirements. This is the standard technique for $\sin(1/x)$.</div></div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch4b);">04</span> PS6 &amp; PS7 Problems</h2>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Problem</span>Analyze where each function is continuous: $f(x)=|x|$; $g(x)=0$ on $\mathbb{Q}$, $g(x)=x$ on $\mathbb{R}\setminus\mathbb{Q}$; $h(x)=|x|/x$; the metric $d:X\times X\to\mathbb{R}$; the Cantor function; the popcorn function. <span class="ps-tag">PS6 Ex.8</span></div>
+    <button class="sol-btn" onclick="toggleSol('sa')">show solution</button>
+    <div id="sa" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">1. $|x|$ — continuous everywhere</div><div class="box-body">$||x|-|p||\leq|x-p|$, so $\delta=\varepsilon$ works. Lipschitz with constant $1$.</div></div>
+      <div class="thm"><div class="box-label">2. $g$ — continuous only at $x=0$</div><div class="box-body">At $0$: $|g(x)|\leq|x|<\varepsilon$ whenever $|x|<\varepsilon$. At $p\neq 0$: approach along rationals ($g\to 0$) and irrationals ($g\to p\neq 0$). Sequential criterion fails.</div></div>
+      <div class="thm"><div class="box-label">3. $h=\text{sgn}(x)$ — continuous on $\mathbb{R}\setminus\{0\}$, jump at $0$</div><div class="box-body">Constant ($\pm 1$) on each half-line. At $0$: $h(0^+)=1\neq-1=h(0^-)$. Jump discontinuity of size $2$.</div></div>
+      <div class="thm"><div class="box-label">4. Metric $d$ — continuous everywhere on $X\times X$</div><div class="box-body">$|d(x,y)-d(p,q)|\leq d(x,p)+d(y,q)$ by the triangle inequality. Take $\delta=\varepsilon/2$ in each coordinate.</div></div>
+      <div class="thm"><div class="box-label">5. Cantor function — continuous everywhere on $[0,1]$</div><div class="box-body">Monotone increasing, constant on each middle-thirds interval. One-sided limits exist everywhere (monotone). One shows $c(x^+)=c(x^-)$ at every point, so no discontinuities. Uniformly continuous on $[0,1]$ yet $c'=0$ a.e.</div></div>
+      <div class="thm"><div class="box-label">6. Popcorn function — continuous at irrationals, discontinuous at rationals</div><div class="box-body">At irrational $t$: for given $\varepsilon$, only finitely many rationals $m/q$ have $1/q\geq\varepsilon$. Choose $\delta$ avoiding them. At rational $r$: approach along irrationals $x_n\to r$ — $p(x_n)=0\not\to p(r)=1/q>0$.</div></div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Problem</span>Show $f(x)=x^2$ is continuous but not uniformly continuous on $\mathbb{R}_{\geq 0}$. Show $g(x)=\sqrt{x}$ is uniformly continuous but not Lipschitz on $\mathbb{R}_{\geq 0}$. <span class="ps-tag">PS7 Ex.1</span></div>
+    <button class="sol-btn" onclick="toggleSol('sb')">show solution</button>
+    <div id="sb" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">$f=x^2$: continuous</div><div class="box-body">$|x^2-p^2|=|x-p||x+p|$. Near $p$: if $|x-p|<1$ then $|x+p|<2p+1$. Take $\delta=\min(1,\varepsilon/(2p+1))$. This $\delta$ depends on $p$.</div></div>
+      <div class="warn"><div class="box-label">$f=x^2$: NOT uniformly continuous</div><div class="box-body">Take $x_n=n$, $y_n=n+1/(2n)$. Then $|x_n-y_n|=1/(2n)\to 0$. But $|x_n^2-y_n^2|=|x_n-y_n||x_n+y_n|=\frac{1}{2n}(2n+\frac{1}{2n})\to 1\neq 0$. No single $\delta$ handles all $n$.</div></div>
+      <div class="thm"><div class="box-label">$g=\sqrt{x}$: uniformly continuous</div><div class="box-body">For $x,y\geq 0$: $|\sqrt{x}-\sqrt{y}|\leq\sqrt{|x-y|}$. Set $\delta=\varepsilon^2$. Then $|x-y|<\delta\Rightarrow|\sqrt{x}-\sqrt{y}|\leq\sqrt{|x-y|}<\varepsilon$. One $\delta$ works everywhere.</div></div>
+      <div class="warn"><div class="box-label">$g=\sqrt{x}$: NOT Lipschitz at $0$</div><div class="box-body">If $|\sqrt{x}-0|\leq L|x-0|$ for all $x>0$, then $1/\sqrt{x}\leq L$ for all $x>0$. But $1/\sqrt{x}\to\infty$ as $x\to 0^+$. No finite $L$ works. $\blacksquare$</div></div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Problem</span>Let $f:\mathbb{R}\to\mathbb{R}$ be monotonically increasing. Show that the set of discontinuities is at most countable. <span class="ps-tag">PS7 Ex.2</span></div>
+    <button class="sol-btn" onclick="toggleSol('sc')">show solution</button>
+    <div id="sc" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Proof</div>
+        <div class="box-body">Since $f$ is increasing, $f(x^-)=\sup_{t&lt;x}f(t)$ and $f(x^+)=\inf_{t&gt;x}f(t)$ exist for every $x$, with $f(x^-)\leq f(x)\leq f(x^+)$. The function is discontinuous at $x$ iff $J(x):=f(x^+)-f(x^-)>0$.<br><br>
+        For each discontinuity $x$, define $I_x=(f(x^-),f(x^+))$. <strong>Claim:</strong> if $x&lt;y$ are both discontinuities, then $I_x\cap I_y=\emptyset$. Indeed, since $f$ is increasing and $x&lt;y$, we have $f(x^+)\leq f(y^-)$, so $I_x$ lies entirely to the left of $I_y$.<br><br>
+        Each $I_x$ is a nonempty open interval, hence contains a rational $q_x\in\mathbb{Q}$. Since the $I_x$ are pairwise disjoint, $x\mapsto q_x$ is an injection into $\mathbb{Q}$. Since $\mathbb{Q}$ is countable, the set of discontinuities is countable. $\blacksquare$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Problem</span>Let $(X,d)$ be a metric space and $A\subseteq X$ path-connected. Show $A$ is connected. <span class="ps-tag">PS7 Ex.5</span></div>
+    <button class="sol-btn" onclick="toggleSol('sd')">show solution</button>
+    <div id="sd" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Proof</div>
+        <div class="box-body">Suppose for contradiction that $A$ is not connected. Then there exist open sets $U,V$ in $X$ such that $A\subseteq U\cup V$, $A\cap U\neq\emptyset$, $A\cap V\neq\emptyset$, and $U\cap V=\emptyset$.<br><br>
+        Pick $p\in A\cap U$ and $q\in A\cap V$. Since $A$ is path-connected, there exists a continuous $\gamma:[0,1]\to A$ with $\gamma(0)=p$ and $\gamma(1)=q$.<br><br>
+        Let $S=\gamma^{-1}(U\cap A)$ and $T=\gamma^{-1}(V\cap A)$. Since $U$ and $V$ are open, $S$ and $T$ are open in $[0,1]$ by continuity of $\gamma$. They are disjoint, their union is $[0,1]$, $0\in S$ and $1\in T$ so both are nonempty. This contradicts the connectedness of $[0,1]$. $\blacksquare$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">Problem</span>Show $T=\{(x,\sin(1/x)):x\in(0,1]\}\cup(\{0\}\times[-1,1])$ is connected but not path-connected. <span class="ps-tag">PS7 Ex.6</span></div>
+    <button class="sol-btn" onclick="toggleSol('se')">show solution</button>
+    <div id="se" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Part 1: $T$ is connected</div>
+        <div class="box-body">Let $S=\{(x,\sin(1/x)):x\in(0,1]\}$. The map $\phi(x)=(x,\sin(1/x))$ is continuous, and $(0,1]$ is connected, so $S$ is connected.<br><br>
+        Claim: $\{0\}\times[-1,1]\subseteq\overline{S}$. For any $c\in[-1,1]$, write $c=\sin\theta_0$ and set $x_n=1/(\theta_0+2\pi n)$. Then $(x_n,\sin(1/x_n))=(x_n,c)\to(0,c)$. So every point of $\{0\}\times[-1,1]$ is a limit of points of $S$.<br><br>
+        Thus $T\subseteq\overline{S}$ and $S\subseteq T$, so $T=\overline{S}$. The closure of a connected set is connected. $\blacksquare$</div>
+      </div>
+      <div class="warn"><div class="box-label">Part 2: $T$ is not path-connected</div>
+        <div class="box-body">Suppose $\gamma=(\gamma_1,\gamma_2):[0,1]\to T$ is continuous with $\gamma(0)=(0,0)$ and $\gamma(1)\in S$ (so $\gamma_1(1)>0$). Define $t_0=\sup\{t\in[0,1]:\gamma_1(t)=0\}$. By continuity, $\gamma_1(t_0)=0$. For all $t>t_0$, $\gamma_1(t)>0$, so $\gamma_2(t)=\sin(1/\gamma_1(t))$.<br><br>
+        As $t\to t_0^+$, $\gamma_1(t)\to 0^+$, so $1/\gamma_1(t)\to+\infty$. The function $\sin(1/\gamma_1(t))$ oscillates between $-1$ and $+1$ infinitely — so $\lim_{t\to t_0^+}\gamma_2(t)$ does not exist, contradicting continuity of $\gamma_2$ at $t_0$. $\blacksquare$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">R1</span>Let $f:\mathbb{R}\to\mathbb{R}$ be continuous with $f(x)=0$ for all $x\in\mathbb{Q}$. Show that $f\equiv 0$. <span class="rudin-tag">RUDIN</span></div>
+    <button class="sol-btn" onclick="toggleSol('sf')">show solution</button>
+    <div id="sf" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Proof</div>
+        <div class="box-body">Let $x\in\mathbb{R}$. Since $\mathbb{Q}$ is dense in $\mathbb{R}$, there exists a sequence of rationals $q_n\to x$. By hypothesis $f(q_n)=0$ for all $n$. By continuity of $f$ at $x$: $f(x)=\lim_{n\to\infty}f(q_n)=0$. Since $x$ was arbitrary, $f\equiv 0$. $\blacksquare$<br><br>
+        <strong>Remark:</strong> A continuous function is completely determined by its values on any dense subset.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card">
+    <div class="drill-q"><span class="hw-num">R2</span>Let $f:(a,b)\to\mathbb{R}$ be uniformly continuous. Show that $f$ is bounded. <span class="rudin-tag">RUDIN</span></div>
+    <button class="sol-btn" onclick="toggleSol('sh')">show solution</button>
+    <div id="sh" style="display:none;margin-top:12px;">
+      <div class="thm"><div class="box-label">Proof</div>
+        <div class="box-body">By uniform continuity with $\varepsilon=1$, there exists $\delta>0$ such that $|x-y|<\delta\Rightarrow|f(x)-f(y)|<1$.<br><br>
+        Cover $(a,b)$ by finitely many subintervals of length $\delta/2$. On each subinterval $(x_k,x_{k+1})$, any two points are within $\delta$ of each other, so $|f(x)-f(x_k)|<1$, giving $|f(x)|\leq|f(x_k)|+1$.<br><br>
+        Let $M=\max_k|f(x_k)|+1$. Then $|f(x)|\leq M$ for all $x\in(a,b)$, so $f$ is bounded. $\blacksquare$</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page 4 -->
+
+<script>
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+  updatePbar();
+}
+function updatePbar(){
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    var pct=h>0?(window.scrollY/h)*100:0;
+    document.getElementById('pf').style.width=pct+'%';
+  },{once:false});
+}
+document.addEventListener('scroll',function(){
+  var h=document.documentElement.scrollHeight-window.innerHeight;
+  var pct=h>0?(window.scrollY/h)*100:0;
+  document.getElementById('pf').style.width=pct+'%';
+});
+function toggleSol(id){
+  var el=document.getElementById(id);
+  var btn=el.previousElementSibling;
+  var hidden=el.style.display==='none'||el.style.display==='';
+  el.style.display=hidden?'block':'none';
+  btn.textContent=hidden?'hide solution':'show solution';
+}
+function answerTF(id,val){
+  var c=document.getElementById(id);
+  if(c.dataset.done)return;
+  c.dataset.done='1';
+  var ans=c.dataset.correct;
+  c.querySelectorAll('.tf-btn').forEach(function(b){
+    b.disabled=true;
+    if(b.dataset.val===ans)b.classList.add('correct');
+    else b.classList.add('wrong');
+  });
+  var e=c.querySelector('.drill-exp');
+  if(e)e.style.display='block';
+}
+function answerMC(id,el){
+  var c=document.getElementById(id);
+  if(c.dataset.done)return;
+  c.dataset.done='1';
+  c.querySelectorAll('.mc-opt').forEach(function(b){
+    b.disabled=true;
+    if(b.dataset.correct==='true')b.classList.add('correct');
+    else if(b===el)b.classList.add('wrong');
+  });
+  var e=c.querySelector('.drill-exp');
+  if(e)e.style.display='block';
+}
+
+/* ===== DRAG-AND-DROP ORDERING ===== */
+var _dragSrc=null,_touchDragEl=null,_touchClone=null,_touchOffX=0,_touchOffY=0;
+function dragStart(e){
+  var el=e.currentTarget;
+  if(el.classList.contains('correct-p')||el.classList.contains('wrong-p')){e.preventDefault();return;}
+  _dragSrc=el;e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','');
+  setTimeout(function(){el.classList.add('dragging');},0);
+}
+function dragEnd(e){
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+}
+function dragOver(e){
+  e.preventDefault();var t=e.currentTarget;
+  if(t!==_dragSrc)t.classList.add('drag-over');return false;
+}
+function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function drop(e){
+  e.stopPropagation();var t=e.currentTarget;
+  t.classList.remove('drag-over');
+  if(_dragSrc&&_dragSrc!==t&&_dragSrc.parentNode===t.parentNode){
+    var p=t.parentNode,si=Array.from(p.children).indexOf(_dragSrc),ti=Array.from(p.children).indexOf(t);
+    if(si<ti)p.insertBefore(_dragSrc,t.nextSibling);else p.insertBefore(_dragSrc,t);
+  }
+  return false;
+}
+function touchStart(e){
+  var el=e.currentTarget;
+  if(el.classList.contains('correct-p')||el.classList.contains('wrong-p'))return;
+  e.preventDefault();
+  _touchDragEl=el;
+  var r=el.getBoundingClientRect();
+  _touchOffX=e.touches[0].clientX-r.left;
+  _touchOffY=e.touches[0].clientY-r.top;
+  _touchClone=el.cloneNode(true);
+  ['ondragstart','ondragend','ondragover','ondragleave','ondrop','ontouchstart'].forEach(function(a){_touchClone.removeAttribute(a);});
+  _touchClone.style.cssText='position:fixed;width:'+r.width+'px;opacity:.72;z-index:9999;pointer-events:none;margin:0;border-radius:3px;box-shadow:0 6px 24px rgba(0,0,0,.5);left:'+(e.touches[0].clientX-_touchOffX)+'px;top:'+(e.touches[0].clientY-_touchOffY)+'px;';
+  document.body.appendChild(_touchClone);
+  el.classList.add('dragging');
+  document.body.style.overscrollBehavior='none';
+}
+/* touchmove and touchend registered at document level with passive:false
+   so e.preventDefault() reliably blocks iOS scroll/bounce during drag */
+document.addEventListener('touchmove',function(e){
+  if(!_touchDragEl)return;
+  e.preventDefault();
+  var tx=e.touches[0].clientX,ty=e.touches[0].clientY;
+  _touchClone.style.left=(tx-_touchOffX)+'px';
+  _touchClone.style.top=(ty-_touchOffY)+'px';
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+  _touchClone.style.display='none';
+  var hit=document.elementFromPoint(tx,ty);
+  _touchClone.style.display='';
+  var tgt=hit?hit.closest('.ord-step'):null;
+  if(tgt&&tgt!==_touchDragEl&&tgt.parentNode===_touchDragEl.parentNode)tgt.classList.add('drag-over');
+},{passive:false});
+document.addEventListener('touchend',function(e){
+  if(!_touchDragEl)return;
+  e.preventDefault();
+  var tx=e.changedTouches[0].clientX,ty=e.changedTouches[0].clientY;
+  _touchClone.style.display='none';
+  var hit=document.elementFromPoint(tx,ty);
+  document.body.removeChild(_touchClone);_touchClone=null;
+  _touchDragEl.classList.remove('dragging');
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+  var tgt=hit?hit.closest('.ord-step'):null;
+  if(tgt&&tgt!==_touchDragEl&&tgt.parentNode===_touchDragEl.parentNode){
+    var p=tgt.parentNode,si=Array.from(p.children).indexOf(_touchDragEl),ti=Array.from(p.children).indexOf(tgt);
+    if(si<ti)p.insertBefore(_touchDragEl,tgt.nextSibling);else p.insertBefore(_touchDragEl,tgt);
+  }
+  _touchDragEl=null;
+  document.body.style.overscrollBehavior='';
+},{passive:false});
+document.addEventListener('touchcancel',function(){
+  if(!_touchDragEl)return;
+  if(_touchClone&&_touchClone.parentNode)document.body.removeChild(_touchClone);
+  _touchClone=null;
+  if(_touchDragEl)_touchDragEl.classList.remove('dragging');
+  document.querySelectorAll('.ord-step').forEach(function(s){s.classList.remove('drag-over');});
+  _touchDragEl=null;
+  document.body.style.overscrollBehavior='';
+});
+function checkOrder(id){
+  var c=document.getElementById(id);
+  if(c.dataset.done)return;c.dataset.done='1';
+  var correct=c.dataset.answer.split(',');
+  var steps=c.querySelectorAll('.ord-steps .ord-step');
+  var ok=true;
+  steps.forEach(function(s,i){
+    s.removeAttribute('draggable');
+    if(s.dataset.label===correct[i])s.classList.add('correct-p');
+    else{s.classList.add('wrong-p');ok=false;}
+  });
+  var btn=c.querySelector('.check-btn');
+  if(btn){btn.disabled=true;btn.textContent=ok?'✓ Correct!':'✗ Not quite — answer revealed below';}
+  var ans=document.getElementById(id+'-ans');
+  if(ans)ans.style.display='block';
+}
+function initAll(){}
+</script>
+</body>
+</html>
