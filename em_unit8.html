@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>E&amp;M · Unit 8: B-Fields Due to Currents</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;700&display=swap');</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#09090f;--surf:#0f1018;--card:#13151e;--card2:#171923;
+  --border:#1e2130;--border2:#252840;
+  --accent:#a78bfa;--adim:#1e1a2e;
+  --blue:#6ee7b7;--bdim:#1a3a2e;
+  --amber:#fbbf24;--amdim:#2a1f08;
+  --rose:#fb7185;--rdim:#2a0f14;
+  --violet:#a78bfa;
+  --text:#e8ecf4;--text2:#9aa3b8;--muted:#4a5168;
+  --ok:#34d399;--err:#f87171;
+}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-size:16px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+.hdr{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surf);border-bottom:1px solid var(--border)}
+.hdr-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--bg);background:var(--accent);padding:4px 8px;border-radius:5px;flex-shrink:0}
+.hdr-title{font-size:13px;font-weight:700}
+.hdr-sub{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+.hdr-pts{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);background:var(--adim);border:1px solid #3a2a6a;padding:4px 10px;border-radius:20px;flex-shrink:0}
+.prog{flex-shrink:0;height:2px;background:var(--border)}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--blue));transition:width .5s ease;width:0%}
+.snav{flex-shrink:0;display:flex;gap:3px;padding:8px 12px;overflow-x:auto;scrollbar-width:none;background:var(--surf);border-bottom:1px solid var(--border)}
+.snav::-webkit-scrollbar{display:none}
+.stab{flex-shrink:0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted);font-family:'JetBrains Mono',monospace;transition:all .15s;white-space:nowrap}
+.stab:hover{color:var(--text);border-color:var(--accent)}
+.stab.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.scroll{flex:1;overflow-y:auto;padding:16px 14px 80px;-webkit-overflow-scrolling:touch}
+.inner{max-width:820px;margin:0 auto}
+.section{display:none}.section.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem}
+.card-title{font-size:1.1rem;font-weight:600;color:var(--accent);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.card-title .icon{font-size:1.2rem}
+.card p{color:var(--text2);margin-bottom:.6rem}
+.card p:last-child{margin-bottom:0}
+.box{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:1rem 1.2rem;margin:.75rem 0}
+.box.accent{border-color:var(--accent);background:var(--adim)}
+.box.blue{border-color:var(--blue);background:var(--bdim)}
+.box.rose{border-color:var(--rose);background:var(--rdim)}
+.box.amber{border-color:var(--amber);background:var(--amdim)}
+.eq{font-size:1.05rem;text-align:center;padding:.5rem 0;overflow-x:auto}
+.canvas-wrap{background:var(--card2);border:1px solid var(--border2);border-radius:10px;overflow:hidden;margin:1rem 0;position:relative}
+canvas{display:block;width:100%;height:auto}
+.canvas-label{position:absolute;top:.5rem;left:.75rem;font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em}
+.ctrl-row{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;padding:.75rem 1rem;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px}
+.ctrl-row label{font-size:.8rem;color:var(--text2);display:flex;flex-direction:column;gap:.25rem;flex:1;min-width:120px}
+.ctrl-row input[type=range]{accent-color:var(--accent);width:100%}
+.ctrl-row span{font-size:.75rem;color:var(--accent);font-family:'JetBrains Mono',monospace}
+.tbl{width:100%;border-collapse:collapse;font-size:.88rem;margin:.5rem 0}
+.tbl th{background:var(--card2);color:var(--text2);font-weight:500;padding:.5rem .75rem;text-align:left;border:1px solid var(--border)}
+.tbl td{padding:.5rem .75rem;border:1px solid var(--border);color:var(--text2)}
+.tbl tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.quiz-wrap{margin-top:1.5rem}
+.q-block{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1rem}
+.q-header{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1rem}
+.q-num{background:var(--adim);color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:.15rem .5rem;font-size:.75rem;font-weight:600;white-space:nowrap}
+.q-tag{background:var(--bdim);color:var(--blue);border:1px solid var(--blue);border-radius:6px;padding:.15rem .5rem;font-size:.7rem;font-weight:500;white-space:nowrap}
+.q-tag.hw{background:var(--rdim);color:var(--rose);border-color:var(--rose)}
+.q-text{color:var(--text);font-size:.95rem;line-height:1.6;flex:1}
+.opts{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem}
+.opt-btn{background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:.6rem .9rem;text-align:left;color:var(--text2);font-size:.88rem;cursor:pointer;transition:all .18s;line-height:1.4}
+.opt-btn:hover{border-color:var(--accent);color:var(--text)}
+.opt-btn.correct{background:#0d2818;border-color:var(--ok);color:var(--ok)}
+.opt-btn.wrong{background:#1e0d0d;border-color:var(--err);color:var(--err)}
+.opt-btn:disabled{cursor:default}
+.num-input-row{display:flex;gap:.5rem;align-items:center}
+.num-input-row input{background:var(--card2);border:1px solid var(--border2);border-radius:6px;padding:.5rem .75rem;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.9rem;width:160px}
+.num-input-row input:focus{outline:none;border-color:var(--accent)}
+.check-btn{background:var(--accent);color:#000;border:none;border-radius:6px;padding:.5rem 1rem;font-size:.85rem;font-weight:600;cursor:pointer}
+.check-btn:hover{filter:brightness(1.1)}
+.feedback{font-size:.85rem;padding:.6rem .9rem;border-radius:6px;margin-top:.5rem;display:none}
+.feedback.ok{background:#0d2818;color:var(--ok);border:1px solid var(--ok)}
+.feedback.err{background:#1e0d0d;color:var(--err);border:1px solid var(--err)}
+.hint-btn{background:none;border:1px solid var(--muted);color:var(--muted);border-radius:6px;padding:.3rem .7rem;font-size:.78rem;cursor:pointer;margin-top:.5rem}
+.hint-btn:hover{border-color:var(--text2);color:var(--text2)}
+.hint-text{font-size:.82rem;color:var(--text2);margin-top:.4rem;padding:.5rem .75rem;background:var(--card2);border-radius:6px;display:none}
+.score-ring-wrap{text-align:center;padding:1.5rem}
+.score-ring-wrap svg{overflow:visible}
+.score-label{font-family:'Crimson Pro',serif;font-size:1.8rem;fill:var(--text)}
+.score-sub{font-size:.85rem;fill:var(--text2)}
+.final-submit-btn{background:var(--accent);color:#000;border:none;border-radius:8px;padding:.7rem 2rem;font-size:1rem;font-weight:700;cursor:pointer;margin-top:1rem}
+.final-submit-btn:hover{filter:brightness(1.1)}
+.final-submit-btn:disabled{opacity:.5;cursor:default}
+.sec-header{margin-bottom:1.4rem}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.sec-title{font-family:'Crimson Pro',serif;font-size:26px;font-weight:600;line-height:1.15;margin-bottom:6px;color:var(--text)}
+.sec-sub{font-size:14px;color:var(--text2);font-weight:300}
+.prose{font-size:15px;line-height:1.8;color:var(--text2);font-weight:300;margin-bottom:14px}
+input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--border2);outline:none;flex:1}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer}
+.katex-display{margin:.3em 0}
+.hidden{display:none!important}
+.rhr-box{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap}
+.rhr-step{flex:1;min-width:140px;background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:.75rem;text-align:center}
+.rhr-step .num{font-size:1.4rem;color:var(--accent);font-weight:600}
+.rhr-step p{font-size:.82rem;color:var(--text2);margin-top:.25rem}
+ul.blist{padding-left:1.2rem;color:var(--text2);font-size:.92rem}
+ul.blist li{margin-bottom:.35rem}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:560px){.row2{grid-template-columns:1fr}}
+.steps{padding-left:0;list-style:none}
+.steps li{display:flex;gap:.5rem;margin-bottom:.5rem;align-items:flex-start}
+.snum{font-weight:600;background:var(--accent);color:#000;font-size:.75rem;padding:.1rem .45rem;border-radius:4px;flex-shrink:0;margin-top:.15rem}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-badge">E&amp;M</div>
+  <div>
+    <div class="hdr-title">Unit 8 · B-Fields Due to Currents</div>
+    <div class="hdr-sub">HALLIDAY &amp; RESNICK · CH. 29</div>
+  </div>
+  <div class="hdr-pts" id="scoreEl">0 pts</div>
+</div>
+<div class="prog"><div class="prog-fill" id="progFill"></div></div>
+
+<div class="snav" id="tabBar">
+  <button class="stab active" onclick="go(0)">1 · Biot-Savart</button>
+  <button class="stab" onclick="go(1)">2 · Wire Forces</button>
+  <button class="stab" onclick="go(2)">3 · Ampère's Law</button>
+  <button class="stab" onclick="go(3)">4 · Current Density</button>
+  <button class="stab" onclick="go(4)">5 · Solenoid &amp; Toroid</button>
+  <button class="stab" onclick="go(5)">6 · Dipole &amp; Quiz</button>
+</div>
+
+<div class="scroll"><div class="inner">
+
+<!-- ═══════════ SECTION 0 — BIOT-SAVART ═══════════ -->
+<div class="section active" id="sec0">
+  <div class="sec-header">
+    <div class="eyebrow">Unit 8 · Section 1</div>
+    <div class="sec-title">Biot-Savart Law</div>
+    <div class="sec-sub">The B-field equivalent of Coulomb's Law — integrating current elements</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🧲</span> The Big Picture</div>
+    <p>Just as $q \to \vec{E} \to \vec{F}_E$, we have $i \to \vec{B} \to \vec{F}_B$.</p>
+    <p>The Biot-Savart Law tells you the infinitesimal $d\vec{B}$ contributed by a tiny current element $i\,d\vec{s}$ at a field point P:</p>
+    <div class="box accent">
+      <div class="eq">$$d\vec{B}_P = \frac{\mu_0 i}{4\pi}\frac{d\vec{s}\times\hat{r}}{r^2}$$</div>
+    </div>
+    <div class="row2">
+      <div class="box">
+        <p style="color:var(--accent);font-weight:600;margin-bottom:.4rem">Variables</p>
+        <ul class="blist">
+          <li>$d\vec{s}$: vector along wire in direction of $i$</li>
+          <li>$\hat{r}$: unit vector pointing <em>from</em> $d\vec{s}$ <em>toward</em> P</li>
+          <li>$r$: distance from $d\vec{s}$ to P</li>
+          <li>$\mu_0 = 4\pi\times10^{-7}$ T·m/A</li>
+        </ul>
+      </div>
+      <div class="box">
+        <p style="color:var(--blue);font-weight:600;margin-bottom:.4rem">Direction via RHR</p>
+        <p style="font-size:.88rem">$d\vec{s}\times\hat{r}$ gives the direction of $d\vec{B}$. Use RHR on the cross product: fingers along $d\vec{s}$, curl toward $\hat{r}$, thumb → $d\vec{B}$.</p>
+        <p style="font-size:.88rem;margin-top:.5rem">$\vec{B} = \displaystyle\int d\vec{B}$ — superposition holds.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📏</span> Finite Wire → Infinite Wire</div>
+    <p>For a straight wire of length $L$, at perpendicular distance $R$ from a point P, integrating Biot-Savart gives:</p>
+    <div class="box">
+      <div class="eq">$$B = \frac{\mu_0 i}{2\pi R}\cdot\frac{L/2}{\sqrt{(L/2)^2 + R^2}} \quad \text{(finite wire, exact)}$$</div>
+    </div>
+    <p>Derivation trick: substitute $s = R\tan\alpha$, so $ds = R\,d\alpha/\cos^2\alpha$ and $(R^2+s^2)^{3/2} = R^3/\cos^3\alpha$. The integral becomes $\int\cos\alpha\,d\alpha = \sin\alpha$.</p>
+    <div class="box blue">
+      <p style="color:var(--blue);font-weight:600">Infinite wire limit: $L \to \infty$ (i.e. $L/2 \gg R$)</p>
+      <div class="eq">$$B = \frac{\mu_0 i}{2\pi R}$$</div>
+      <p style="font-size:.85rem">Direction: circles around the wire per RHR. Into the page on the right for $i$ pointing right.</p>
+    </div>
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Biot-Savart Simulator — finite wire</div>
+    <canvas id="c0" width="700" height="300"></canvas>
+  </div>
+  <div class="ctrl-row">
+    <label>Wire length L (m)
+      <input type="range" id="wireL" min="0.5" max="6" step="0.1" value="2">
+      <span id="wireLv">2.0</span>
+    </label>
+    <label>Current i (A)
+      <input type="range" id="wireI" min="1" max="20" step="1" value="5">
+      <span id="wireIv">5</span>
+    </label>
+    <label>Distance R (m)
+      <input type="range" id="wireR" min="0.2" max="2" step="0.05" value="0.5">
+      <span id="wireRv">0.50</span>
+    </label>
+  </div>
+
+  <div class="quiz-wrap" id="quiz0"></div>
+</div>
+
+<!-- ═══════════ SECTION 1 — WIRE FORCES ═══════════ -->
+<div class="section" id="sec1">
+  <div class="sec-header">
+    <div class="eyebrow">Unit 8 · Section 2</div>
+    <div class="sec-title">Forces on Current-Carrying Wires</div>
+    <div class="sec-sub">Parallel wires, the Newton's 3rd law pair, and the rail gun</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">⚡</span> Force on a Wire in a B-Field</div>
+    <p>A wire of length $L$ carrying current $i$ in a field $\vec{B}$:</p>
+    <div class="box accent">
+      <div class="eq">$$\vec{F} = i\vec{L}\times\vec{B}$$</div>
+    </div>
+    <p>$\vec{L}$ is the vector of length $L$ pointing in the direction of current flow.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🔗</span> Two Parallel Wires</div>
+    <p>Wire $a$ creates a B-field at wire $b$. If $d \ll L$ (wires behave as infinite):</p>
+    <div class="box">
+      <div class="eq">$$B_b = \frac{\mu_0 i_a}{2\pi d}$$</div>
+    </div>
+    <p>This field exerts a force on wire $b$:</p>
+    <div class="box accent">
+      <div class="eq">$$F_{ab} = i_b L B_b = \frac{\mu_0 i_a i_b L}{2\pi d}$$</div>
+    </div>
+    <div class="row2">
+      <div class="box blue">
+        <p style="color:var(--blue);font-weight:600">Parallel currents → Attract</p>
+        <p style="font-size:.85rem">RHR: wire $a$ creates $\vec{B}$ downward at $b$ (for $i_a$ rightward). $i_b\vec{L}\times\vec{B}$ points toward $a$.</p>
+      </div>
+      <div class="box rose">
+        <p style="color:var(--rose);font-weight:600">Antiparallel currents → Repel</p>
+        <p style="font-size:.85rem">$\vec{F}_{ba} = -\vec{F}_{ab}$ — Newton's 3rd Law. Magnitude same, direction opposite.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">💥</span> Rail Gun (Real Application)</div>
+    <p>Two parallel conducting rails carry current $i$. A conducting fuse/projectile bridges them (length $d$). The rail currents create a $\vec{B}$ field pointing downward at the fuse. Then:</p>
+    <div class="box amber">
+      <div class="eq">$$\vec{F}_B = i\,d\,(\hat{i}\times\vec{B}) \quad\text{— accelerates projectile out}$$</div>
+    </div>
+    <p>The fuse is Joule-heated until it becomes plasma (high conductivity). $id\vec{B}$ then launches the projectile at extreme velocity. This is a direct use of $\vec{F} = i\vec{L}\times\vec{B}$.</p>
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Two-Wire Force Simulator</div>
+    <canvas id="c1" width="700" height="300"></canvas>
+  </div>
+  <div class="ctrl-row">
+    <label>Current $i_a$ (A)
+      <input type="range" id="ia" min="1" max="20" step="1" value="8">
+      <span id="iav">8</span>
+    </label>
+    <label>Current $i_b$ (A)
+      <input type="range" id="ib" min="1" max="20" step="1" value="8">
+      <span id="ibv">8</span>
+    </label>
+    <label>Same direction?
+      <select id="sameDir" style="background:var(--card2);border:1px solid var(--border2);color:var(--text);border-radius:5px;padding:.3rem .5rem">
+        <option value="1">Yes — parallel (attract)</option>
+        <option value="-1">No — antiparallel (repel)</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="quiz-wrap" id="quiz1"></div>
+</div>
+
+<!-- ═══════════ SECTION 2 — AMPERE'S LAW ═══════════ -->
+<div class="section" id="sec2">
+  <div class="sec-header">
+    <div class="eyebrow">Unit 8 · Section 3</div>
+    <div class="sec-title">Ampère's Law</div>
+    <div class="sec-sub">The B-field analog of Gauss's Law — exploit symmetry to avoid Biot-Savart</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🔄</span> The Law</div>
+    <p>For any closed loop $C$:</p>
+    <div class="box accent">
+      <div class="eq">$$\oint_C \vec{B}\cdot d\vec{s} = \mu_0\, i_\text{enc}$$</div>
+    </div>
+    <p>$i_\text{enc}$ = net current passing through any surface bounded by $C$. We only evaluate $\vec{B}$ <em>on the loop we chose</em>.</p>
+    <div class="box blue">
+      <p style="color:var(--blue);font-weight:600;margin-bottom:.4rem">Finding $i_\text{enc}$ — sign convention (RHR)</p>
+      <ul class="blist">
+        <li>Pick a direction of integration around $C$ (show with arrows)</li>
+        <li>Run your 4 fingers of the right hand along the integration path</li>
+        <li>Your thumb points in the direction of <strong>positive</strong> current through $C$</li>
+        <li>Currents in the opposite direction count as <strong>negative</strong></li>
+        <li>Currents not passing through $C$ contribute <strong>zero</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🗺️</span> Strategy for Ampère's Law</div>
+    <ul class="steps">
+      <li><span class="snum">1</span><span style="color:var(--text2)">Figure out the direction of $\vec{B}$ from the current configuration using RHR</span></li>
+      <li><span class="snum">2</span><span style="color:var(--text2)">Pick a closed loop $C$ that is either parallel to $\vec{B}$ (so $\vec{B}\cdot d\vec{s} = B\,ds$), perpendicular (contributes 0), or where $B=0$</span></li>
+      <li><span class="snum">3</span><span style="color:var(--text2)">Calculate $i_\text{enc}$ using RHR to get signs right</span></li>
+      <li><span class="snum">4</span><span style="color:var(--text2)">Do the integral $\oint_C$ — usually just $B \times (\text{path length})$</span></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📐</span> Example: Long Straight Wire</div>
+    <p>$\vec{B}$ forms closed circles around the wire (RHR). Choose a circular Amperian loop of radius $r$:</p>
+    <div class="box">
+      <p style="color:var(--text2);font-size:.9rem">$\vec{B} \parallel d\vec{s}$ everywhere on the circle, and $B$ is constant → $\oint \vec{B}\cdot d\vec{s} = B \cdot 2\pi r$</p>
+      <div class="eq">$$B \cdot 2\pi r = \mu_0 i \implies B(r) = \frac{\mu_0 i}{2\pi r}$$</div>
+    </div>
+    <p>Same result as Biot-Savart for infinite wire — but derived in two lines instead of a full integral.</p>
+    <p>For two wires both inside loop: $i_\text{enc} = i_1 - i_2$ (if they go in opposite directions).</p>
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Amperian Loop Visualizer</div>
+    <canvas id="c2" width="700" height="300"></canvas>
+  </div>
+  <div class="ctrl-row">
+    <label>Loop radius r
+      <input type="range" id="loopR" min="0.3" max="3" step="0.05" value="1.2">
+      <span id="loopRv">1.20</span>
+    </label>
+    <label>Wire current i (A)
+      <input type="range" id="loopI" min="1" max="20" step="1" value="10">
+      <span id="loopIv">10</span>
+    </label>
+  </div>
+
+  <div class="quiz-wrap" id="quiz2"></div>
+</div>
+
+<!-- ═══════════ SECTION 3 — CURRENT DENSITY ═══════════ -->
+<div class="section" id="sec3">
+  <div class="sec-header">
+    <div class="eyebrow">Unit 8 · Section 4</div>
+    <div class="sec-title">Wire with Current Density $j(r)$</div>
+    <div class="sec-sub">B-field inside and outside a thick wire — the full B(r) profile</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🔬</span> Generalized Ampère's Law</div>
+    <p>When current is distributed (not a thin wire), $i_\text{enc}$ is found by integrating the current density $\vec{j}$:</p>
+    <div class="box accent">
+      <div class="eq">$$\oint_C \vec{B}\cdot d\vec{s} = \mu_0 \int_A \vec{j}\cdot\hat{n}\,dA$$</div>
+    </div>
+    <p>$A$ = cross-sectional area enclosed by loop $C$; $\hat{n}$ is defined by the same RHR.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> Uniform Current Density — Wire of Radius $R$</div>
+    <p>Total current $i$, uniform density $j = i/\pi R^2$.</p>
+    <div class="row2">
+      <div class="box blue">
+        <p style="color:var(--blue);font-weight:600;margin-bottom:.4rem">Inside: $r \leq R$</p>
+        <p style="font-size:.85rem">$i_\text{enc} = j\cdot\pi r^2 = i\cdot(r/R)^2$</p>
+        <div class="eq">$$B(r) = \frac{\mu_0 i}{2\pi R^2}\,r$$</div>
+        <p style="font-size:.82rem;color:var(--muted)">Grows linearly with $r$</p>
+      </div>
+      <div class="box rose">
+        <p style="color:var(--rose);font-weight:600;margin-bottom:.4rem">Outside: $r > R$</p>
+        <p style="font-size:.85rem">$i_\text{enc} = i$ (all current inside)</p>
+        <div class="eq">$$B(r) = \frac{\mu_0 i}{2\pi r}$$</div>
+        <p style="font-size:.82rem;color:var(--muted)">Falls off as $1/r$</p>
+      </div>
+    </div>
+    <div class="box amber">
+      <p style="color:var(--amber);font-weight:600">Key: at $r = R$ both expressions agree — $B$ is continuous</p>
+      <div class="eq">$$B(R) = \frac{\mu_0 i}{2\pi R}$$</div>
+    </div>
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">B(r) Profile — Interactive</div>
+    <canvas id="c3" width="700" height="300"></canvas>
+  </div>
+  <div class="ctrl-row">
+    <label>Wire radius R (cm)
+      <input type="range" id="wR" min="10" max="100" step="5" value="50">
+      <span id="wRv">50</span>
+    </label>
+    <label>Current i (A)
+      <input type="range" id="wI3" min="1" max="30" step="1" value="10">
+      <span id="wI3v">10</span>
+    </label>
+  </div>
+
+  <div class="quiz-wrap" id="quiz3"></div>
+</div>
+
+<!-- ═══════════ SECTION 4 — SOLENOID & TOROID ═══════════ -->
+<div class="section" id="sec4">
+  <div class="sec-header">
+    <div class="eyebrow">Unit 8 · Section 5</div>
+    <div class="sec-title">Solenoids &amp; Toroids</div>
+    <div class="sec-sub">Using Ampère's law on highly symmetric geometries</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🌀</span> Solenoid</div>
+    <p>A tightly wound coil (like a slinky) with $n$ turns per meter, current $i$. In the ideal limit (tight, long windings): $B$ is uniform inside, $B \approx 0$ outside.</p>
+    <p>Choose a rectangular Amperian loop with leg 3 inside (length $L$) and leg 1 outside:</p>
+    <ul class="blist">
+      <li>Leg 3 (inside): $\vec{B} \parallel d\vec{s}$ → contributes $BL$</li>
+      <li>Legs 2, 4: $\vec{B} \perp d\vec{s}$ → contribute 0</li>
+      <li>Leg 1 (outside): $B \approx 0$ → contributes 0</li>
+    </ul>
+    <div class="box accent">
+      <div class="eq">$$BL = \mu_0\,n\,i\,L \implies \boxed{B = \mu_0 n i} \quad\text{(ideal solenoid)}$$</div>
+    </div>
+    <p>$n$ = turns/meter. Note $B$ is <strong>independent of position inside</strong> — truly uniform.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🍩</span> Toroid</div>
+    <p>A solenoid bent into a closed donut. $N$ = total number of turns. $\vec{B}$ is circular and confined inside the donut.</p>
+    <p>Choose a circular Amperian loop of radius $r$ (inside toroid, $R_i &lt; r &lt; R_o$). Each of the $N$ turns penetrates the loop, so $i_\text{enc} = Ni$:</p>
+    <div class="box accent">
+      <div class="eq">$$B\cdot 2\pi r = \mu_0 N i \implies B(r) = \frac{\mu_0 N i}{2\pi r}$$</div>
+    </div>
+    <div class="row2">
+      <div class="box blue">
+        <p style="color:var(--blue);font-weight:600">vs. Solenoid</p>
+        <p style="font-size:.85rem">Solenoid: $B = \mu_0 n i$ — uniform inside</p>
+        <p style="font-size:.85rem">Toroid: $B(r) = \mu_0 Ni/2\pi r$ — varies with $r$</p>
+        <p style="font-size:.85rem">Note: solenoid $n$ = turns/m; toroid $N$ = total turns</p>
+      </div>
+      <div class="box rose">
+        <p style="color:var(--rose);font-weight:600">B limits in toroid</p>
+        <p style="font-size:.85rem">$B_\text{max} = \mu_0 N i / 2\pi R_i$ (inner radius)</p>
+        <p style="font-size:.85rem">$B_\text{min} = \mu_0 N i / 2\pi R_o$ (outer radius)</p>
+        <p style="font-size:.85rem">$B = 0$ outside the donut entirely</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Solenoid Cross-Section — B Field Lines</div>
+    <canvas id="c4" width="700" height="300"></canvas>
+  </div>
+  <div class="ctrl-row">
+    <label>Turns/m, $n$
+      <input type="range" id="sol_n" min="100" max="2000" step="100" value="800">
+      <span id="sol_nv">800</span>
+    </label>
+    <label>Current $i$ (A)
+      <input type="range" id="sol_i" min="0.5" max="10" step="0.5" value="3">
+      <span id="sol_iv">3.0</span>
+    </label>
+  </div>
+
+  <div class="quiz-wrap" id="quiz4"></div>
+</div>
+
+<!-- ═══════════ SECTION 5 — MAGNETIC DIPOLE + FINAL QUIZ ═══════════ -->
+<div class="section" id="sec5">
+  <div class="sec-header">
+    <div class="eyebrow">Unit 8 · Section 6</div>
+    <div class="sec-title">Current Loop as a Magnetic Dipole</div>
+    <div class="sec-sub">On-axis B-field, far-field limit, torque in external fields</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🎯</span> B on the Axis of a Current Loop</div>
+    <p>A circular loop of radius $R$, current $i$, centered at the origin in the $xy$-plane. The B-field along the $z$-axis:</p>
+    <div class="box accent">
+      <div class="eq">$$\vec{B}(z) = \frac{\mu_0 i R^2}{2(R^2+z^2)^{3/2}}\,\hat{z}$$</div>
+    </div>
+    <p>At the center ($z=0$): $B = \mu_0 i / 2R$. For $N$ loops: multiply by $N$.</p>
+    <div class="box blue">
+      <p style="color:var(--blue);font-weight:600">Far field: $z \gg R$</p>
+      <div class="eq">$$\vec{B}(z) \approx \frac{\mu_0}{2\pi}\frac{\vec{\mu}}{z^3} \quad\text{where}\quad \vec{\mu} = Ni\pi R^2\,\hat{z} = NiA\,\hat{z}$$</div>
+      <p style="font-size:.85rem">$\vec{\mu}$ is the magnetic dipole moment. Same $1/r^3$ fall-off as electric dipole, same field shape along the axis.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🔃</span> Torque &amp; Potential Energy in External $\vec{B}$</div>
+    <p>A current loop with dipole moment $\vec{\mu}$ in an external field $\vec{B}_\text{ext}$:</p>
+    <div class="row2">
+      <div class="box accent">
+        <p style="color:var(--accent);font-weight:600">Torque</p>
+        <div class="eq">$$\vec{\tau} = \vec{\mu}\times\vec{B}_\text{ext}$$</div>
+        <p style="font-size:.85rem">Coil rotates so $\vec{\mu}$ aligns with $\vec{B}_\text{ext}$ (stable equilibrium at $\theta=0$)</p>
+      </div>
+      <div class="box amber">
+        <p style="color:var(--amber);font-weight:600">Potential Energy</p>
+        <div class="eq">$$U = -\vec{\mu}\cdot\vec{B}_\text{ext} = -\mu B\cos\theta$$</div>
+        <p style="font-size:.85rem">Minimum at $\theta=0$ (aligned), maximum at $\theta=\pi$</p>
+      </div>
+    </div>
+    <div class="box">
+      <p style="color:var(--text2);font-size:.88rem">The current loop looks exactly like a bar magnet when viewed from far away along the axis — $\vec{\mu}$ points from S-pole to N-pole (inside the magnet convention).</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> Unit 8 — Master Reference</div>
+    <table class="tbl">
+      <thead><tr><th>Geometry</th><th>Formula</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr><td>Finite wire, distance $R$</td><td>$B = \dfrac{\mu_0 i}{2\pi R}\cdot\dfrac{L/2}{\sqrt{(L/2)^2+R^2}}$</td><td>Biot-Savart</td></tr>
+        <tr><td>Infinite wire, distance $r$</td><td>$B = \dfrac{\mu_0 i}{2\pi r}$</td><td>Either</td></tr>
+        <tr><td>Two parallel wires, force/length</td><td>$F/L = \dfrac{\mu_0 i_a i_b}{2\pi d}$</td><td>$F = iLB$</td></tr>
+        <tr><td>Thick wire inside ($r \leq R$)</td><td>$B = \dfrac{\mu_0 i}{2\pi R^2}\,r$</td><td>Ampère</td></tr>
+        <tr><td>Thick wire outside ($r > R$)</td><td>$B = \dfrac{\mu_0 i}{2\pi r}$</td><td>Ampère</td></tr>
+        <tr><td>Ideal solenoid</td><td>$B = \mu_0 n i$</td><td>Ampère</td></tr>
+        <tr><td>Toroid (inside)</td><td>$B = \dfrac{\mu_0 N i}{2\pi r}$</td><td>Ampère</td></tr>
+        <tr><td>Loop axis (exact)</td><td>$B = \dfrac{\mu_0 i R^2}{2(R^2+z^2)^{3/2}}$</td><td>Biot-Savart</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Magnetic Dipole — Torque Visualizer</div>
+    <canvas id="c5" width="700" height="280"></canvas>
+  </div>
+  <div class="ctrl-row">
+    <label>Angle $\theta$ (deg)
+      <input type="range" id="dipAng" min="0" max="360" step="1" value="30">
+      <span id="dipAngv">30°</span>
+    </label>
+    <label>$\mu B$ (strength)
+      <input type="range" id="dipMuB" min="0.5" max="3" step="0.1" value="1.5">
+      <span id="dipMuBv">1.5</span>
+    </label>
+  </div>
+
+  <div class="quiz-wrap" id="quiz5"></div>
+
+  <!-- Final Score Ring -->
+  <div id="finalScoreWrap" style="display:none">
+    <div class="score-ring-wrap">
+      <svg width="160" height="160" viewBox="0 0 160 160">
+        <circle cx="80" cy="80" r="65" fill="none" stroke="#1e2130" stroke-width="12"/>
+        <circle id="scoreArc" cx="80" cy="80" r="65" fill="none" stroke="#a78bfa" stroke-width="12"
+          stroke-dasharray="408.4" stroke-dashoffset="408.4"
+          stroke-linecap="round" transform="rotate(-90 80 80)"/>
+        <text id="scoreRingPct" x="80" y="86" text-anchor="middle" class="score-label">0%</text>
+        <text x="80" y="106" text-anchor="middle" class="score-sub">Unit 8 Score</text>
+      </svg>
+      <div style="margin-top:1rem;font-size:.95rem;color:var(--text2)" id="scoreSummary"></div>
+    </div>
+  </div>
+</div>
+
+</div></div><!-- end inner / scroll -->
+
+<script>
+// ── Section data ──────────────────────────────────────────────────────────────
+const sections = [
+  { questions: [
+    { type:'mc', text:'A long straight wire carries current to the right. At a point directly above the wire, in what direction does $\\vec{B}$ point?',
+      opts:['Into the page','Out of the page','Upward (away from wire)','Downward (toward wire)'], ans:0,
+      hint:'Use RHR on Biot-Savart: fingers point right (current), curl toward up (toward P), cross product $d\\vec{s}\\times\\hat{r}$ points into the page.'},
+    { type:'num', text:'An infinite wire carries $i = 8$ A. What is $B$ in μT at $R = 4$ cm? ($\\mu_0/2\\pi = 2\\times10^{-7}$ T·m/A)',
+      ans:40, tol:1,
+      hint:'$B = \\mu_0 i/2\\pi R = (2\\times10^{-7})(8)/(0.04)$ = 40 μT.'},
+    { type:'mc', text:'Which of these is the correct form of Biot-Savart for a current element?',
+      opts:['$d\\vec{B} = \\dfrac{\\mu_0 i}{4\\pi}\\dfrac{d\\vec{s}\\times\\hat{r}}{r^2}$','$d\\vec{B} = \\dfrac{\\mu_0 i}{2\\pi}\\dfrac{d\\vec{s}\\cdot\\hat{r}}{r^2}$','$d\\vec{B} = \\dfrac{\\mu_0 i}{4\\pi}\\dfrac{\\hat{r}\\times d\\vec{s}}{r^3}$','$d\\vec{B} = \\dfrac{\\mu_0 i}{4\\pi r}d\\vec{s}$'], ans:0,
+      hint:'It\'s a cross product $d\\vec{s}\\times\\hat{r}$ (not $\\hat{r}\\times d\\vec{s}$), divided by $r^2$, with $\\mu_0/4\\pi$ out front.'},
+  ]},
+  { questions: [
+    { type:'mc', text:'Two long parallel wires carry currents in the same direction. The force between them is:',
+      opts:['Attractive','Repulsive','Zero','Depends on wire length'], ans:0,
+      hint:'Wire $a$ creates a B-field whose direction at $b$ (from RHR) gives $i_b\\vec{L}\\times\\vec{B}$ pointing toward $a$. They attract.'},
+    { type:'num', text:'Two parallel wires 5 cm apart each carry 10 A in opposite directions. What is the force per unit length (in μN/m)? ($\\mu_0/2\\pi = 2\\times10^{-7}$)',
+      ans:40, tol:2,
+      hint:'$F/L = \\mu_0 i_a i_b/(2\\pi d) = (2\\times10^{-7})(10)(10)/(0.05) = 40$ μN/m. Force is repulsive for antiparallel.'},
+    { type:'mc', text:'In a rail gun, what provides the force to accelerate the projectile?',
+      opts:['$\\vec{F} = i\\vec{d}\\times\\vec{B}$, where $\\vec{B}$ is created by rail currents','The electric field between the rails','Gravity','Thermal expansion from Joule heating'], ans:0,
+      hint:'The rail currents create $\\vec{B}$ downward in the fuse region. Then $\\vec{F} = i d (\\hat{i}\\times\\vec{B})$ launches the fuse/projectile outward.'},
+  ]},
+  { questions: [
+    { type:'mc', text:'The sign of $i_\\text{enc}$ in Ampère\'s Law is determined by:',
+      opts:['The RHR: curl fingers along integration direction, thumb = positive current direction','Whichever direction gives a positive answer','The sign of the charge carriers','Always positive for enclosed currents'], ans:0,
+      hint:'Pick integration direction → RHR gives the positive current direction. Currents piercing in the opposite direction are negative.'},
+    { type:'num', text:'Use Ampère\'s Law to find $B$ (in μT) at $r = 2$ cm from an infinite wire carrying $i = 6$ A.',
+      ans:60, tol:2,
+      hint:'$\\oint \\vec{B}\\cdot d\\vec{s} = B\\cdot 2\\pi r = \\mu_0 i \\Rightarrow B = \\mu_0 i/2\\pi r = (2\\times10^{-7})(6)/(0.02) = 60$ μT.'},
+    { type:'mc', text:'A circular Amperian loop encloses two wires: $i_1 = 5$ A (into page) and $i_2 = 3$ A (out of page). With CCW integration, $i_\\text{enc}$ is:',
+      opts:['$-2$ A','$+2$ A','$+8$ A','$-8$ A'], ans:0,
+      hint:'CCW integration → RHR → thumb points out of page = positive. $i_2=+3$ A (out of page), $i_1=-5$ A (into page). $i_\\text{enc} = 3-5 = -2$ A.'},
+  ]},
+  { questions: [
+    { type:'mc', text:'For a thick cylindrical wire of radius $R$ with uniform current density, $B(r)$ for $r < R$ depends on $r$ as:',
+      opts:['$B \\propto r$','$B \\propto 1/r$','$B \\propto r^2$','$B$ is constant'], ans:0,
+      hint:'$i_\\text{enc} = j\\pi r^2 = i(r/R)^2$. Ampère: $B\\cdot 2\\pi r = \\mu_0 i(r/R)^2 \\Rightarrow B \\propto r$.'},
+    { type:'num', text:'A wire of radius 2 cm carries 12 A uniformly. What is $B$ (in μT) at $r = 1$ cm (inside)?',
+      ans:60, tol:2,
+      hint:'$B = \\mu_0 i r/(2\\pi R^2) = (2\\times10^{-7})(12)(0.01)/(0.02)^2 = 60$ μT.'},
+    { type:'mc', text:'At $r = R$ (the wire surface), the inside and outside expressions for $B$ give:',
+      opts:['The same value — $B$ is continuous','Different values — there is a jump in $B$','Zero, because the surface is a boundary','Depends on current density'], ans:0,
+      hint:'Inside: $B = \\mu_0 i R/(2\\pi R^2) = \\mu_0 i/(2\\pi R)$. Outside: $B = \\mu_0 i/(2\\pi R)$. Same — $B$ is continuous.'},
+  ]},
+  { questions: [
+    { type:'mc', text:'An ideal solenoid has $n = 1000$ turns/m and $i = 2$ A. $B$ inside is:',
+      opts:['$2.51$ mT','$1.26$ mT','$0.63$ mT','$5.03$ mT'], ans:0,
+      hint:'$B = \\mu_0 n i = (4\\pi\\times10^{-7})(1000)(2) \\approx 2.51$ mT.'},
+    { type:'mc', text:'A toroid has $N = 500$ turns, $i = 2$ A, inner radius $R_i = 5$ cm. $B_\\text{max}$ is:',
+      opts:['4.0 mT','2.0 mT','8.0 mT','1.0 mT'], ans:0,
+      hint:'$B_\\text{max} = \\mu_0 N i/(2\\pi R_i) = (4\\pi\\times10^{-7})(500)(2)/(2\\pi\\times0.05) = 4.0$ mT.'},
+    { type:'mc', text:'Why is $B \\approx 0$ outside an ideal solenoid?',
+      opts:['An Amperian loop outside encloses zero net current (equal + and − turns cancel)','The field lines terminate on the wire surface','$\\mu_0$ is too small to matter outside','The coil shields its own field'], ans:0,
+      hint:'For a loop outside: equal numbers of turns carry current in both directions through the loop → $i_\\text{enc} = 0 \\Rightarrow B = 0$.'},
+  ]},
+  { questions: [
+    { type:'mc', text:'A current loop with $\\vec{\\mu}$ pointing up is placed in $\\vec{B}_{\\text{ext}}$ pointing right. The torque $\\vec{\\tau} = \\vec{\\mu}\\times\\vec{B}$ points:',
+      opts:['Into the page','Out of the page','Downward','Upward'], ans:1,
+      hint:'$\\hat{z}\\times\\hat{x} = \\hat{y}$... wait: $\\vec{\\mu}=\\mu\\hat{z}$, $\\vec{B}=B\\hat{x}$. $\\vec{\\tau} = \\mu B(\\hat{z}\\times\\hat{x}) = \\mu B\\hat{y}$ = out of the page.'},
+    { type:'num', text:'A circular loop ($R = 5$ cm, $i = 3$ A) sits on axis at $z = 0$. $B$ at the center in μT is: ($\\mu_0 = 4\\pi\\times10^{-7}$)',
+      ans:37.7, tol:1,
+      hint:'$B = \\mu_0 i/2R = (4\\pi\\times10^{-7})(3)/(2\\times0.05) \\approx 37.7$ μT.'},
+    { type:'mc', text:'In the far field ($z \\gg R$), the on-axis B-field of a current loop falls off as:',
+      opts:['$1/z^3$','$1/z^2$','$1/z$','$1/z^4$'], ans:0,
+      hint:'$B(z) \\approx \\frac{\\mu_0}{2\\pi}\\frac{\\mu}{z^3}$ — same $1/r^3$ behavior as an electric dipole. This is the magnetic dipole far field.'},
+    { type:'mc', text:'Which of the following correctly states the stable equilibrium for $\\vec{\\mu}$ in $\\vec{B}_\\text{ext}$?',
+      opts:['$\\vec{\\mu}$ aligned with $\\vec{B}_\\text{ext}$ ($\\theta=0$, $U=-\\mu B$ minimum)','$\\vec{\\mu}$ anti-aligned ($\\theta=\\pi$, $U=+\\mu B$)','$\\vec{\\mu}$ perpendicular to $\\vec{B}_\\text{ext}$','No equilibrium exists'], ans:0,
+      hint:'$U = -\\vec{\\mu}\\cdot\\vec{B} = -\\mu B\\cos\\theta$. Minimum (most stable) when $\\theta=0$ → $U = -\\mu B$.'},
+  ]},
+];
+
+// ── Scoring ───────────────────────────────────────────────────────────────────
+let totalPts = 0, maxPts = 0;
+const answered = {};
+
+function addPts(key, pts, max) {
+  if (answered[key]) return;
+  answered[key] = true;
+  totalPts += pts; maxPts += max;
+  document.getElementById('scoreEl').textContent = totalPts + ' pts';
+  const pct = maxPts > 0 ? totalPts/maxPts : 0;
+  document.getElementById('progFill').style.width = (pct*100) + '%';
+}
+
+// ── Tab navigation ────────────────────────────────────────────────────────────
+let currentSec = 0;
+function go(n) {
+  document.querySelectorAll('.section').forEach((s,i) => s.classList.toggle('active', i===n));
+  document.querySelectorAll('.stab').forEach((t,i) => t.classList.toggle('active', i===n));
+  currentSec = n;
+  initInteractives(n);
+  document.querySelector('.scroll').scrollTop = 0;
+}
+
+// ── Quiz builder ──────────────────────────────────────────────────────────────
+function buildQuiz(containerId, questions, secKey) {
+  const el = document.getElementById(containerId);
+  if (!el || el.dataset.built) return;
+  el.dataset.built = '1';
+  let html = '<div class="quiz-wrap">';
+  questions.forEach((q, qi) => {
+    const key = secKey + '_q' + qi;
+    html += `<div class="q-block" id="qb_${key}">
+      <div class="q-header">
+        <span class="q-num">Q${qi+1}</span>
+        <span class="q-tag">${q.type === 'num' ? 'Numeric' : 'Concept'}</span>
+        <span class="q-text">${q.text}</span>
+      </div>`;
+    if (q.type === 'mc') {
+      html += '<div class="opts">';
+      q.opts.forEach((o, oi) => {
+        html += `<button class="opt-btn" onclick="checkMC('${key}',${oi},${q.ans})">${o}</button>`;
+      });
+      html += '</div>';
+    } else {
+      html += `<div class="num-input-row">
+        <input type="number" id="ni_${key}" placeholder="your answer" step="any">
+        <button class="check-btn" onclick="checkNum('${key}',${q.ans},${q.tol})">Check</button>
+      </div>
+      <div class="feedback" id="fb_${key}"></div>`;
+    }
+    if (q.hint) {
+      html += `<button class="hint-btn" onclick="toggleHint('${key}')">💡 Hint</button>
+      <div class="hint-text" id="ht_${key}">${q.hint}</div>`;
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+  if (window.renderMathInElement) {
+    renderMathInElement(el, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});
+  }
+}
+
+function checkMC(key, chosen, correct) {
+  const qb = document.getElementById('qb_' + key);
+  const btns = qb.querySelectorAll('.opt-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[chosen].classList.add(chosen === correct ? 'correct' : 'wrong');
+  if (chosen !== correct) btns[correct].classList.add('correct');
+  addPts(key, chosen === correct ? 10 : 0, 10);
+}
+
+function checkNum(key, correct, tol) {
+  const inp = document.getElementById('ni_' + key);
+  const fb = document.getElementById('fb_' + key);
+  const val = parseFloat(inp.value);
+  if (isNaN(val)) { fb.textContent = 'Enter a number.'; fb.className = 'feedback err'; fb.style.display='block'; return; }
+  const ok = Math.abs(val - correct) <= tol;
+  fb.textContent = ok ? '✓ Correct! (' + correct + ')' : '✗ Expected ≈ ' + correct + ' (±' + tol + ')';
+  fb.className = 'feedback ' + (ok ? 'ok' : 'err');
+  fb.style.display = 'block';
+  inp.disabled = true;
+  document.querySelector(`[onclick="checkNum('${key}',${correct},${tol})"]`).disabled = true;
+  addPts(key, ok ? 10 : 0, 10);
+}
+
+function toggleHint(key) {
+  const ht = document.getElementById('ht_' + key);
+  ht.style.display = ht.style.display === 'block' ? 'none' : 'block';
+}
+
+function renderMath() {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});
+  }
+}
+
+// ── Arrow helper ──────────────────────────────────────────────────────────────
+function drawArrow(ctx, x1, y1, x2, y2, color, label, lw) {
+  ctx.strokeStyle = color; ctx.lineWidth = lw || 2;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  const ang = Math.atan2(y2-y1,x2-x1), len=10;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-len*Math.cos(ang-0.4),y2-len*Math.sin(ang-0.4));
+  ctx.lineTo(x2-len*Math.cos(ang+0.4),y2-len*Math.sin(ang+0.4));
+  ctx.closePath(); ctx.fillStyle=color; ctx.fill();
+  if(label){ctx.fillStyle=color;ctx.font='italic 12px Outfit';ctx.fillText(label,x2+6,y2-4);}
+}
+
+// ── Section 0: Biot-Savart wire ───────────────────────────────────────────────
+let raf0;
+function initC0() {
+  const cv = document.getElementById('c0'); if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  cancelAnimationFrame(raf0);
+
+  const slL = document.getElementById('wireL');
+  const slI = document.getElementById('wireI');
+  const slR = document.getElementById('wireR');
+  [slL,slI,slR].forEach(s => s.addEventListener('input', draw0));
+
+  const MU0 = 4*Math.PI*1e-7;
+
+  function draw0() {
+    const L = parseFloat(slL.value);
+    const i = parseFloat(slI.value);
+    const R = parseFloat(slR.value);
+    document.getElementById('wireLv').textContent = L.toFixed(1);
+    document.getElementById('wireIv').textContent = i;
+    document.getElementById('wireRv').textContent = R.toFixed(2);
+
+    const B_finite = (MU0*i)/(2*Math.PI*R) * (L/2)/Math.sqrt((L/2)**2 + R**2);
+    const B_inf    = (MU0*i)/(2*Math.PI*R);
+    const B_uT_fin = (B_finite*1e6).toFixed(2);
+    const B_uT_inf = (B_inf*1e6).toFixed(2);
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#0f1018'; ctx.fillRect(0,0,W,H);
+
+    const wireY = H/2, wireX1=60, wireX2=W-60;
+    const Px = W/2, Py = wireY - 90; // point P above wire
+
+    // Wire
+    ctx.strokeStyle='#fbbf24'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.moveTo(wireX1,wireY); ctx.lineTo(wireX2,wireY); ctx.stroke();
+    // Current arrow
+    drawArrow(ctx, wireX1+20, wireY, wireX1+80, wireY, '#fbbf24', 'i →', 2);
+
+    // Wire endpoints label
+    ctx.fillStyle='#4a5168'; ctx.font='11px JetBrains Mono, monospace';
+    ctx.fillText('-L/2', wireX1-10, wireY+18);
+    ctx.fillText('+L/2', wireX2-14, wireY+18);
+
+    // Distance R line
+    ctx.strokeStyle='rgba(167,139,250,0.4)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(Px, wireY); ctx.lineTo(Px, Py+6); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#a78bfa'; ctx.font='12px Outfit';
+    ctx.fillText('R = '+R.toFixed(2)+'m', Px+8, wireY - 40);
+
+    // Point P
+    ctx.beginPath(); ctx.arc(Px, Py, 7, 0, Math.PI*2);
+    ctx.fillStyle='#fb7185'; ctx.fill();
+    ctx.fillStyle='#fb7185'; ctx.font='bold 13px Outfit';
+    ctx.fillText('P', Px+10, Py+4);
+
+    // B-field direction (into page = ⊗ for wire going right and P above)
+    ctx.fillStyle='#6ee7b7'; ctx.font='bold 20px Outfit';
+    ctx.fillText('⊗', Px-10, Py-22);
+    ctx.fillStyle='#6ee7b7'; ctx.font='11px Outfit';
+    ctx.fillText('B (into page)', Px-35, Py-38);
+
+    // dS × r̂ hint
+    ctx.fillStyle='#4a5168'; ctx.font='11px JetBrains Mono, monospace';
+    ctx.fillText('d\u20D1s × r̂ = into page at P by RHR', wireX1, H-14);
+
+    // B values
+    ctx.fillStyle='#e8ecf4'; ctx.font='bold 13px Outfit';
+    ctx.fillText('B (finite L='+L.toFixed(1)+'m) = '+B_uT_fin+' μT', 60, 28);
+    ctx.fillStyle='#9aa3b8'; ctx.font='12px Outfit';
+    ctx.fillText('B (infinite) = '+B_uT_inf+' μT', 60, 48);
+    ctx.fillStyle='#4a5168'; ctx.font='11px Outfit';
+    const pct = (B_finite/B_inf*100).toFixed(1);
+    ctx.fillText('finite/infinite = '+pct+'%', 60, 66);
+
+    // dB contributions: draw a few elements along the wire
+    const n_elem = 9;
+    for(let k=0; k<n_elem; k++){
+      const sx = wireX1 + (k+0.5)*(wireX2-wireX1)/n_elem;
+      const dx = Px - sx, dy = Py - wireY;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      const dB_rel = 1/(dist*dist) * 8;
+      const radius = Math.min(12, dB_rel*1200);
+      ctx.strokeStyle='rgba(110,231,183,0.5)'; ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.arc(sx, wireY+2, radius, 0, Math.PI*2);
+      ctx.stroke();
+    }
+  }
+  draw0();
+}
+
+// ── Section 1: Two-wire forces ────────────────────────────────────────────────
+let raf1;
+function initC1() {
+  const cv = document.getElementById('c1'); if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  cancelAnimationFrame(raf1);
+  let t1=0;
+
+  const slIa = document.getElementById('ia');
+  const slIb = document.getElementById('ib');
+  const selDir = document.getElementById('sameDir');
+  [slIa, slIb, selDir].forEach(s => s.addEventListener('input', ()=>{}));
+
+  function frame() {
+    t1 += 0.03;
+    const ia = parseFloat(slIa.value);
+    const ib = parseFloat(slIb.value);
+    const same = parseInt(selDir.value) > 0;
+    document.getElementById('iav').textContent = ia;
+    document.getElementById('ibv').textContent = ib;
+
+    const MU0 = 4*Math.PI*1e-7;
+    const d = 0.1; // 10 cm separation (display)
+    const L = 1.0;
+    const F = MU0*ia*ib*L/(2*Math.PI*d);
+    const F_uN = (F*1e6).toFixed(1);
+
+    ctx.clearRect(0,0,W,H); ctx.fillStyle='#0f1018'; ctx.fillRect(0,0,W,H);
+
+    const wAx=W/3, wBx=2*W/3, wY1=40, wY2=H-40;
+    const cx_mid = (wAx+wBx)/2;
+
+    // Wire A
+    ctx.strokeStyle='#6ee7b7'; ctx.lineWidth=6;
+    ctx.beginPath(); ctx.moveTo(wAx,wY1); ctx.lineTo(wAx,wY2); ctx.stroke();
+    ctx.fillStyle='#6ee7b7'; ctx.font='bold 13px Outfit';
+    ctx.textAlign='center';
+    ctx.fillText('Wire a', wAx, wY1-10);
+    ctx.fillText('i_a = '+ia+' A', wAx, wY2+18);
+    // Wire A current direction (always up = out of page at bottom)
+    ctx.fillStyle='#6ee7b7'; ctx.font='14px Outfit';
+    ctx.fillText('↑', wAx-5, H/2);
+
+    // Wire B
+    ctx.strokeStyle='#fb7185'; ctx.lineWidth=6;
+    ctx.beginPath(); ctx.moveTo(wBx,wY1); ctx.lineTo(wBx,wY2); ctx.stroke();
+    ctx.fillStyle='#fb7185'; ctx.font='bold 13px Outfit';
+    ctx.fillText('Wire b', wBx, wY1-10);
+    ctx.fillText('i_b = '+ib+' A', wBx, wY2+18);
+    ctx.fillStyle='#fb7185'; ctx.font='14px Outfit';
+    ctx.fillText(same ? '↑' : '↓', wBx-5, H/2);
+
+    // Distance label
+    ctx.strokeStyle='#252840'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(wAx,H/2); ctx.lineTo(wBx,H/2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#4a5168'; ctx.font='11px JetBrains Mono, monospace'; ctx.textAlign='center';
+    ctx.fillText('d = 10 cm', cx_mid, H/2-8);
+
+    // Force arrows
+    const fScale = Math.min(60, F*1e6*1.5);
+    const forceColor = same ? '#34d399' : '#f87171';
+    const arrowDirA = same ? +1 : -1; // toward B if same, away if different
+    const arrowDirB = same ? -1 : +1;
+
+    const bounce = Math.sin(t1)*3; // subtle animation
+    // Arrow on wire A
+    const ax1=wAx, ax2=wAx+arrowDirA*(fScale+bounce);
+    drawArrow(ctx, ax1, H/2-15, ax2, H/2-15, forceColor, '', 3);
+    // Arrow on wire B
+    const bx1=wBx, bx2=wBx+arrowDirB*(fScale+bounce);
+    drawArrow(ctx, bx1, H/2+15, bx2, H/2+15, forceColor, '', 3);
+
+    // Labels
+    ctx.fillStyle=forceColor; ctx.font='bold 13px Outfit'; ctx.textAlign='center';
+    ctx.fillText(same ? 'ATTRACT' : 'REPEL', cx_mid, 26);
+    ctx.fillStyle='#e8ecf4'; ctx.font='12px Outfit';
+    ctx.fillText('F/L = μ₀ i_a i_b / 2πd = '+F_uN+' μN/m (L=1m shown)', cx_mid, H-6);
+    ctx.textAlign='left';
+
+    raf1 = requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+// ── Section 2: Ampere's Law loop ─────────────────────────────────────────────
+let raf2;
+function initC2() {
+  const cv = document.getElementById('c2'); if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  cancelAnimationFrame(raf2);
+  let t2=0;
+
+  const slLR = document.getElementById('loopR');
+  const slLI = document.getElementById('loopI');
+
+  function frame() {
+    t2 += 0.015;
+    const r_m = parseFloat(slLR.value);
+    const i   = parseFloat(slLI.value);
+    document.getElementById('loopRv').textContent = r_m.toFixed(2);
+    document.getElementById('loopIv').textContent = i;
+
+    const MU0=4*Math.PI*1e-7;
+    const B = MU0*i/(2*Math.PI*r_m);
+    const B_uT = (B*1e6).toFixed(2);
+
+    ctx.clearRect(0,0,W,H); ctx.fillStyle='#0f1018'; ctx.fillRect(0,0,W,H);
+
+    const cx=W/2, cy=H/2;
+    const maxR = Math.min(W,H)/2 - 20;
+    const r_px = Math.min(maxR, r_m * 80);
+
+    // Field lines (circles around wire, animated)
+    for(let rr=20; rr<maxR; rr+=28) {
+      const alpha = Math.max(0, 1 - rr/maxR);
+      ctx.strokeStyle = `rgba(110,231,183,${0.12+alpha*0.2})`;
+      ctx.lineWidth=1.5; ctx.setLineDash([3,6]);
+      ctx.beginPath(); ctx.arc(cx,cy,rr,0,Math.PI*2); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Animated loop arrows
+    const n_arrows = 8;
+    for(let k=0; k<n_arrows; k++){
+      const ang = (k/n_arrows)*Math.PI*2 + t2;
+      const ax = cx + r_px*Math.cos(ang), ay = cy + r_px*Math.sin(ang);
+      const tang = ang + Math.PI/2; // tangential
+      const dx=Math.cos(tang)*10, dy=Math.sin(tang)*10;
+      ctx.fillStyle='#a78bfa';
+      ctx.beginPath(); ctx.arc(ax,ay,3,0,Math.PI*2); ctx.fill();
+      drawArrow(ctx, ax-dx*0.7, ay-dy*0.7, ax+dx*0.7, ay+dy*0.7, '#a78bfa','',2);
+    }
+
+    // Amperian loop circle
+    ctx.strokeStyle='#a78bfa'; ctx.lineWidth=2.5; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(cx,cy,r_px,0,Math.PI*2); ctx.stroke();
+
+    // Wire cross-section (into page)
+    ctx.fillStyle='#fbbf24';
+    ctx.beginPath(); ctx.arc(cx,cy,10,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#0f1018'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(cx-6,cy-6); ctx.lineTo(cx+6,cy+6);
+    ctx.moveTo(cx+6,cy-6); ctx.lineTo(cx-6,cy+6); ctx.stroke();
+
+    // Labels
+    ctx.fillStyle='#fbbf24'; ctx.font='11px Outfit'; ctx.textAlign='center';
+    ctx.fillText('i = '+i+' A', cx, cy+22);
+    ctx.fillStyle='#a78bfa'; ctx.font='12px Outfit';
+    ctx.fillText('r = '+r_m.toFixed(2)+' m', cx+r_px/2+10, cy-r_px/2+10);
+
+    // Formula box
+    ctx.fillStyle='rgba(30,26,46,0.85)';
+    ctx.fillRect(8, 8, 300, 68); ctx.strokeStyle='#3a2a6a'; ctx.lineWidth=1;
+    ctx.strokeRect(8,8,300,68);
+    ctx.fillStyle='#e8ecf4'; ctx.font='bold 12px Outfit'; ctx.textAlign='left';
+    ctx.fillText('∮ B·ds = μ₀ i_enc', 18, 28);
+    ctx.fillText('B · 2πr = μ₀ · '+i+' A', 18, 46);
+    ctx.fillStyle='#6ee7b7'; ctx.font='bold 13px JetBrains Mono, monospace';
+    ctx.fillText('B = '+B_uT+' μT', 18, 66);
+
+    ctx.textAlign='left';
+    raf2 = requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+// ── Section 3: B(r) profile ───────────────────────────────────────────────────
+let raf3;
+function initC3() {
+  const cv = document.getElementById('c3'); if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  cancelAnimationFrame(raf3);
+
+  const slWR = document.getElementById('wR');
+  const slWI = document.getElementById('wI3');
+  [slWR, slWI].forEach(s => s.addEventListener('input', draw3));
+
+  const MU0=4*Math.PI*1e-7;
+
+  function draw3() {
+    const R_cm = parseFloat(slWR.value);
+    const R = R_cm/100;
+    const i = parseFloat(slWI.value);
+    document.getElementById('wRv').textContent = R_cm;
+    document.getElementById('wI3v').textContent = i;
+
+    const B_max = MU0*i/(2*Math.PI*R);
+
+    ctx.clearRect(0,0,W,H); ctx.fillStyle='#0f1018'; ctx.fillRect(0,0,W,H);
+
+    const pad={l:70,r:30,t:30,b:50};
+    const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+    const r_max_display = R*3.5;
+
+    // Axes
+    ctx.strokeStyle='#252840'; ctx.lineWidth=1.5;
+    ctx.beginPath();
+    ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,pad.t+ph);
+    ctx.lineTo(pad.l+pw,pad.t+ph); ctx.stroke();
+
+    // Axis labels
+    ctx.fillStyle='#4a5168'; ctx.font='11px JetBrains Mono, monospace'; ctx.textAlign='center';
+    ctx.fillText('0', pad.l, pad.t+ph+16);
+    ctx.fillText('R', pad.l+pw*(R/r_max_display), pad.t+ph+16);
+    ctx.fillText('2R', pad.l+pw*(2*R/r_max_display), pad.t+ph+16);
+    ctx.fillText('3R', pad.l+pw*(3*R/r_max_display), pad.t+ph+16);
+    ctx.fillText('r →', pad.l+pw, pad.t+ph+28);
+    ctx.fillStyle='#9aa3b8'; ctx.font='11px Outfit'; ctx.textAlign='right';
+    ctx.fillText('μ₀i/2πR', pad.l-6, pad.t+10);
+    ctx.fillText('B(r)', pad.l-6, pad.t+ph/2);
+
+    const r2y = (B) => pad.t + ph - (B/B_max)*ph*0.88;
+    const r2x = (r) => pad.l + (r/r_max_display)*pw;
+
+    // Vertical dashed line at R
+    ctx.strokeStyle='rgba(251,191,36,0.3)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(r2x(R),pad.t); ctx.lineTo(r2x(R),pad.t+ph); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Inside curve: B ∝ r  (blue)
+    ctx.strokeStyle='#6ee7b7'; ctx.lineWidth=3;
+    ctx.beginPath();
+    for(let k=0; k<=100; k++){
+      const r = (k/100)*R;
+      const B = MU0*i/(2*Math.PI*R*R)*r;
+      if(k===0) ctx.moveTo(r2x(r),r2y(B)); else ctx.lineTo(r2x(r),r2y(B));
+    }
+    ctx.stroke();
+
+    // Outside curve: B ∝ 1/r  (rose)
+    ctx.strokeStyle='#fb7185'; ctx.lineWidth=3;
+    ctx.beginPath();
+    for(let k=0; k<=200; k++){
+      const r = R + (k/200)*(r_max_display-R);
+      const B = MU0*i/(2*Math.PI*r);
+      if(k===0) ctx.moveTo(r2x(r),r2y(B)); else ctx.lineTo(r2x(r),r2y(B));
+    }
+    ctx.stroke();
+
+    // Junction dot
+    ctx.beginPath(); ctx.arc(r2x(R),r2y(B_max),6,0,Math.PI*2);
+    ctx.fillStyle='#fbbf24'; ctx.fill();
+
+    // Labels
+    ctx.fillStyle='#6ee7b7'; ctx.font='12px Outfit'; ctx.textAlign='left';
+    ctx.fillText('B ∝ r (inside)', r2x(R*0.1), r2y(B_max*0.6));
+    ctx.fillStyle='#fb7185';
+    ctx.fillText('B ∝ 1/r (outside)', r2x(R*1.3), r2y(B_max*0.6));
+    ctx.fillStyle='#fbbf24'; ctx.font='11px Outfit';
+    ctx.fillText('B continuous at r=R', r2x(R)+5, r2y(B_max)-12);
+    ctx.fillStyle='#e8ecf4'; ctx.font='bold 12px JetBrains Mono, monospace';
+    ctx.fillText('B_max = '+(B_max*1e6).toFixed(1)+' μT  |  R='+R_cm+'cm  |  i='+i+'A', pad.l, pad.t+ph+42);
+    ctx.textAlign='left';
+  }
+  draw3();
+}
+
+// ── Section 4: Solenoid ───────────────────────────────────────────────────────
+let raf4;
+function initC4() {
+  const cv = document.getElementById('c4'); if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  cancelAnimationFrame(raf4);
+  let t4=0;
+
+  function frame() {
+    t4 += 0.02;
+    const n  = parseFloat(document.getElementById('sol_n').value);
+    const si = parseFloat(document.getElementById('sol_i').value);
+    document.getElementById('sol_nv').textContent = n;
+    document.getElementById('sol_iv').textContent = si.toFixed(1);
+
+    const MU0=4*Math.PI*1e-7;
+    const B = MU0*n*si;
+    const B_mT = (B*1e3).toFixed(2);
+
+    ctx.clearRect(0,0,W,H); ctx.fillStyle='#0f1018'; ctx.fillRect(0,0,W,H);
+
+    const solenoidTop=80, solenoidBot=H-80, solenoidL=80, solenoidR=W-80;
+    const nTurns = 14;
+    const dx = (solenoidR-solenoidL)/nTurns;
+
+    // Draw solenoid coils
+    for(let k=0; k<nTurns; k++){
+      const x=solenoidL+k*dx;
+      // Top wire (current going into page on top → X)
+      ctx.fillStyle='#fbbf24';
+      ctx.beginPath(); ctx.arc(x+dx/2,solenoidTop,5,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='#0f1018'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(x+dx/2-3,solenoidTop-3); ctx.lineTo(x+dx/2+3,solenoidTop+3);
+      ctx.moveTo(x+dx/2+3,solenoidTop-3); ctx.lineTo(x+dx/2-3,solenoidTop+3); ctx.stroke();
+      // Bottom wire (out of page → dot)
+      ctx.fillStyle='#fbbf24';
+      ctx.beginPath(); ctx.arc(x+dx/2,solenoidBot,5,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#0f1018';
+      ctx.beginPath(); ctx.arc(x+dx/2,solenoidBot,2,0,Math.PI*2); ctx.fill();
+    }
+
+    // Uniform B-field inside (animated arrows)
+    const nLines = 5;
+    for(let row=0; row<nLines; row++){
+      const y = solenoidTop + (row+1)*(solenoidBot-solenoidTop)/(nLines+1);
+      const anim_offset = (t4 * 60) % (solenoidR-solenoidL);
+      for(let ax = solenoidL; ax < solenoidR; ax += 55) {
+        const bx = solenoidL + ((ax - solenoidL + anim_offset) % (solenoidR-solenoidL));
+        if(bx > solenoidR-20) continue;
+        drawArrow(ctx, bx, y, bx+40, y, 'rgba(110,231,183,0.7)', '', 2);
+      }
+    }
+
+    // Near-zero field outside (faint squiggles)
+    ctx.strokeStyle='rgba(110,231,183,0.08)'; ctx.lineWidth=1.5;
+    for(let x=solenoidL+20; x<solenoidR-20; x+=55){
+      ctx.beginPath();
+      ctx.moveTo(x, solenoidTop-20);
+      ctx.quadraticCurveTo(x+20, solenoidTop-35, x+40, solenoidTop-20);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x, solenoidBot+20);
+      ctx.quadraticCurveTo(x+20, solenoidBot+35, x+40, solenoidBot+20);
+      ctx.stroke();
+    }
+
+    // Labels
+    ctx.fillStyle='#6ee7b7'; ctx.font='11px Outfit'; ctx.textAlign='center';
+    ctx.fillText('B = μ₀ni (uniform inside)', W/2, solenoidTop+30);
+    ctx.fillStyle='#4a5168'; ctx.font='11px Outfit';
+    ctx.fillText('B ≈ 0 outside', W/2, 22);
+    ctx.fillStyle='rgba(30,26,46,0.9)'; ctx.textAlign='left';
+    ctx.fillRect(8,8,240,52); ctx.strokeStyle='#3a2a6a'; ctx.lineWidth=1; ctx.strokeRect(8,8,240,52);
+    ctx.fillStyle='#e8ecf4'; ctx.font='bold 12px JetBrains Mono, monospace';
+    ctx.fillText('B = μ₀ · n · i', 16,28);
+    ctx.fillText('  = '+B_mT+' mT', 16,46);
+
+    raf4 = requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+// ── Section 5: Magnetic dipole torque ────────────────────────────────────────
+let raf5, drag5=false;
+function initC5() {
+  const cv = document.getElementById('c5'); if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  cancelAnimationFrame(raf5);
+  let t5auto=0;
+
+  const slAng = document.getElementById('dipAng');
+  const slMuB = document.getElementById('dipMuB');
+  slAng.addEventListener('pointerdown',()=>drag5=true);
+  slAng.addEventListener('pointerup',()=>drag5=false);
+  [slAng,slMuB].forEach(s=>s.addEventListener('input',()=>{}));
+
+  function frame() {
+    if(!drag5){ t5auto+=0.007; slAng.value=Math.round(((t5auto*180/Math.PI)%360+360)%360); }
+    const theta_deg=parseFloat(slAng.value);
+    const muB=parseFloat(slMuB.value);
+    document.getElementById('dipAngv').textContent=theta_deg+'°';
+    document.getElementById('dipMuBv').textContent=muB.toFixed(1);
+
+    const theta=theta_deg*Math.PI/180;
+    const U=-muB*Math.cos(theta);
+    const tau=muB*Math.sin(theta);
+
+    ctx.clearRect(0,0,W,H); ctx.fillStyle='#0f1018'; ctx.fillRect(0,0,W,H);
+
+    // B_ext arrows (horizontal, right)
+    for(let y=30; y<H; y+=50){
+      drawArrow(ctx,20,y,70,y,'rgba(110,231,183,0.3)','',2);
+    }
+    ctx.fillStyle='rgba(110,231,183,0.5)'; ctx.font='11px JetBrains Mono, monospace';
+    ctx.fillText('B_ext →', 8, 18);
+
+    // U vs theta plot (right half)
+    const pad=40, plotX=W/2+20, plotW2=W/2-pad-20, plotH2=H-2*pad;
+    const cx5=plotX, cy5_zero=pad+plotH2/2;
+    ctx.strokeStyle='#252840'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(cx5,pad); ctx.lineTo(cx5,pad+plotH2);
+    ctx.moveTo(cx5,cy5_zero); ctx.lineTo(W-pad,cy5_zero); ctx.stroke();
+    ctx.fillStyle='#4a5168'; ctx.font='10px JetBrains Mono, monospace';
+    ctx.textAlign='center';
+    ctx.fillText('0', cx5, cy5_zero+12);
+    ctx.fillText('180°', cx5+plotW2*0.5, pad+plotH2+16);
+    ctx.fillText('360°', cx5+plotW2, pad+plotH2+16);
+    ctx.textAlign='right';
+    ctx.fillText('+μB', cx5-4, pad+14);
+    ctx.fillText('−μB', cx5-4, pad+plotH2-2);
+    ctx.textAlign='left';
+    const yAmp=Math.min(plotH2/2-6, muB*45);
+    ctx.beginPath(); ctx.strokeStyle='#f59e0b'; ctx.lineWidth=2.5;
+    for(let deg=0;deg<=360;deg++){
+      const x=cx5+(deg/360)*plotW2;
+      const u=-Math.cos(deg*Math.PI/180);
+      const y=cy5_zero-u*yAmp;
+      if(deg===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    ctx.fillStyle='#34d399'; ctx.font='9px Outfit';
+    ctx.fillText('stable',cx5+4,cy5_zero+13);
+    ctx.fillStyle='#f87171';
+    ctx.fillText('unstable',cx5+plotW2*0.5-15,cy5_zero-14);
+    const x_cur=cx5+(theta_deg/360)*plotW2;
+    const y_cur=cy5_zero-(-Math.cos(theta))*yAmp;
+    ctx.beginPath(); ctx.arc(x_cur,y_cur,7,0,Math.PI*2);
+    ctx.fillStyle='#fb7185'; ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+
+    // Dipole in left half
+    const dcx=W/4, dcy=H/2, dipLen=70;
+    const cos_t=Math.cos(theta), sin_t=Math.sin(theta);
+    // Coil ellipse
+    ctx.save();
+    ctx.translate(dcx,dcy); ctx.rotate(theta);
+    ctx.strokeStyle='#a78bfa'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.ellipse(0,0,dipLen,18,0,0,Math.PI*2); ctx.stroke();
+    ctx.restore();
+    // μ arrow
+    const mux=dcx+dipLen*0.9*cos_t, muy=dcy+dipLen*0.9*(-sin_t);
+    drawArrow(ctx,dcx,dcy,mux,muy,'#fb7185','μ',3);
+    // τ indicator
+    const tauDir=tau>0?1:-1;
+    const arcR=dipLen+20;
+    ctx.strokeStyle='#fbbf24'; ctx.lineWidth=2; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(dcx,dcy,arcR,theta-0.5*tauDir,theta+0.5*tauDir,tauDir<0);
+    ctx.stroke();
+
+    // Info
+    ctx.fillStyle='rgba(19,21,30,0.85)'; ctx.fillRect(8,H-56,280,48);
+    ctx.strokeStyle='#252840'; ctx.lineWidth=1; ctx.strokeRect(8,H-56,280,48);
+    ctx.fillStyle='#e8ecf4'; ctx.font='12px JetBrains Mono, monospace';
+    ctx.fillText('U = −μBcosθ = '+U.toFixed(2)+'·μB', 14,H-38);
+    ctx.fillText('τ = μBsinθ  = '+tau.toFixed(2)+'·μB', 14,H-18);
+
+    raf5=requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+// ── Init interactives ─────────────────────────────────────────────────────────
+function initInteractives(sec) {
+  switch(sec){
+    case 0: initC0(); buildQuiz('quiz0',sections[0].questions,'s0'); break;
+    case 1: initC1(); buildQuiz('quiz1',sections[1].questions,'s1'); break;
+    case 2: initC2(); buildQuiz('quiz2',sections[2].questions,'s2'); break;
+    case 3: initC3(); buildQuiz('quiz3',sections[3].questions,'s3'); break;
+    case 4: initC4(); buildQuiz('quiz4',sections[4].questions,'s4'); break;
+    case 5: initC5(); buildQuiz('quiz5',sections[5].questions,'s5'); break;
+  }
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  initInteractives(0);
+  renderMath();
+});
+</script>
+</body>
+</html>
