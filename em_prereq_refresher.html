@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E&amp;M — Units 1–4 Refresher</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']], tags: 'none' },
+  options: { skipHtmlTags: ['script','noscript','style','textarea'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  --bg: #09090f;
+  --surf: #0f1018;
+  --card: #13151e;
+  --border: #1e2130;
+  --border2: #252840;
+  --accent: #6ee7b7;
+  --adim: #0f2820;
+  --blue: #7ab3ff;
+  --bdim: #101e35;
+  --amber: #fbbf24;
+  --amdim: #221a06;
+  --rose: #fb7185;
+  --rdim: #250c12;
+  --violet: #a78bfa;
+  --vdim: #1a1030;
+  --text: #e8ecf4;
+  --text2: #9aa3b8;
+  --muted: #4a5168;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+/* HEADER */
+.page-header {
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 18px;
+  margin-bottom: 36px;
+}
+.page-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.page-title {
+  font-family: 'Crimson Pro', serif;
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.page-sub {
+  font-size: 13px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* TOC */
+.toc {
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 40px;
+}
+.toc-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.toc ol {
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.toc a {
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color .15s;
+}
+.toc a:hover { color: var(--accent); }
+.toc .toc-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-right: 4px;
+}
+
+/* SECTION */
+.section {
+  margin-bottom: 48px;
+  scroll-margin-top: 20px;
+}
+.section-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+.section-title {
+  font-family: 'Crimson Pro', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+/* PROSE */
+p {
+  font-size: 15px;
+  color: var(--text2);
+  font-weight: 300;
+  margin-bottom: 12px;
+}
+p:last-child { margin-bottom: 0; }
+strong { color: var(--text); font-weight: 600; }
+
+/* EQUATION BOX */
+.eq {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+}
+.eq-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.eq-body {
+  font-size: 15px;
+  color: var(--accent);
+  overflow-x: auto;
+}
+.eq-note {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.8;
+}
+
+/* CALLOUTS */
+.gotcha {
+  background: var(--rdim);
+  border: 1px solid #3a1020;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  font-size: 14px;
+  color: var(--rose);
+  line-height: 1.7;
+}
+.gotcha::before {
+  content: "Gotcha — ";
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.insight {
+  background: var(--adim);
+  border: 1px solid #1e4030;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  font-size: 14px;
+  color: var(--accent);
+  line-height: 1.7;
+}
+.insight::before {
+  content: "Key insight — ";
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.recall {
+  background: var(--bdim);
+  border: 1px solid #1e3050;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  font-size: 14px;
+  color: #90b8e8;
+  line-height: 1.7;
+}
+.recall::before {
+  content: "Recall — ";
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.note {
+  background: var(--amdim);
+  border: 1px solid #3a2808;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  font-size: 14px;
+  color: var(--amber);
+  line-height: 1.7;
+}
+.note::before {
+  content: "Note — ";
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* DIVIDER */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 40px 0;
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  padding: 7px 12px;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  border-bottom: 1px solid var(--border2);
+  font-family: 'JetBrains Mono', monospace;
+}
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+}
+tr:last-child td { border-bottom: none; }
+.hi { color: var(--accent); font-weight: 600; }
+
+/* FOOTER */
+.footer {
+  margin-top: 60px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-eyebrow">E&amp;M · Columbia Spring 2026 · Halliday &amp; Resnick</div>
+  <div class="page-title">Units 1–4 Refresher</div>
+  <div class="page-sub">Quick-skim before Unit 5 (Capacitance) — ~5 min read</div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <ol>
+    <li><a href="#efield"><span class="toc-num">01</span> The Electric Field</a></li>
+    <li><a href="#gauss"><span class="toc-num">02</span> Gauss's Law &amp; Gaussian Surfaces</a></li>
+    <li><a href="#potential"><span class="toc-num">03</span> Electric Potential</a></li>
+    <li><a href="#capacitance"><span class="toc-num">04</span> Capacitance</a></li>
+    <li><a href="#current"><span class="toc-num">05</span> Current &amp; Resistance</a></li>
+  </ol>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ 1. ELECTRIC FIELD -->
+<div class="section" id="efield">
+  <div class="section-eyebrow">Chapter 22 · H&amp;R §22.1–22.7</div>
+  <div class="section-title">The Electric Field</div>
+
+  <p>A charge $q$ creates an electric field at every point in surrounding space. Place a positive test charge $q_0$ at point $P$ and measure the force $\vec{F}$ it feels — the field there is defined as that force per unit test charge.</p>
+
+  <div class="eq">
+    <div class="eq-label">Definition of Electric Field</div>
+    <div class="eq-body">$$\vec{E} = \frac{\vec{F}}{q_0}$$</div>
+    <div class="eq-note">Units: N/C. Direction: same as force on a <em>positive</em> test charge.</div>
+  </div>
+
+  <p>For a single point charge $q$ at distance $r$:</p>
+
+  <div class="eq">
+    <div class="eq-label">Coulomb / Point-Charge Field</div>
+    <div class="eq-body">$$E = \frac{1}{4\pi\varepsilon_0}\frac{q}{r^2}, \qquad \vec{E} = \frac{1}{4\pi\varepsilon_0}\frac{q}{r^2}\hat{r}$$</div>
+    <div class="eq-note">$\hat{r}$ points away from $q$. If $q < 0$, $\vec{E}$ points toward $q$.
+$k = 1/4\pi\varepsilon_0 \approx 8.99\times10^9\ \text{N·m}^2/\text{C}^2$</div>
+  </div>
+
+  <div class="gotcha">The test charge $q_0$ must be small enough not to disturb the source charge distribution. $\vec{E}$ is a property of the source — it exists at $P$ regardless of whether anything is there to feel it.</div>
+
+  <p><strong>Superposition:</strong> fields from multiple charges add as vectors, not magnitudes. Always decompose into components before summing.</p>
+
+  <p><strong>Continuous charge distributions</strong> use charge densities: linear $\lambda$ (C/m), surface $\sigma$ (C/m²), volume $\rho$ (C/m³). Slice into $dq$ elements, write $d\vec{E}$, integrate — components often cancel by symmetry.</p>
+
+  <div class="eq">
+    <div class="eq-label">Key Results to Know</div>
+    <div class="eq-body">
+      $$E_\text{ring, axis} = \frac{qz}{4\pi\varepsilon_0(z^2+R^2)^{3/2}}$$
+      $$E_\text{disc, axis} = \frac{\sigma}{2\varepsilon_0}\!\left(1 - \frac{z}{\sqrt{z^2+R^2}}\right)$$
+      $$E_\text{infinite sheet} = \frac{\sigma}{2\varepsilon_0}$$
+    </div>
+    <div class="eq-note">Disc result → infinite sheet as $R\to\infty$ with $z$ finite.</div>
+  </div>
+
+  <p><strong>Electric dipole:</strong> two equal and opposite charges $\pm q$ separated by distance $d$. The dipole moment is $\vec{p} = q\vec{d}$ (points from $-$ to $+$, magnitude $p = qd$). On the dipole axis at large distance:</p>
+
+  <div class="eq">
+    <div class="eq-label">Dipole Field (far, on axis)</div>
+    <div class="eq-body">$$E \approx \frac{1}{2\pi\varepsilon_0}\frac{p}{z^3}$$</div>
+    <div class="eq-note">Falls off as $1/r^3$, faster than a monopole. Valid for $z \gg d$.</div>
+  </div>
+
+  <p><strong>Dipole in a uniform field:</strong> net force is zero, but there is a torque $\vec{\tau} = \vec{p}\times\vec{E}$ that tends to align $\vec{p}$ with $\vec{E}$. Potential energy of orientation: $U = -\vec{p}\cdot\vec{E}$.</p>
+
+  <div class="gotcha">Torque on a dipole is $pE\sin\theta$ — maximum when $\vec{p} \perp \vec{E}$, zero at both aligned ($\theta=0$, stable equilibrium) and anti-aligned ($\theta=\pi$, unstable equilibrium).</div>
+
+  <p><strong>Field lines:</strong> tangent to $\vec{E}$ at every point; density proportional to magnitude; originate on $+$, terminate on $-$.</p>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════════════════════════════════════ 2. GAUSS'S LAW -->
+<div class="section" id="gauss">
+  <div class="section-eyebrow">Chapter 23 · H&amp;R §23.1–23.4</div>
+  <div class="section-title">Gauss's Law &amp; Gaussian Surfaces</div>
+
+  <p><strong>Electric flux</strong> through a patch $dA$ is the component of $\vec{E}$ perpendicular to (i.e., piercing through) that patch times its area:</p>
+
+  <div class="eq">
+    <div class="eq-label">Electric Flux</div>
+    <div class="eq-body">$$\Phi = \oint \vec{E}\cdot d\vec{A}$$</div>
+    <div class="eq-note">The loop integral means over the entire closed surface. $d\vec{A}$ points outward by convention. Units: N·m²/C.</div>
+  </div>
+
+  <p>Only the component of $\vec{E}$ parallel to $d\vec{A}$ (perpendicular to the surface) contributes. A field line running parallel to the surface contributes zero flux through it.</p>
+
+  <div class="eq">
+    <div class="eq-label">Gauss's Law</div>
+    <div class="eq-body">$$\oint \vec{E}\cdot d\vec{A} = \frac{q_\text{enc}}{\varepsilon_0}$$</div>
+    <div class="eq-note">$q_\text{enc}$: algebraic sum of all charges inside the closed Gaussian surface. Outside charges contribute zero net flux.</div>
+  </div>
+
+  <div class="insight">Gauss's law is always true, but it is only <em>useful</em> for finding $\vec{E}$ when the charge distribution has enough symmetry to pull $E$ outside the integral. The three geometries: spherical, cylindrical, planar.</div>
+
+  <p><strong>Applying Gauss's law — the recipe:</strong></p>
+  <ol style="padding-left:20px; color:var(--text2); font-size:14px; line-height:2;">
+    <li>Identify the symmetry of the charge distribution.</li>
+    <li>Choose a Gaussian surface that matches that symmetry so $\vec{E}$ is constant in magnitude and either parallel or perpendicular to $d\vec{A}$ on every part of the surface.</li>
+    <li>Compute $\oint \vec{E}\cdot d\vec{A} = E \cdot A_\text{surface}$ (where $E$ is constant on the surface).</li>
+    <li>Set equal to $q_\text{enc}/\varepsilon_0$ and solve for $E$.</li>
+  </ol>
+
+  <table>
+    <thead>
+      <tr><th>Geometry</th><th>Surface</th><th>Result</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Point charge / sphere</td><td>Sphere of radius $r$</td><td class="hi">$E = \frac{q}{4\pi\varepsilon_0 r^2}$</td></tr>
+      <tr><td>Infinite line / cylinder</td><td>Coaxial cylinder, length $L$</td><td class="hi">$E = \frac{\lambda}{2\pi\varepsilon_0 r}$</td></tr>
+      <tr><td>Infinite plane</td><td>Pillbox straddling surface</td><td class="hi">$E = \frac{\sigma}{2\varepsilon_0}$ (each side)</td></tr>
+      <tr><td>Conducting surface</td><td>Pillbox, inner face inside conductor</td><td class="hi">$E = \frac{\sigma}{\varepsilon_0}$ (outside only)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="gotcha">The infinite line result falls off as $1/r$ (not $1/r^2$); the infinite plane result is <em>independent</em> of distance. Both of these are non-obvious and frequently confused. The planar case gives $\sigma/2\varepsilon_0$ per sheet; two opposing sheets (like a capacitor) give $\sigma/\varepsilon_0$ in the gap.</div>
+
+  <div class="recall">Conductors in electrostatic equilibrium: $\vec{E} = 0$ inside, any net charge resides entirely on the surface, and $\vec{E}$ just outside is perpendicular to the surface with magnitude $\sigma/\varepsilon_0$.</div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════════════════════════════════════ 3. ELECTRIC POTENTIAL -->
+<div class="section" id="potential">
+  <div class="section-eyebrow">Chapter 24 · H&amp;R §24.1–24.7</div>
+  <div class="section-title">Electric Potential</div>
+
+  <p>The electric force is conservative, so we can associate a potential energy $U$ with any configuration of charges. <strong>Electric potential $V$</strong> is potential energy per unit charge — a scalar field:</p>
+
+  <div class="eq">
+    <div class="eq-label">Definition</div>
+    <div class="eq-body">$$V = \frac{U}{q_0}, \qquad \Delta V = -\int_i^f \vec{E}\cdot d\vec{s}$$</div>
+    <div class="eq-note">Units: volt (V = J/C). Potential difference $\Delta V$ is what's physically meaningful; absolute $V$ requires a reference point (usually $V=0$ at $r\to\infty$).</div>
+  </div>
+
+  <div class="eq">
+    <div class="eq-label">Point Charge &amp; Superposition</div>
+    <div class="eq-body">$$V = \frac{1}{4\pi\varepsilon_0}\frac{q}{r}, \qquad V = \sum_i \frac{q_i}{4\pi\varepsilon_0 r_i}$$</div>
+    <div class="eq-note">Crucially, $V$ is a scalar — no vector components to worry about when summing contributions. This is often easier than finding $\vec{E}$ directly.</div>
+  </div>
+
+  <p><strong>Recovering $\vec{E}$ from $V$:</strong> the field points in the direction of steepest decrease of $V$:</p>
+
+  <div class="eq">
+    <div class="eq-label">Gradient Relation</div>
+    <div class="eq-body">$$\vec{E} = -\nabla V = -\left(\frac{\partial V}{\partial x}\hat{x} + \frac{\partial V}{\partial y}\hat{y} + \frac{\partial V}{\partial z}\hat{z}\right)$$</div>
+    <div class="eq-note">In 1D: $E_x = -dV/dx$. Equipotential surfaces are always perpendicular to field lines.</div>
+  </div>
+
+  <div class="insight">$V$ is often easier to compute from charge distributions than $\vec{E}$ because it's a scalar sum. Then differentiate to get $\vec{E}$ if needed.</div>
+
+  <p><strong>Work and energy:</strong> work done by the electric field moving charge $q$ from $i$ to $f$ is $W = q(V_i - V_f) = -q\,\Delta V$. The work done by an external agent is the negative of this: $W_\text{ext} = q\,\Delta V$.</p>
+
+  <p><strong>Potential due to a dipole</strong> at point $(r, \theta)$ from the dipole center (for $r \gg d$):</p>
+
+  <div class="eq">
+    <div class="eq-label">Dipole Potential (far field)</div>
+    <div class="eq-body">$$V = \frac{1}{4\pi\varepsilon_0}\frac{p\cos\theta}{r^2}$$</div>
+    <div class="eq-note">$\theta$ is angle from the dipole axis ($\vec{p}$ direction). Falls off as $1/r^2$, faster than a monopole ($1/r$).</div>
+  </div>
+
+  <div class="gotcha">Do not confuse $W = q\,\Delta V$ with $W = \Delta V$ alone. The sign is also crucial: moving a positive charge from high to low $V$ means the field does positive work (releases energy); moving against the field requires positive work input.</div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════════════════════════════════════ 4. CAPACITANCE -->
+<div class="section" id="capacitance">
+  <div class="section-eyebrow">Chapter 25 · H&amp;R §25.1–25.5</div>
+  <div class="section-title">Capacitance</div>
+
+  <p>A <strong>capacitor</strong> is any arrangement of two conductors carrying equal and opposite charges $\pm Q$. The potential difference $V$ between them is proportional to $Q$; the proportionality constant defines capacitance:</p>
+
+  <div class="eq">
+    <div class="eq-label">Definition of Capacitance</div>
+    <div class="eq-body">$$C = \frac{Q}{V}$$</div>
+    <div class="eq-note">Units: farad (F = C/V). $C$ depends only on geometry, not on $Q$ or $V$ individually. Larger $C$ means more charge stored per volt.</div>
+  </div>
+
+  <p>Common geometries (derived using Gauss's law to find $E$, then integrating to find $V$):</p>
+
+  <table>
+    <thead>
+      <tr><th>Type</th><th>Capacitance</th><th>Variables</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Parallel plate</td><td class="hi">$C = \varepsilon_0 A/d$</td><td>plate area $A$, separation $d$</td></tr>
+      <tr><td>Cylindrical</td><td class="hi">$C = 2\pi\varepsilon_0 L / \ln(b/a)$</td><td>length $L$, radii $a < b$</td></tr>
+      <tr><td>Spherical</td><td class="hi">$C = 4\pi\varepsilon_0 ab/(b-a)$</td><td>radii $a < b$</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Capacitors in combination:</strong></p>
+
+  <div class="eq">
+    <div class="eq-label">Parallel vs. Series</div>
+    <div class="eq-body">
+      $$C_\text{parallel} = \sum_i C_i$$
+      $$\frac{1}{C_\text{series}} = \sum_i \frac{1}{C_i}$$
+    </div>
+    <div class="eq-note">Parallel: same $V$, charges add. Series: same $Q$, voltages add. Series reduces total $C$; parallel increases it.</div>
+  </div>
+
+  <p><strong>Energy stored in a capacitor:</strong></p>
+
+  <div class="eq">
+    <div class="eq-label">Stored Energy</div>
+    <div class="eq-body">$$U = \frac{Q^2}{2C} = \frac{1}{2}CV^2 = \frac{1}{2}QV$$</div>
+    <div class="eq-note">All three forms are equivalent via $Q = CV$. The energy resides in the electric field between the plates.</div>
+  </div>
+
+  <p><strong>Energy density</strong> of the electric field (energy per unit volume in the gap):</p>
+
+  <div class="eq">
+    <div class="eq-label">Energy Density</div>
+    <div class="eq-body">$$u = \frac{1}{2}\varepsilon_0 E^2$$</div>
+    <div class="eq-note">This is a general result — not just for capacitors. Wherever there is an electric field, there is stored energy with this density.</div>
+  </div>
+
+  <p><strong>Dielectrics:</strong> inserting a dielectric (insulator) with dielectric constant $\kappa > 1$ between the plates replaces $\varepsilon_0$ with $\kappa\varepsilon_0$, multiplying $C$ by $\kappa$. The dielectric weakens $E$ inside by the same factor.</p>
+
+  <div class="gotcha">When a capacitor is disconnected from its battery, $Q$ is fixed — inserting a dielectric decreases $V$ and $U$. When connected to a battery, $V$ is fixed — inserting a dielectric increases $Q$ and $U$. The two scenarios behave oppositely.</div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════════════════════════════════════ 5. CURRENT & RESISTANCE -->
+<div class="section" id="current">
+  <div class="section-eyebrow">Chapter 26 · H&amp;R §26.1–26.5</div>
+  <div class="section-title">Current &amp; Resistance</div>
+
+  <p>When a potential difference is maintained across a conductor, charges flow. <strong>Current</strong> $i$ is the rate of charge flow:</p>
+
+  <div class="eq">
+    <div class="eq-label">Current</div>
+    <div class="eq-body">$$i = \frac{dq}{dt}$$</div>
+    <div class="eq-note">Units: ampere (A = C/s). By convention, current direction is the direction positive charge would flow (opposite to electron flow).</div>
+  </div>
+
+  <p><strong>Current density</strong> $\vec{J}$ is current per unit cross-sectional area, and it is related to the drift velocity of charge carriers:</p>
+
+  <div class="eq">
+    <div class="eq-label">Current Density &amp; Drift</div>
+    <div class="eq-body">$$J = \frac{i}{A}, \qquad \vec{J} = (ne)\vec{v}_d$$</div>
+    <div class="eq-note">$n$: number density of carriers, $e$: electron charge, $v_d$: drift speed (typically $\sim$mm/s, much slower than the signal speed).</div>
+  </div>
+
+  <p><strong>Resistance</strong> is the ratio of voltage across a device to current through it:</p>
+
+  <div class="eq">
+    <div class="eq-label">Ohm's Law</div>
+    <div class="eq-body">$$V = iR, \qquad R = \frac{\rho L}{A}$$</div>
+    <div class="eq-note">Units: ohm ($\Omega$ = V/A). $\rho$: resistivity (material property, units $\Omega$·m), $L$: length, $A$: cross-sectional area.</div>
+  </div>
+
+  <p><strong>Resistivity and temperature:</strong> for metals, $\rho$ increases with temperature: $\rho = \rho_0[1 + \alpha(T - T_0)]$ where $\alpha$ is the temperature coefficient of resistivity.</p>
+
+  <p><strong>Power dissipated</strong> in a resistor:</p>
+
+  <div class="eq">
+    <div class="eq-label">Power</div>
+    <div class="eq-body">$$P = iV = i^2 R = \frac{V^2}{R}$$</div>
+    <div class="eq-note">All three forms are equivalent via $V = iR$. Power is dissipated as heat (Joule heating).</div>
+  </div>
+
+  <div class="gotcha">Ohm's law ($V = iR$ with constant $R$) is a material-specific approximation, not a universal law. A device is "ohmic" only if $R$ is independent of $V$. Diodes, transistors, and many biological materials are not ohmic.</div>
+
+  <div class="recall">The distinction between EMF $\mathcal{E}$ and terminal voltage: a real battery has internal resistance $r$, so terminal voltage $V = \mathcal{E} - ir$ (less than EMF when current is flowing).</div>
+</div>
+
+<div class="divider"></div>
+
+<div class="footer">E&amp;M Units 1–4 · H&amp;R Chs. 22–26 · Generated April 2026</div>
+
+</body>
+</html>
