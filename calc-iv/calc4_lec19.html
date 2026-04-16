@@ -516,123 +516,162 @@ ul.notes li { margin-bottom: 4px; }
 <!-- ========================= HW 09 PRACTICE ========================= -->
 <div id="hw09" class="panel">
 
-  <div class="sec-title">HW09 — Due 2026-04-21</div>
-
+  <div class="sec-title">How to Use This Section</div>
   <div class="card">
-    <div class="card-title">Problems 1–3 — Cauchy-Riemann equations (from Lecture 18)</div>
-    <p>The first three HW09 problems cover the Cauchy-Riemann equations from Lecture 18. They build the foundational skill of translating between "$f$ is analytic" and the concrete partial-derivative conditions on $u$ and $v$. Read $f = u + iv$, compute all four partials, check $u_x = v_y$ and $u_y = -v_x$.</p>
+    <p style="color:var(--text2);font-size:14px;">Each problem includes background on the concept being tested, a step-by-step approach, and a hidden solution. Try the approach first before revealing the solution &mdash; these problems are entirely mechanical once you know the checklist, but the CIF problems specifically require careful setup before any computation begins.</p>
   </div>
 
   <!-- PROBLEM 1 -->
+  <div class="sec-title">Problem 1 &mdash; Checking CR Equations for Two Functions</div>
   <div class="card">
-    <div style="display:flex;align-items:center;margin-bottom:10px;">
-      <span class="hw-number">P1</span>
-      <span style="font-weight:600;font-size:14px;">Check Cauchy-Riemann for two functions</span>
-      <button class="collapse-btn" onclick="toggleSol('p1sol')">show solution</button>
+    <div class="card-title"><span class="hw-number">1a</span>$f(z) = 4x^2 + 5x - 4y^2 + 9 + i(8xy + 5y - 1)$</div>
+    <p>The job here is to check whether this function is analytic. The CR equations give you a concrete test: write $f = u + iv$, compute all four first-order partials, and verify $u_x = v_y$ and $u_y = -v_x$. If both hold everywhere on an open set, $f$ is analytic there. If they only hold on a discrete set (like a single point or a line), $f$ is differentiable at those points but still not analytic. Read off $u$ and $v$ carefully &mdash; the real part is everything before the $i$, the imaginary part is everything inside the $i(\ldots)$.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Identify $u = 4x^2 + 5x - 4y^2 + 9$ and $v = 8xy + 5y - 1$.</p>
+      <p>2. Compute all four: $u_x$, $u_y$, $v_x$, $v_y$.</p>
+      <p>3. Check CR1: $u_x = v_y$. Check CR2: $u_y = -v_x$. (The minus sign in CR2 is where errors happen.)</p>
+      <p>4. State whether the equations hold everywhere, nowhere, or only on a subset.</p>
+      <p>5. If analytic, write $f'(z) = u_x + i\,v_x$ explicitly.</p>
     </div>
-    <p><strong>(a)</strong> $f(z) = 4x^2 + 5x - 4y^2 + 9 + i(8xy + 5y - 1)$. Does this satisfy the C-R equations?</p>
-    <p><strong>(b)</strong> $g(z) = x^3 + 3xy^2 - x + i(y^3 + 3x^2 y - y)$. Does this satisfy the C-R equations?</p>
-    <div class="collapse-body closed" id="p1sol">
-      <div class="box accent" style="margin-top:8px;">
-        <div class="box-label">Solution (a) — $f$ satisfies CR</div>
-        <p>Identify $u = 4x^2 + 5x - 4y^2 + 9$ and $v = 8xy + 5y - 1$. Compute:</p>
-        <p>$u_x = 8x + 5$, $\quad v_y = 8x + 5$ $\quad\Rightarrow u_x = v_y$ ✓</p>
-        <p>$u_y = -8y$, $\quad -v_x = -8y$ $\quad\Rightarrow u_y = -v_x$ ✓</p>
-        <p>Both CR equations hold everywhere, so $f$ is analytic on all of $\mathbb{C}$. Its derivative is $f'(z) = u_x + iv_x = (8x+5) + 8iy = 8(x+iy) + 5 = 8z + 5$.</p>
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
+        <div class="box-label">Solution &mdash; $f$ satisfies CR everywhere</div>
+        <p>$u = 4x^2 + 5x - 4y^2 + 9$, $\quad v = 8xy + 5y - 1$</p>
+        <p>$u_x = 8x + 5$, $\quad v_y = 8x + 5$ $\quad\Rightarrow$ CR1: $u_x = v_y$ &#10003; (holds everywhere)</p>
+        <p>$u_y = -8y$, $\quad -v_x = -(8y) = -8y$ $\quad\Rightarrow$ CR2: $u_y = -v_x$ &#10003; (holds everywhere)</p>
+        <p>Both equations hold for all $(x,y)$, so $f$ is analytic on all of $\mathbb{C}$ (entire).</p>
+        <p>Derivative: $f'(z) = u_x + iv_x = (8x+5) + i(8y) = 8(x+iy) + 5 = 8z + 5$.</p>
       </div>
-      <div class="box rose" style="margin-top:8px;">
-        <div class="box-label">Solution (b) — $g$ fails CR</div>
-        <p>Identify $u = x^3 + 3xy^2 - x$ and $v = y^3 + 3x^2y - y$. Compute:</p>
-        <p>$u_x = 3x^2 + 3y^2 - 1$, $\quad v_y = 3y^2 + 3x^2 - 1$ $\quad\Rightarrow u_x = v_y$ ✓</p>
-        <p>$u_y = 6xy$, $\quad -v_x = -6xy$ $\quad\Rightarrow u_y = -v_x$ requires $6xy = -6xy$, i.e., $12xy = 0$.</p>
-        <p>This only holds when $x = 0$ or $y = 0$, not everywhere. So $g$ is <strong>not</strong> analytic (except along the axes).</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="hw-number">1b</span>$g(z) = x^3 + 3xy^2 - x + i(y^3 + 3x^2y - y)$</div>
+    <p>This one looks symmetric and might feel like it should work &mdash; but pay careful attention to which cross-terms appear. Don't confuse this with $z^3$: recall $z^3 = (x^3 - 3xy^2) + i(3x^2y - y^3)$, which has <em>opposite</em> signs on the cubic cross-terms. Here the signs are different, and that difference is exactly what breaks CR. CR2 is the one to watch; the CR2 failure will only disappear on a subset, making the function not analytic anywhere.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Identify $u = x^3 + 3xy^2 - x$ and $v = y^3 + 3x^2y - y$.</p>
+      <p>2. Compute $u_x$, $u_y$, $v_x$, $v_y$ &mdash; all involve products of $x$ and $y$.</p>
+      <p>3. Check CR1 first &mdash; it may hold. Then check CR2: $u_y = -v_x$. Write out the equation it reduces to and ask: for what $(x,y)$ is this satisfied?</p>
+      <p>4. Conclude: if CR only holds on a line or discrete set, $g$ is not analytic anywhere.</p>
+    </div>
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
+        <div class="box-label">Solution &mdash; $g$ fails CR, not analytic</div>
+        <p>$u = x^3 + 3xy^2 - x$, $\quad v = y^3 + 3x^2y - y$</p>
+        <p>$u_x = 3x^2 + 3y^2 - 1$, $\quad v_y = 3y^2 + 3x^2 - 1$ $\quad\Rightarrow$ CR1: $u_x = v_y$ &#10003; (always equal)</p>
+        <p>$u_y = 6xy$, $\quad -v_x = -(6xy) = -6xy$ $\quad\Rightarrow$ CR2 requires $6xy = -6xy$, i.e. $12xy = 0$.</p>
+        <p>CR2 holds only when $x = 0$ or $y = 0$ &mdash; the coordinate axes. So $g$ is differentiable only at points on the axes, and is <strong>not analytic</strong> anywhere (analyticity requires differentiability on an open set; the axes have no interior).</p>
+        <p><em>Note:</em> This is not $z^3$. Recall $z^3 = (x^3 - 3xy^2) + i(3x^2y - y^3)$ &mdash; opposite signs on all cross-terms. Here the signs are flipped, breaking CR2.</p>
       </div>
     </div>
   </div>
 
   <!-- PROBLEM 2 -->
+  <div class="sec-title">Problem 2 &mdash; Finding Constants That Make $f$ Analytic</div>
   <div class="card">
-    <div style="display:flex;align-items:center;margin-bottom:10px;">
-      <span class="hw-number">P2</span>
-      <span style="font-weight:600;font-size:14px;">Find $a, b$ so that $f$ is complex differentiable</span>
-      <button class="collapse-btn" onclick="toggleSol('p2sol')">show solution</button>
+    <div class="card-title"><span class="hw-number">2</span>Find real constants $a$ and $b$ such that $f(z) = 3x - y + 5 + i(ax + by - 3)$ is complex differentiable.</div>
+    <p>This flips the usual CR check: instead of asking "do these fixed $u$ and $v$ satisfy CR?", you're asked "what must $a$ and $b$ be so that CR is satisfied?" The CR equations become two algebraic equations in $a$ and $b$. Since both equations are linear and the partials of this $u$ and $v$ are all constants, the system is immediate. The payoff: once you find $a$ and $b$, try to recognize $f(z)$ as a complex-linear function of $z$ to double-check your answer.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Read off $u = 3x - y + 5$ and $v = ax + by - 3$.</p>
+      <p>2. Compute $u_x$, $u_y$, $v_x$, $v_y$ &mdash; they will involve $a$ and $b$.</p>
+      <p>3. Set CR1 ($u_x = v_y$) to get one equation in $b$. Set CR2 ($u_y = -v_x$) to get one equation in $a$.</p>
+      <p>4. Solve each. Then sanity-check: write $f(z) = (3+i\cdot?)z + \text{const}$ to confirm it's a complex-linear map.</p>
     </div>
-    <p>Find real constants $a$ and $b$ such that $f(z) = 3x - y + 5 + i(ax + by - 3)$ is complex differentiable (analytic) on $\mathbb{C}$.</p>
-    <p>Here $u = 3x - y + 5$ and $v = ax + by - 3$.</p>
-    <div class="collapse-body closed" id="p2sol">
-      <div class="box accent" style="margin-top:8px;">
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
         <div class="box-label">Solution</div>
-        <p>Compute partials: $u_x = 3$, $u_y = -1$, $v_x = a$, $v_y = b$.</p>
-        <p>CR equations require:</p>
-        <p>$u_x = v_y \Rightarrow 3 = b$, so $b = 3$.</p>
-        <p>$u_y = -v_x \Rightarrow -1 = -a$, so $a = 1$.</p>
-        <p>With $a = 1$, $b = 3$: $f(z) = 3x - y + 5 + i(x + 3y - 3)$. Derivative: $f'(z) = u_x + iv_x = 3 + i$. This is constant, meaning $f$ is a complex-linear (affine) map — an $\mathbb{R}$-linear function that is also $\mathbb{C}$-linear.</p>
+        <p>$u = 3x - y + 5$, $\quad v = ax + by - 3$</p>
+        <p>Partials: $u_x = 3$, $u_y = -1$, $v_x = a$, $v_y = b$.</p>
+        <p>CR1: $u_x = v_y \Rightarrow 3 = b$. So $\boxed{b = 3}$.</p>
+        <p>CR2: $u_y = -v_x \Rightarrow -1 = -a$. So $\boxed{a = 1}$.</p>
+        <p>With $a=1$, $b=3$: $f(z) = 3x - y + 5 + i(x + 3y - 3)$. Sanity check: notice $(3+i)(x+iy) = 3x - y + i(x+3y)$, so $f(z) = (3+i)z + 5 - 3i$. This is a complex-linear map &mdash; consistent with being entire with constant derivative $f'(z) = 3 + i$.</p>
       </div>
     </div>
   </div>
 
   <!-- PROBLEM 3 -->
+  <div class="sec-title">Problem 3 &mdash; Proving $f$ Constant When Both $f$ and $\overline{f}$ Are Analytic</div>
   <div class="card">
-    <div style="display:flex;align-items:center;margin-bottom:10px;">
-      <span class="hw-number">P3</span>
-      <span style="font-weight:600;font-size:14px;">If $f$ and $\overline{f}$ are both analytic, then $f' = 0$</span>
-      <button class="collapse-btn" onclick="toggleSol('p3sol')">show solution</button>
+    <div class="card-title"><span class="hw-number">3</span>Show: if $f(z)$ and $\overline{f(z)}$ are both analytic on a domain $D$, then $f'(z) = 0$.</div>
+    <p>The key insight is that $\overline{f(z)} = u - iv$ is a different complex function from $f = u + iv$ &mdash; its imaginary part is $-v$, not $+v$. So you have <em>two</em> sets of CR equations: one for $f$ and one for $\overline{f}$. Each gives you relationships between $u_x$, $u_y$, $v_x$, $v_y$. When you use both sets simultaneously, the two systems overdetermine the partials and force all four to be zero. This is a proof problem &mdash; write it in clear logical steps: state the CR for $f$, state the CR for $\overline{f}$, combine, conclude.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Write the CR equations for $f = u + iv$: gives $u_x = v_y$ and $u_y = -v_x$. Call this system (I).</p>
+      <p>2. Write $\overline{f} = u + i(-v)$ &mdash; real part $u$, imaginary part $-v$. Write CR for $\overline{f}$: gives $u_x = -v_y$ and $u_y = v_x$. Call this system (II).</p>
+      <p>3. From (I) and (II): add the two $u_x$ equations to get $2u_x = 0$; add the two $u_y$ equations to get $2u_y = 0$. Then use CR to conclude $v_x = v_y = 0$ too.</p>
+      <p>4. State: all four partials vanish, so $f'(z) = u_x + iv_x = 0$.</p>
     </div>
-    <p>Let $f(z) = u + iv$ be a complex function. Suppose both $f(z)$ and $\overline{f(z)} = u - iv$ are analytic on a domain $D$. Show that $f'(z) = 0$ on $D$ (i.e., $f$ is constant).</p>
-    <div class="collapse-body closed" id="p3sol">
-      <div class="box accent" style="margin-top:8px;">
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
         <div class="box-label">Solution</div>
-        <p>Since $f = u + iv$ is analytic, the CR equations hold: $u_x = v_y$ and $u_y = -v_x$.</p>
-        <p>Since $\overline{f} = u - iv$ is analytic, apply CR to the function with real part $u$ and imaginary part $-v$: $u_x = (-v)_y = -v_y$ and $u_y = -(-v)_x = v_x$.</p>
-        <p>From the first CR system: $u_x = v_y$. From the second: $u_x = -v_y$. Adding: $2u_x = 0$, so $u_x = 0$. Then $v_y = u_x = 0$.</p>
-        <p>From the first CR system: $u_y = -v_x$. From the second: $u_y = v_x$. Adding: $2u_y = 0$, so $u_y = 0$. Then $v_x = -u_y = 0$.</p>
-        <p>All four partials vanish: $u_x = u_y = v_x = v_y = 0$. Therefore $f'(z) = u_x + iv_x = 0 + 0 = 0$. On a connected domain, $f' = 0$ implies $f$ is constant. $\square$</p>
+        <p>Write $f = u + iv$.</p>
+        <p><strong>CR for $f$:</strong> $u_x = v_y$ and $u_y = -v_x$ &emsp;...(I)</p>
+        <p>The function $\overline{f(z)} = u(x,y) - iv(x,y)$ has real part $U = u$ and imaginary part $V = -v$.</p>
+        <p><strong>CR for $\overline{f}$:</strong> $u_x = -v_y$ and $u_y = v_x$ &emsp;...(II)</p>
+        <p>From (I): $u_x = +v_y$. From (II): $u_x = -v_y$. Adding: $2u_x = 0 \Rightarrow u_x = 0$, hence $v_y = 0$.</p>
+        <p>From (I): $u_y = -v_x$. From (II): $u_y = +v_x$. Adding: $2u_y = 0 \Rightarrow u_y = 0$, hence $v_x = 0$.</p>
+        <p>All four partials vanish. Therefore $f'(z) = u_x + iv_x = 0$. On a connected domain, $f' \equiv 0$ implies $f$ is constant. $\blacksquare$</p>
       </div>
     </div>
   </div>
 
   <!-- PROBLEM 4 -->
+  <div class="sec-title">Problem 4 &mdash; Cauchy Integral Formula, Single Pole</div>
   <div class="card">
-    <div style="display:flex;align-items:center;margin-bottom:10px;">
-      <span class="hw-number">P4</span>
-      <span style="font-weight:600;font-size:14px;">Cauchy Integral Formula — single pole</span>
-      <button class="collapse-btn" onclick="toggleSol('p4sol')">show solution</button>
+    <div class="card-title"><span class="hw-number">4</span>$\displaystyle\oint_{|z|=2} \frac{\cos z}{3z - \pi}\,dz$</div>
+    <p>This is a direct application of the Cauchy Integral Formula. The denominator $3z - \pi$ has a single zero &mdash; that's your candidate pole. Before applying any formula, you must check that the pole is strictly inside the contour $|z| = 2$. After that, the only algebraic step is factoring out the coefficient of $z$ from the denominator so it reads as $(z - z_0)$ with a leading $1$ &mdash; a step that's easy to forget and will cost you a factor if you skip it.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Find the pole: set $3z - \pi = 0$, solve for $z_0$.</p>
+      <p>2. Check: is $|z_0| &lt; 2$? (Compute $|\pi/3| \approx 1.05$.) Yes &mdash; the pole is inside.</p>
+      <p>3. Factor the denominator: $3z - \pi = 3(z - \pi/3)$. Pull the $1/3$ out of the integral.</p>
+      <p>4. Identify $f(z) = \cos z$ (the remaining analytic factor after removing $1/(z-z_0)$).</p>
+      <p>5. Apply CIF: $\frac{1}{3} \cdot 2\pi i \cdot f(\pi/3)$. Recall $\cos(\pi/3) = 1/2$.</p>
     </div>
-    <p>Compute $\displaystyle\oint_{|z|=2} \frac{\cos z}{3z - \pi}\,dz$.</p>
-    <p>The contour is the circle $|z| = 2$, traversed counterclockwise. The integrand has a singularity where the denominator vanishes: $3z - \pi = 0 \Rightarrow z = \pi/3$.</p>
-    <div class="collapse-body closed" id="p4sol">
-      <div class="box accent" style="margin-top:8px;">
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
         <div class="box-label">Solution</div>
-        <p><strong>Step 1 — Check the pole location.</strong> Is $z_0 = \pi/3$ inside $|z| = 2$? Yes: $|\pi/3| \approx 1.047 &lt; 2$. ✓</p>
-        <p><strong>Step 2 — Factor to standard CIF form.</strong></p>
-        $$\frac{\cos z}{3z - \pi} = \frac{\cos z}{3(z - \pi/3)} = \frac{1}{3} \cdot \frac{\cos z}{z - \pi/3}$$
-        <p><strong>Step 3 — Apply CIF</strong> with $f(w) = \cos w$ (analytic everywhere) and $z_0 = \pi/3$:</p>
-        $$\oint_{|z|=2} \frac{\cos z}{3z-\pi}\,dz = \frac{1}{3}\oint_{|z|=2} \frac{\cos z}{z - \pi/3}\,dz = \frac{1}{3} \cdot 2\pi i \cdot \cos\!\left(\frac{\pi}{3}\right) = \frac{2\pi i}{3} \cdot \frac{1}{2} = \boxed{\dfrac{\pi i}{3}}$$
+        <p>Pole at $z_0 = \pi/3$. Check: $|\pi/3| \approx 1.047 &lt; 2$, so $z_0$ is inside $|z| = 2$. &#10003;</p>
+        <p>Factor: $3z - \pi = 3(z - \pi/3)$. So:</p>
+        $$\oint_{|z|=2} \frac{\cos z}{3z - \pi}\,dz = \frac{1}{3}\oint_{|z|=2} \frac{\cos z}{z - \pi/3}\,dz$$
+        <p>Apply CIF with $f(z) = \cos z$ (entire) and $z_0 = \pi/3$:</p>
+        $$= \frac{1}{3} \cdot 2\pi i \cdot \cos\!\left(\frac{\pi}{3}\right) = \frac{2\pi i}{3} \cdot \frac{1}{2} = \boxed{\frac{\pi i}{3}}$$
       </div>
     </div>
   </div>
 
   <!-- PROBLEM 5 -->
+  <div class="sec-title">Problem 5 &mdash; CIF with Two Candidate Poles, Only One Inside</div>
   <div class="card">
-    <div style="display:flex;align-items:center;margin-bottom:10px;">
-      <span class="hw-number">P5</span>
-      <span style="font-weight:600;font-size:14px;">CIF — identify which pole is inside</span>
-      <button class="collapse-btn" onclick="toggleSol('p5sol')">show solution</button>
+    <div class="card-title"><span class="hw-number">5</span>$\displaystyle\oint_{|z-2i|=2} \frac{\sin z}{z^2 + \pi^2}\,dz$</div>
+    <p>The denominator $z^2 + \pi^2$ factors over $\mathbb{C}$ into two linear factors, giving two candidate poles. The contour $|z - 2i| = 2$ is centered at $2i$ with radius $2$ &mdash; it's a circle in the upper half-plane. You need to check both poles: one will be strictly inside, one strictly outside. Only the one inside contributes. After identifying the active pole, the integral is just CIF &mdash; but the final step requires evaluating $\sin$ at a purely imaginary argument, which means converting to $\sinh$. That conversion is the detail that trips people up.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Factor: $z^2 + \pi^2 = (z - i\pi)(z + i\pi)$. Poles at $z = i\pi$ and $z = -i\pi$.</p>
+      <p>2. Check each pole against the contour (center $2i$, radius $2$):</p>
+      <p>&emsp;$|i\pi - 2i| = (\pi - 2)|i| = \pi - 2 \approx 1.14 &lt; 2$ &#10003; (inside)</p>
+      <p>&emsp;$|-i\pi - 2i| = (\pi + 2) \approx 5.14 &gt; 2$ &#10007; (outside)</p>
+      <p>3. Only $z_0 = i\pi$ is inside. Write integrand as $\dfrac{f(z)}{z - i\pi}$ where $f(z) = \dfrac{\sin z}{z + i\pi}$.</p>
+      <p>4. Verify $f$ is analytic inside (its only bad point, $-i\pi$, is outside the contour).</p>
+      <p>5. Apply CIF: $2\pi i \cdot f(i\pi)$. Then evaluate $\sin(i\pi)$ using $\sin(i\theta) = i\sinh(\theta)$.</p>
     </div>
-    <p>Compute $\displaystyle\oint_{|z-2i|=2} \frac{\sin z}{z^2 + \pi^2}\,dz$.</p>
-    <p>The contour is a circle of radius $2$ centered at $2i$. The denominator $z^2 + \pi^2 = (z - i\pi)(z + i\pi)$ has zeros at $z = i\pi$ and $z = -i\pi$.</p>
-    <div class="collapse-body closed" id="p5sol">
-      <div class="box accent" style="margin-top:8px;">
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
         <div class="box-label">Solution</div>
-        <p><strong>Step 1 — Check which poles are inside the contour.</strong></p>
-        <p>$|i\pi - 2i| = |\pi - 2| \cdot |i| = \pi - 2 \approx 1.14 &lt; 2$ — <strong>inside</strong> ✓</p>
-        <p>$|-i\pi - 2i| = |\pi + 2| \approx 5.14 &gt; 2$ — outside ✗</p>
-        <p><strong>Step 2 — Factor and apply CIF.</strong> Write $z^2 + \pi^2 = (z - i\pi)(z + i\pi)$, so:</p>
-        $$\frac{\sin z}{z^2+\pi^2} = \frac{\sin z / (z + i\pi)}{z - i\pi} = \frac{f(z)}{z - i\pi}, \quad f(z) = \frac{\sin z}{z + i\pi}$$
-        <p>Here $f(z)$ is analytic at $z = i\pi$ (the factor $z + i\pi$ is nonzero there: $i\pi + i\pi = 2i\pi \neq 0$). Apply CIF:</p>
-        $$\oint \frac{\sin z}{z^2+\pi^2}\,dz = 2\pi i \cdot f(i\pi) = 2\pi i \cdot \frac{\sin(i\pi)}{i\pi + i\pi} = 2\pi i \cdot \frac{\sin(i\pi)}{2i\pi}$$
-        <p><strong>Step 3 — Evaluate $\sin(i\pi)$.</strong> Recall $\sin(i\theta) = i\sinh(\theta)$ (from the definition $\sin z = (e^{iz} - e^{-iz})/2i$). So $\sin(i\pi) = i\sinh(\pi)$.</p>
-        $$= 2\pi i \cdot \frac{i\sinh(\pi)}{2i\pi} = 2\pi i \cdot \frac{\sinh(\pi)}{2\pi} = \boxed{i\sinh(\pi)}$$
+        <p>Factor: $z^2 + \pi^2 = (z - i\pi)(z + i\pi)$. Only $z_0 = i\pi$ is inside (distance to $2i$: $|i\pi - 2i| = \pi - 2 \approx 1.14 &lt; 2$).</p>
+        <p>Write $f(z) = \dfrac{\sin z}{z + i\pi}$, analytic at $z_0 = i\pi$ since $i\pi + i\pi = 2i\pi \neq 0$. Apply CIF:</p>
+        $$\oint \frac{\sin z}{z^2+\pi^2}\,dz = 2\pi i \cdot f(i\pi) = 2\pi i \cdot \frac{\sin(i\pi)}{2i\pi} = \sin(i\pi)$$
+        <p>Now $\sin(i\pi) = \dfrac{e^{i(i\pi)} - e^{-i(i\pi)}}{2i} = \dfrac{e^{-\pi} - e^{\pi}}{2i} = \dfrac{-(e^\pi - e^{-\pi})}{2i} \cdot \dfrac{i}{i} = \dfrac{i(e^\pi - e^{-\pi})}{2} = i\sinh(\pi)$.</p>
+        $$\boxed{\oint_{|z-2i|=2} \frac{\sin z}{z^2+\pi^2}\,dz = i\sinh(\pi)}$$
       </div>
     </div>
   </div>
@@ -743,20 +782,11 @@ function switchTab(id) {
   event.target.classList.add('active');
 }
 
-function toggleSol(id) {
-  const el = document.getElementById(id);
-  if (el.classList.contains('closed')) {
-    el.style.maxHeight = el.scrollHeight + 'px';
-    el.classList.remove('closed');
-    event.target.textContent = 'hide solution';
-  } else {
-    el.style.maxHeight = el.scrollHeight + 'px';
-    requestAnimationFrame(() => {
-      el.style.maxHeight = '0px';
-      el.classList.add('closed');
-    });
-    event.target.textContent = 'show solution';
-  }
+function toggleSol(btn) {
+  const body = btn.nextElementSibling;
+  const closed = body.classList.toggle('closed');
+  body.style.maxHeight = closed ? '0' : body.scrollHeight + 'px';
+  btn.textContent = closed ? 'Show Solution' : 'Hide Solution';
 }
 
 function initAll() {
