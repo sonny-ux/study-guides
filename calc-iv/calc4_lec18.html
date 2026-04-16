@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calc IV — Lecture 18</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="document.addEventListener('DOMContentLoaded', () => { renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  }); initAll(); })"></script>
+<style>
+:root {
+  --bg: #f4f5f9;
+  --surf: #ffffff;
+  --card: #ffffff;
+  --card2: #f0f1f7;
+  --border: #e2e4ef;
+  --border2: #cdd0e3;
+  --accent: #6d28d9;
+  --adim: #ede9fe;
+  --blue: #047857;
+  --bdim: #d1fae5;
+  --amber: #b45309;
+  --amdim: #fef9c3;
+  --rose: #be123c;
+  --rdim: #ffe4e6;
+  --text: #111827;
+  --text2: #374151;
+  --muted: #9ca3af;
+  --ok: #059669;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+.header {
+  background: var(--surf);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 24px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-inner {
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  background: var(--adim);
+  color: var(--accent);
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+.header-text { flex: 1; }
+.header-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+.header-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text2);
+  margin-top: 2px;
+  letter-spacing: 0.03em;
+}
+
+.tab-nav {
+  background: var(--surf);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-nav-inner {
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  gap: 2px;
+  padding: 8px 16px 0;
+}
+.stab {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text2);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 16px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.18s, border-color 0.18s;
+}
+.stab:hover { color: var(--text); }
+.stab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.main {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 28px 16px 60px;
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.sec-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+  margin-top: 28px;
+}
+.sec-title:first-child { margin-top: 0; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.card-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.card p { color: var(--text2); margin-bottom: 6px; font-size: 14px; }
+.card p:last-child { margin-bottom: 0; }
+
+.box {
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+.box.accent { background: var(--adim); border: 1px solid var(--border2); color: var(--text2); }
+.box.blue { background: var(--bdim); border: 1px solid #1e4a38; color: var(--text2); }
+.box.rose { background: var(--rdim); border: 1px solid #3a1520; color: var(--text2); }
+.box.amber { background: var(--amdim); border: 1px solid #3a2808; color: var(--text2); }
+.box .box-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.box.accent .box-label { color: var(--accent); }
+.box.blue .box-label { color: var(--blue); }
+.box.rose .box-label { color: var(--rose); }
+.box.amber .box-label { color: var(--amber); }
+.box .katex-display { margin: 8px 0; }
+.box p { margin-bottom: 5px; }
+.box p:last-child { margin-bottom: 0; }
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+@media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 14px;
+  color: var(--text2);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.row:last-child { border-bottom: none; }
+.row .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  min-width: 130px;
+  flex-shrink: 0;
+}
+
+.collapse-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  padding: 0;
+  margin-left: 8px;
+}
+.collapse-body { overflow: hidden; transition: max-height 0.3s ease; }
+.collapse-body.closed { max-height: 0 !important; }
+
+.hw-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--adim);
+  border-radius: 4px;
+  padding: 2px 7px;
+  margin-right: 8px;
+}
+
+canvas { display: block; width: 100%; }
+.canvas-wrap {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+.canvas-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  padding: 8px 14px 4px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+ul.notes { padding-left: 18px; color: var(--text2); font-size: 14px; }
+ul.notes li { margin-bottom: 4px; }
+
+.sol-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  background: var(--adim);
+  color: var(--accent);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.15s;
+}
+.sol-btn:hover { background: var(--border2); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="badge">CALC IV</div>
+    <div class="header-text">
+      <div class="header-title">Lecture 18 · Cauchy-Riemann Equations &amp; Complex Line Integrals</div>
+      <div class="header-sub">Spring 2026 · HW09 due 2026-04-21 · Gamelin II.3, III.1</div>
+    </div>
+    <div class="badge" style="background:var(--bdim);color:var(--blue);">STUDY GUIDE</div>
+  </div>
+</div>
+
+<div class="tab-nav">
+  <div class="tab-nav-inner">
+    <button class="stab active" onclick="switchTab('cr')">Lec 18 · CR Equations</button>
+    <button class="stab" onclick="switchTab('integrals')">Complex Line Integrals</button>
+    <button class="stab" onclick="switchTab('hw09')">HW09 Practice</button>
+    <button class="stab" onclick="switchTab('ref')">Quick Reference</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ============================= CR EQUATIONS ============================= -->
+<div id="cr" class="panel active">
+
+  <div class="sec-title">The Big Picture</div>
+  <div class="card">
+    <div class="card-title">Why do we need the Cauchy-Riemann equations?</div>
+    <p>Recall from Lecture 17 that a function $f: D \to \mathbb{C}$ is <strong>complex differentiable</strong> at $z_0$ if the limit $\lim_{h \to 0} \frac{f(z_0+h) - f(z_0)}{h}$ exists, with $h$ approaching $0$ from any direction in $\mathbb{C}$. That limit condition is clean to state but hard to check directly — you'd have to verify it for infinitely many approach directions.</p>
+    <p>The Cauchy-Riemann equations translate that infinite-direction limit condition into just two partial derivative equations. Instead of checking a limit, you compute four partial derivatives and see whether two relationships hold. This is the main working criterion for analyticity throughout the rest of the course.</p>
+  </div>
+
+  <div class="sec-title">Breaking $f$ Into Real and Imaginary Parts</div>
+  <div class="card">
+    <div class="card-title">Setup — writing $f = u + iv$ as a function of $(x, y)$</div>
+    <p>Since any complex number $z = x + iy$ is really just a pair of real numbers, any complex function $f(z)$ can be split into its real and imaginary components:</p>
+    $$f(z) = u(x,y) + i\,v(x,y)$$
+    <p>Here $u$ and $v$ are ordinary real-valued functions of two real variables — the kind you know from multivariable calculus. The function $u(x,y)$ is the real part of $f$ at the point $z = x + iy$, and $v(x,y)$ is the imaginary part. For example, if $f(z) = z^2 = (x+iy)^2 = x^2 - y^2 + 2ixy$, then $u(x,y) = x^2 - y^2$ and $v(x,y) = 2xy$.</p>
+    <p>The key question is: what conditions on $u$ and $v$ make $f$ complex differentiable? The answer comes from approaching the derivative limit in two specific ways.</p>
+  </div>
+
+  <div class="sec-title">Deriving the CR Equations — Two Approaches</div>
+  <div class="card">
+    <div class="card-title">Horizontal approach ($h = \Delta x \in \mathbb{R}$)</div>
+    <p>Fix a point $z = x + iy$. To compute the complex derivative, let $h$ approach $0$ along the real axis, so $h = \Delta x$ is a real number. Plugging $f = u + iv$ into the difference quotient:</p>
+    $$\frac{f(z + \Delta x) - f(z)}{\Delta x} = \frac{u(x+\Delta x,\, y) - u(x,y)}{\Delta x} + i\,\frac{v(x+\Delta x,\, y) - v(x,y)}{\Delta x}$$
+    <p>As $\Delta x \to 0$, both fractions on the right are just the definition of partial derivatives in $x$. So the horizontal limit gives:</p>
+    $$f'(z) = \frac{\partial u}{\partial x}(x,y) + i\,\frac{\partial v}{\partial x}(x,y)$$
+    <div class="box blue">
+      <div class="box-label">Horizontal formula for $f'$</div>
+      $$f'(z) = \partial_x u + i\,\partial_x v$$
+      <p><strong>Reading each term:</strong> $\partial_x u$ is how fast the real part of $f$ changes as you move right; $\partial_x v$ is how fast the imaginary part changes moving right. Together they assemble the complex derivative.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Vertical approach ($h = i\Delta y$, purely imaginary)</div>
+    <p>Now let $h$ approach $0$ along the imaginary axis, so $h = i\Delta y$ for real $\Delta y$. Plugging in:</p>
+    $$\frac{f(z + i\Delta y) - f(z)}{i\Delta y} = \frac{u(x,\, y+\Delta y) - u(x,y)}{i\Delta y} + i\,\frac{v(x,\, y+\Delta y) - v(x,y)}{i\Delta y}$$
+    <p>Dividing by $i$ is the same as multiplying by $-i$ (since $1/i = -i$). Doing this and taking $\Delta y \to 0$:</p>
+    $$f'(z) = \frac{\partial v}{\partial y}(x,y) - i\,\frac{\partial u}{\partial y}(x,y)$$
+    <div class="box blue">
+      <div class="box-label">Vertical formula for $f'$</div>
+      $$f'(z) = \partial_y v - i\,\partial_y u$$
+      <p><strong>Reading each term:</strong> $\partial_y v$ is how fast the imaginary part of $f$ changes as you move upward; $\partial_y u$ is how fast the real part changes moving upward. The $-i$ in front of $\partial_y u$ comes from dividing by $i$ when moving vertically.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Equating the two expressions — the CR equations emerge</div>
+    <p>If $f$ is complex differentiable at $z$, the limit must be the same no matter how $h \to 0$. In particular, the horizontal result and the vertical result must agree. This gives us two expressions for the same $f'(z)$:</p>
+    $$\partial_x u + i\,\partial_x v = \partial_y v - i\,\partial_y u$$
+    <p>Matching real parts and imaginary parts separately (since two complex numbers are equal iff their real and imaginary parts both match):</p>
+    <div class="box accent">
+      <div class="box-label">The Cauchy-Riemann Equations</div>
+      $$\frac{\partial u}{\partial x} = \frac{\partial v}{\partial y} \qquad \text{and} \qquad \frac{\partial u}{\partial y} = -\frac{\partial v}{\partial x}$$
+      <p><strong>Reading each equation:</strong> The first says the rate of change of the real part moving right must equal the rate of change of the imaginary part moving up. The second says the rate of change of the real part moving up must equal the <em>negative</em> rate of change of the imaginary part moving right. These two constraints tightly couple $u$ and $v$ — you can't change one without forcing specific changes in the other.</p>
+    </div>
+    <p>The CR equations are a <em>necessary</em> condition for complex differentiability. But the converse also holds (with a mild smoothness assumption): if $u$ and $v$ have continuous first-order partial derivatives that satisfy the CR equations, then $f = u + iv$ is complex differentiable. This gives us a clean if-and-only-if criterion.</p>
+    <div class="box accent">
+      <div class="box-label">Theorem (Gamelin II.3) — The Full Statement</div>
+      <p>Let $f = u + iv$ be defined on a domain $D \subset \mathbb{C}$. Then $f$ is analytic on $D$ if and only if $u(x,y)$ and $v(x,y)$ have continuous first-order partial derivatives that satisfy the Cauchy-Riemann equations throughout $D$.</p>
+      <p>When they hold, the derivative is given by either equivalent formula:</p>
+      $$f'(z) = \partial_x u + i\,\partial_x v = \partial_y v - i\,\partial_y u$$
+    </div>
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">CR Equations — two approach directions</div>
+    <canvas id="crCanvas" height="200"></canvas>
+  </div>
+
+  <div class="sec-title">Worked Examples — Checking CR</div>
+  <div class="card">
+    <div class="card-title">$p(z) = z^2$ — satisfies CR everywhere</div>
+    <p>Recall $z^2 = (x+iy)^2 = x^2 - y^2 + 2ixy$. So the real and imaginary parts are $u(x,y) = x^2 - y^2$ and $v(x,y) = 2xy$. Compute all four partial derivatives:</p>
+    <div class="box blue">
+      <div class="box-label">Checking CR for $z^2$</div>
+      <p>$\partial_x u = 2x$, $\quad \partial_y v = 2x$ $\quad \Rightarrow \partial_x u = \partial_y v$ ✓</p>
+      <p>$\partial_y u = -2y$, $\quad -\partial_x v = -2y$ $\quad \Rightarrow \partial_y u = -\partial_x v$ ✓</p>
+      <p>Both equations hold for all $(x,y)$, so $z^2$ is analytic on all of $\mathbb{C}$. The derivative is $f'(z) = \partial_x u + i\,\partial_x v = 2x + 2iy = 2(x+iy) = 2z$, as expected.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">$e^z$ — satisfies CR everywhere</div>
+    <p>We extend the exponential to complex inputs as $e^z = e^{x+iy} = e^x(\cos y + i\sin y)$. So $u(x,y) = e^x \cos y$ and $v(x,y) = e^x \sin y$. This is one of the most important examples in the course, so it's worth doing carefully.</p>
+    <div class="box blue">
+      <div class="box-label">Checking CR for $e^z$</div>
+      <p>$\partial_x u = e^x \cos y$, $\quad \partial_y v = e^x \cos y$ $\quad \Rightarrow \partial_x u = \partial_y v$ ✓</p>
+      <p>$\partial_y u = -e^x \sin y$, $\quad -\partial_x v = -e^x \sin y$ $\quad \Rightarrow \partial_y u = -\partial_x v$ ✓</p>
+      <p>Both hold everywhere, so $e^z$ is entire (analytic on all of $\mathbb{C}$). The derivative: $f'(z) = \partial_x u + i\,\partial_x v = e^x\cos y + ie^x\sin y = e^x(\cos y + i\sin y) = e^z$. So $(e^z)' = e^z$, exactly as in real calculus.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">$f(z) = |z|^2$ — fails CR everywhere except the origin</div>
+    <p>Here $|z|^2 = x^2 + y^2$, so $u(x,y) = x^2 + y^2$ and $v(x,y) = 0$ (the function is real-valued). Checking CR:</p>
+    <div class="box rose">
+      <div class="box-label">CR fails for $|z|^2$</div>
+      <p>$\partial_x u = 2x$, $\quad \partial_y v = 0$ $\quad \Rightarrow \partial_x u = \partial_y v$ requires $2x = 0$, i.e., $x = 0$.</p>
+      <p>$\partial_y u = 2y$, $\quad -\partial_x v = 0$ $\quad \Rightarrow \partial_y u = -\partial_x v$ requires $2y = 0$, i.e., $y = 0$.</p>
+      <p>Both equations hold only at $(x, y) = (0, 0)$, i.e., $z = 0$. So $|z|^2$ is complex differentiable at exactly one point and analytic nowhere.</p>
+    </div>
+    <p>Intuitively: $|z|^2$ is a purely real function (its imaginary part is identically $0$). Any real-valued non-constant function fails CR — a function with no imaginary part can't "rotate" information the way a complex derivative must.</p>
+  </div>
+
+  <div class="sec-title">Reading Off $f'(z)$ Once CR Holds</div>
+  <div class="card">
+    <div class="card-title">The derivative formula — use whichever is easier</div>
+    <p>Once you've confirmed the CR equations hold, you can compute $f'(z)$ from either the horizontal or vertical formula — they're equal. In practice, the horizontal formula is usually cleaner:</p>
+    <div class="box accent">
+      <div class="box-label">Derivative formula (horizontal)</div>
+      $$f'(z) = \frac{\partial u}{\partial x} + i\,\frac{\partial v}{\partial x}$$
+      <p>You already computed $\partial_x u$ and $\partial_x v$ while checking CR, so you get the derivative for free.</p>
+    </div>
+    <div class="box amber">
+      <div class="box-label">Exam trap — CR is necessary but you must state smoothness too</div>
+      <p>Strictly speaking, CR equations are necessary for complex differentiability, but not sufficient on their own. The full theorem requires that $u$ and $v$ also have <em>continuous</em> first-order partial derivatives. In practice, all the functions you'll encounter in this course have continuous partials, so CR is effectively equivalent to analyticity. But on a proof-based problem, state "the partial derivatives are continuous and satisfy CR" to be rigorous.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================= COMPLEX LINE INTEGRALS ============================= -->
+<div id="integrals" class="panel">
+
+  <div class="sec-title">From Vector to Complex Line Integrals</div>
+  <div class="card">
+    <div class="card-title">Motivation — what we already know</div>
+    <p>Recall from earlier in Calc IV that for a vector field $\vec{F} = (P, Q)$ and a curve $C$, the line integral is $\int_C \vec{F} \cdot d\vec{r} = \int_C P\,dx + Q\,dy$. Complex line integrals are the same idea, but now $f(z)$ is a complex-valued function and $dz = dx + i\,dy$ is a complex differential. The integral $\int_C f(z)\,dz$ is defined by expanding $f\,dz$ into real and imaginary parts and integrating each piece separately — so all the machinery you built for Green's theorem applies directly.</p>
+    <p>The power of this construction is that it lets us bring the full force of multivariable integral calculus — including Green's theorem — to bear on complex functions. The payoff is Cauchy's theorem, one of the most useful results in the course.</p>
+  </div>
+
+  <div class="sec-title">Definition and Computation</div>
+  <div class="card">
+    <div class="card-title">$f(z)\,dz$ as a standard line integral</div>
+    <p>Write $f = u + iv$ and interpret $dz = dx + i\,dy$. Expanding the product:</p>
+    $$f(z)\,dz = (u + iv)(dx + i\,dy) = (u\,dx - v\,dy) + i(v\,dx + u\,dy)$$
+    <p>So the complex line integral splits as:</p>
+    $$\int_C f(z)\,dz = \underbrace{\int_C u\,dx - v\,dy}_{\text{real part}} + i\underbrace{\int_C v\,dx + u\,dy}_{\text{imaginary part}}$$
+    <p>Comparing with $\int_C P\,dx + Q\,dy$, we see there are really two standard line integrals here: one with $P = u$, $Q = -v$ (real part) and one with $P = v$, $Q = u$ (imaginary part). Both are just real line integrals that you already know how to compute.</p>
+    <div class="box accent">
+      <div class="box-label">The $P, Q$ decomposition (Gamelin notation)</div>
+      <p>Writing $\int_C f(z)\,dz = \int_C P\,dx + Q\,dy$ where:</p>
+      $$P = u + iv \qquad Q = -v + iu$$
+      <p>Note that $P$ and $Q$ are themselves complex-valued — but the integral still makes sense because we evaluate the real and imaginary parts separately.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The parametric formula — how to actually compute</div>
+    <p>If $\gamma: [0,1] \to \mathbb{C}$ parametrizes the curve $C$ (so $\gamma(t) = \gamma_1(t) + i\gamma_2(t)$ traces out $C$ as $t$ goes from $0$ to $1$), then the complex line integral becomes an ordinary integral over $t$:</p>
+    <div class="box accent">
+      <div class="box-label">Parametric formula</div>
+      $$\int_C f(z)\,dz = \int_0^1 f(\gamma(t))\cdot\gamma'(t)\,dt$$
+      <p><strong>Reading each term:</strong> $\gamma(t)$ is the point on the curve at parameter value $t$ — plug it into $f$ to evaluate $f$ there. $\gamma'(t) = \gamma_1'(t) + i\gamma_2'(t)$ is the complex velocity of the parametrization — it plays the role of $d\vec{r}/dt$. The product $f(\gamma(t))\cdot\gamma'(t)$ is complex multiplication, which you then integrate over $t$ from $0$ to $1$. The result is a complex number.</p>
+    </div>
+    <div class="box blue">
+      <div class="box-label">Worked example — integrating $f(z) = z$ around the unit circle</div>
+      <p>Let $C$ be the unit circle $|z| = 1$, parametrized by $\gamma(t) = e^{2\pi i t}$ for $t \in [0,1]$. Then $\gamma'(t) = 2\pi i\, e^{2\pi i t}$. So:</p>
+      $$\int_C z\,dz = \int_0^1 e^{2\pi it}\cdot 2\pi i\, e^{2\pi it}\,dt = 2\pi i \int_0^1 e^{4\pi it}\,dt = 2\pi i \cdot \left[\frac{e^{4\pi it}}{4\pi i}\right]_0^1 = 2\pi i \cdot \frac{e^{4\pi i} - 1}{4\pi i} = 0$$
+      <p>The answer is $0$ because $z$ is analytic (Cauchy's theorem, coming up).</p>
+    </div>
+  </div>
+
+  <div class="sec-title">The ML Inequality (Estimation)</div>
+  <div class="card">
+    <div class="card-title">Bounding a complex line integral by length × max value</div>
+    <p>In real calculus, you can bound an integral $|\int_a^b h(t)\,dt| \leq \int_a^b |h(t)|\,dt$ — the absolute value of an integral is at most the integral of the absolute value. This holds for complex-valued functions too, and it gives one of the most useful estimation tools in complex analysis.</p>
+    <p>For a complex line integral, the magnitude of the integrand is $|f(\gamma(t))\cdot\gamma'(t)| = |f(\gamma(t))|\cdot|\gamma'(t)|$. Recall that $|\gamma'(t)| = \sqrt{(\gamma_1')^2 + (\gamma_2')^2}$ is the speed of the parametrization, so $\int_0^1 |\gamma'(t)|\,dt$ is the arc length of $C$ — which we write as $L$ (length of $C$). Putting it all together:</p>
+    <div class="box accent">
+      <div class="box-label">ML Inequality</div>
+      $$\left|\int_C f(z)\,dz\right| \leq \int_C |f(z)|\,|dz| \leq M \cdot L$$
+      <p><strong>Reading each term:</strong> $M = \max_{z \in C} |f(z)|$ is the maximum modulus of $f$ on the curve $C$ — the worst-case size of $f$ along $C$. $L$ is the arc length of $C$. The inequality says the complex line integral can't be larger in absolute value than $M$ times $L$. This is called the "ML bound."</p>
+    </div>
+    <p>The ML inequality doesn't compute the integral — it only bounds it. Its main use is in convergence arguments and error estimates, where you need to show that some integral goes to zero as a curve shrinks or a parameter changes.</p>
+  </div>
+
+  <div class="sec-title">Cauchy's Theorem — The Central Result</div>
+  <div class="card">
+    <div class="card-title">How Green's theorem and CR equations combine</div>
+    <p>Recall Green's theorem from earlier in Calc IV: if $D$ is a nice bounded domain with boundary $\partial D$, then $\int_{\partial D} P\,dx + Q\,dy = \iint_D \left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right)\,dA$. The integrand on the right is the "curl" of the vector field $(P, Q)$.</p>
+    <p>Now apply this to the complex line integral $\int_{\partial D} f(z)\,dz = \int_{\partial D} P\,dx + Q\,dy$ where $P = u + iv$ and $Q = -v + iu$. The curl integrand becomes $\partial_x Q - \partial_y P = \partial_x(-v + iu) - \partial_y(u + iv) = (-\partial_x v + i\,\partial_x u) - (\partial_y u + i\,\partial_y v)$. Regrouping real and imaginary parts: $(-\partial_x v - \partial_y u) + i(\partial_x u - \partial_y v)$. But this is exactly $0$ when the CR equations hold — $\partial_x u = \partial_y v$ kills the imaginary part, and $\partial_y u = -\partial_x v$ kills the real part. The entire double integral vanishes.</p>
+    <div class="box accent">
+      <div class="box-label">Cauchy's Theorem</div>
+      <p>If $f(z)$ is complex differentiable (analytic) on a domain $D \subset \mathbb{C}$, then for any simple closed curve $C$ bounding a region entirely inside $D$:</p>
+      $$\oint_C f(z)\,dz = 0$$
+      <p><strong>What this means:</strong> integrating an analytic function around any closed loop gives zero. The loop can be any shape — the result is always the same. This is the complex analogue of "conservative vector fields have zero circulation."</p>
+    </div>
+    <div class="box blue">
+      <div class="box-label">Proof sketch (from lecture notes)</div>
+      <p>$\oint_{\partial D} f(z)\,dz = \oint_{\partial D} P\,dx + Q\,dy$ (write as real line integral)</p>
+      <p>$= \iint_D \left(\partial_x Q - \partial_y P\right)dA$ (Green's theorem)</p>
+      <p>$= 0$ (because CR equations say $\partial_x Q = \partial_y P$)</p>
+      <p>The CR equations are doing the critical work here — they are precisely the condition that makes the Green's theorem integrand vanish.</p>
+    </div>
+    <div class="box rose">
+      <div class="box-label">Key requirement: $f$ must be analytic on the entire region</div>
+      <p>Cauchy's theorem requires $f$ to be analytic on the <em>interior</em> of $C$, not just on $C$ itself. If $f$ has a singularity inside $C$ — for example, $f(z) = 1/z$ and $C$ is the unit circle — the theorem fails. In that case the integral is $2\pi i$, not $0$. The singularity inside the curve is exactly what the Cauchy integral formula (below) measures.</p>
+    </div>
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Cauchy's theorem — closed contour around analytic region</div>
+    <canvas id="cauchyCanvas" height="220"></canvas>
+  </div>
+
+  <div class="sec-title">The Fundamental Theorem — Primitives</div>
+  <div class="card">
+    <div class="card-title">The complex antiderivative</div>
+    <p>In real calculus, if $F'(t) = f(t)$ then $\int_a^b f(t)\,dt = F(b) - F(a)$. The exact same theorem holds in complex analysis, and for exactly the same reason. The key concept is a <strong>primitive</strong> (also called an antiderivative): a function $F(z)$ is a primitive of $f(z)$ if $F'(z) = f(z)$ everywhere on the domain.</p>
+    <p>To see why this works: if $F = U + iV$ is a primitive of $f = u + iv$, then $F'(z) = \partial_x U + i\,\partial_x V$. So $\partial_x U = u$ and $\partial_x V = v$. The complex line integral $\int_C f(z)\,dz$ can then be written as $\int_C \nabla U \cdot d\vec{r} + i\int_C \nabla V \cdot d\vec{r}$, and each piece evaluates by the FTC for line integrals to give $U(b) - U(a)$ and $V(b) - V(a)$ respectively.</p>
+    <div class="box accent">
+      <div class="box-label">Fundamental Theorem for Complex Line Integrals</div>
+      <p>If $F(z)$ is a primitive of $f(z)$ (i.e., $F'(z) = f(z)$) and $C$ is any curve from $a$ to $b$, then:</p>
+      $$\int_C f(z)\,dz = F(b) - F(a)$$
+      <p><strong>Reading each term:</strong> $F$ is the antiderivative — just like in single-variable calculus. $b$ and $a$ are the endpoints of the curve $C$. The crucial point: the answer depends only on the endpoints, not the path. Any two curves from $a$ to $b$ give the same integral, as long as $f$ is analytic on the region between them.</p>
+    </div>
+    <div class="box blue">
+      <div class="box-label">Worked example — $\int_C z^2\,dz$ along any path</div>
+      <p>$f(z) = z^2$ has primitive $F(z) = z^3/3$ (check: $F'(z) = z^2$). So for any curve $C$ from $z = 0$ to $z = 1+i$:</p>
+      $$\int_C z^2\,dz = F(1+i) - F(0) = \frac{(1+i)^3}{3} - 0 = \frac{2i - 2}{3} \cdot \frac{1}{1} = \frac{-2+2i}{3}$$
+      <p>We compute $(1+i)^3 = (1+i)^2(1+i) = (2i)(1+i) = 2i - 2$. The path shape doesn't matter — only the endpoints count.</p>
+    </div>
+    <div class="box amber">
+      <div class="box-label">Connection to Cauchy's theorem</div>
+      <p>If $f$ has a primitive $F$ on all of $D$, then for any closed loop $C$ in $D$, the endpoints are the same ($a = b$), so $\int_C f\,dz = F(a) - F(a) = 0$. This is consistent with Cauchy's theorem — but the FTC gives us an explicit formula for open paths too, not just the vanishing result for closed loops.</p>
+    </div>
+  </div>
+
+  <div class="sec-title">The Cauchy Integral Formula — What Comes Next</div>
+  <div class="card">
+    <div class="card-title">When there's a singularity inside the contour</div>
+    <p>Cauchy's theorem says the integral around a closed curve is zero when $f$ is analytic <em>everywhere inside</em>. But what if $f$ has an isolated singularity at a single point $z_0$ inside the curve? Then the theorem doesn't apply — and the integral is not zero. Instead, it measures the "strength" of the singularity, and this is the content of the Cauchy integral formula.</p>
+    <p>The formula arises naturally from Cauchy's theorem by a shrinking-disk argument: the integral around any contour containing $z_0$ equals the integral around a tiny circle centered at $z_0$, which can be computed directly by parametrizing that circle. The result is elegant and is the engine behind all residue calculations later in the course.</p>
+    <div class="box accent">
+      <div class="box-label">Cauchy Integral Formula</div>
+      <p>Let $f$ be analytic on and inside a simple closed contour $C$ (counterclockwise orientation). If $z_0$ is any point <em>strictly inside</em> $C$, then:</p>
+      $$\oint_C \frac{f(z)}{z - z_0}\,dz = 2\pi i\, f(z_0)$$
+      <p><strong>Reading each term:</strong> $f(z)/(z - z_0)$ is the integrand — $f$ is the analytic function, $(z - z_0)$ is the denominator that creates the singularity at $z_0$. The left side is the contour integral. The right side is $2\pi i$ times the value of $f$ at the special interior point $z_0$. The formula says: a contour integral of this form doesn't depend on the shape of $C$ at all — it only depends on the value of $f$ at the one interior point $z_0$.</p>
+    </div>
+    <div class="box rose">
+      <div class="box-label">Critical check before applying: is $z_0$ inside $C$?</div>
+      <p>Before using the Cauchy integral formula, you must verify that $z_0$ is strictly inside the contour. If $z_0$ is outside $C$, then $f(z)/(z-z_0)$ is analytic everywhere inside $C$, and Cauchy's theorem gives $0$ instead. The two cases give completely different answers, so this check is not optional.</p>
+      <p><strong>How to check:</strong> compute $|z_0 - \text{center}|$ and compare to the radius. For a circle $|z - a| = r$, the point $z_0$ is inside iff $|z_0 - a| &lt; r$.</p>
+    </div>
+    <div class="box blue">
+      <div class="box-label">How to apply it — step by step</div>
+      <p><strong>1.</strong> Identify the singularity: rewrite the denominator so it looks like $(\text{something})(z - z_0)$. Factor out constants so the coefficient of $z$ in the denominator is $1$.</p>
+      <p><strong>2.</strong> Check $z_0$ is inside $C$: compute $|z_0 - \text{center of }C|$ and confirm it's less than the radius.</p>
+      <p><strong>3.</strong> Identify $f(z)$: everything in the integrand except the factor $1/(z - z_0)$.</p>
+      <p><strong>4.</strong> Apply the formula: result $= 2\pi i\, f(z_0)$.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================= HW09 PRACTICE ============================= -->
+<div id="hw09" class="panel">
+
+  <div class="sec-title">How to Use This Section</div>
+  <div class="card">
+    <p style="color:var(--text2);font-size:14px;">Each problem includes background on the concept being tested, a step-by-step approach, and a hidden solution. Work through it yourself first — the CR equation problems are mechanical once you know the checklist, but the Cauchy integral formula problems require careful setup.</p>
+  </div>
+
+  <!-- ---- PROBLEM 1a ---- -->
+  <div class="sec-title">Problem 1 — Checking Complex Differentiability via CR</div>
+  <div class="card">
+    <div class="card-title"><span class="hw-number">1a</span>$f(z) = 4x^2 + 5x - 4y^2 + 9 + i(8xy + 5y - 1)$</div>
+    <p>The strategy for all "check whether $f$ is complex differentiable" problems is identical: extract $u$ and $v$, compute all four partial derivatives, then check both CR equations. If both hold everywhere, $f$ is analytic; if they only hold on a subset, $f$ is differentiable only there; if they never hold, $f$ is not differentiable.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Read off $u = 4x^2 + 5x - 4y^2 + 9$ and $v = 8xy + 5y - 1$.</p>
+      <p>2. Compute: $\partial_x u$, $\partial_y v$, $\partial_y u$, $\partial_x v$.</p>
+      <p>3. Check CR1: $\partial_x u = \partial_y v$. Check CR2: $\partial_y u = -\partial_x v$.</p>
+      <p>4. State whether they hold everywhere, nowhere, or on a subset.</p>
+      <p>5. If analytic, write $f'(z) = \partial_x u + i\,\partial_x v$.</p>
+    </div>
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
+        <div class="box-label">Solution</div>
+        <p>$u = 4x^2 + 5x - 4y^2 + 9$, $\quad v = 8xy + 5y - 1$</p>
+        <p>$\partial_x u = 8x + 5$, $\quad \partial_y v = 8x + 5$ $\quad \Rightarrow$ CR1: $\partial_x u = \partial_y v$ ✓ (holds everywhere)</p>
+        <p>$\partial_y u = -8y$, $\quad -\partial_x v = -(8y) = -8y$ $\quad \Rightarrow$ CR2: $\partial_y u = -\partial_x v$ ✓ (holds everywhere)</p>
+        <p>Both CR equations hold for all $(x,y)$, so $f$ is analytic on all of $\mathbb{C}$ (entire).</p>
+        <p>Derivative: $f'(z) = \partial_x u + i\,\partial_x v = (8x+5) + i(8y+5) = 8(x+iy) + (5+5i) = 8z + 5(1+i)$.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="hw-number">1b</span>$g(z) = x^3 + 3xy^2 - x + i(y^3 + 3x^2y - y)$</div>
+    <p>This one requires careful arithmetic. Don't mix up which partial goes with which CR equation. Remember CR1 is $\partial_x u = \partial_y v$ and CR2 is $\partial_y u = -\partial_x v$ — the minus sign in CR2 is where errors happen.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>Same checklist as 1a. The function looks symmetric — check if that symmetry saves CR or breaks it.</p>
+    </div>
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
+        <div class="box-label">Solution</div>
+        <p>$u = x^3 + 3xy^2 - x$, $\quad v = y^3 + 3x^2y - y$</p>
+        <p>$\partial_x u = 3x^2 + 3y^2 - 1$, $\quad \partial_y v = 3y^2 + 3x^2 - 1$ $\quad \Rightarrow$ CR1: $\partial_x u = \partial_y v$ ✓ (always equal)</p>
+        <p>$\partial_y u = 6xy$, $\quad -\partial_x v = -(6xy) = -6xy$ $\quad \Rightarrow$ CR2 requires $6xy = -6xy$, i.e. $12xy = 0$.</p>
+        <p>CR2 holds only when $x = 0$ or $y = 0$ — that is, on the coordinate axes. So $g$ is complex differentiable only at points on the axes, and is <strong>not analytic</strong> anywhere (analytic requires differentiability on an open set, but the axes form a set with no interior).</p>
+        <p><em>Note:</em> This function is <em>not</em> $z^3$. Recall $z^3 = (x^3 - 3xy^2) + i(3x^2y - y^3)$. What's in problem 1b has the opposite signs on the cubic cross-terms — it is not a holomorphic function of $z$.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- PROBLEM 2 ---- -->
+  <div class="sec-title">Problem 2 — Finding Constants for Analyticity</div>
+  <div class="card">
+    <div class="card-title"><span class="hw-number">2</span>Find real constants $a$ and $b$ such that $f(z) = 3x - y + 5 + i(ax + by - 3)$ is complex differentiable.</div>
+    <p>When asked to find constants that make a function analytic, you apply the CR equations as equations in the constants rather than as checks. Set $\partial_x u = \partial_y v$ and $\partial_y u = -\partial_x v$, solve the resulting system. Each CR equation gives one constraint, so two unknowns ($a$ and $b$) are determined exactly.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Identify $u = 3x - y + 5$ and $v = ax + by - 3$.</p>
+      <p>2. Compute partial derivatives in terms of $a$ and $b$.</p>
+      <p>3. Set up CR1 and CR2 as equations — solve for $a$ and $b$.</p>
+      <p>4. Verify by writing $f$ as an explicit complex function of $z$.</p>
+    </div>
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
+        <div class="box-label">Solution</div>
+        <p>$u = 3x - y + 5$, $\quad v = ax + by - 3$</p>
+        <p>$\partial_x u = 3$, $\quad \partial_y v = b$ $\quad \Rightarrow$ CR1: $3 = b$, so $\boxed{b = 3}$.</p>
+        <p>$\partial_y u = -1$, $\quad -\partial_x v = -a$ $\quad \Rightarrow$ CR2: $-1 = -a$, so $\boxed{a = 1}$.</p>
+        <p>With $a = 1$, $b = 3$: $f(z) = 3x - y + 5 + i(x + 3y - 3)$.</p>
+        <p><em>Sanity check — write as a function of $z$:</em> Notice $3x + ix = x(3+i)$ and $-y + 3iy = y(-1+3i) = iy \cdot (3+i)$. So $(3+i)(x+iy) = (3x - y) + i(x + 3y)$. Therefore:</p>
+        $$f(z) = (3+i)z + 5 - 3i$$
+        <p>This is a linear function — entirely consistent with being analytic everywhere.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- PROBLEM 3 ---- -->
+  <div class="sec-title">Problem 3 — Both $f$ and $\overline{f(z)}$ Analytic Implies Constant</div>
+  <div class="card">
+    <div class="card-title"><span class="hw-number">3</span>Show that if $f(z)$ and $\overline{f(z)}$ are both complex differentiable, then $f'(z) = 0$.</div>
+    <p>The notation $\overline{f(z)}$ means the complex conjugate of the output $f(z)$ — if $f = u + iv$, then $\overline{f(z)} = u - iv$. The key idea: applying the CR equations to both $f$ and $\overline{f}$ simultaneously forces all four partial derivatives to be zero, which makes $f'(z) = 0$. This is a proof-style problem, so write it in full logical steps.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Write the CR equations for $f = u + iv$.</p>
+      <p>2. Identify the real and imaginary parts of $\overline{f} = u + i(-v)$ and write its CR equations.</p>
+      <p>3. The two sets of equations will be contradictory unless all partials are zero.</p>
+      <p>4. Conclude $f'(z) = \partial_x u + i\,\partial_x v = 0 + 0 = 0$.</p>
+    </div>
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
+        <div class="box-label">Solution</div>
+        <p>Write $f = u + iv$.</p>
+        <p><strong>CR for $f$:</strong> $\;\partial_x u = \partial_y v\;$ and $\;\partial_y u = -\partial_x v\;$ ... (I)</p>
+        <p>The function $\overline{f(z)} = u(x,y) - iv(x,y)$ has real part $U = u$ and imaginary part $V = -v$.</p>
+        <p><strong>CR for $\overline{f}$:</strong> $\;\partial_x U = \partial_y V\;$ and $\;\partial_y U = -\partial_x V$, which becomes:</p>
+        <p>$\partial_x u = \partial_y(-v) = -\partial_y v\;$ and $\;\partial_y u = -\partial_x(-v) = \partial_x v$ ... (II)</p>
+        <p>Now combine (I) and (II):</p>
+        <p>From (I): $\partial_x u = +\partial_y v$. From (II): $\partial_x u = -\partial_y v$. Adding: $2\partial_x u = 0 \Rightarrow \partial_x u = 0$, hence $\partial_y v = 0$.</p>
+        <p>From (I): $\partial_y u = -\partial_x v$. From (II): $\partial_y u = +\partial_x v$. Adding: $2\partial_y u = 0 \Rightarrow \partial_y u = 0$, hence $\partial_x v = 0$.</p>
+        <p>All four partial derivatives vanish: $\partial_x u = \partial_y u = \partial_x v = \partial_y v = 0$. Therefore $f'(z) = \partial_x u + i\,\partial_x v = 0$. Since the domain is connected and $f' = 0$ throughout, $f$ is constant. $\blacksquare$</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- PROBLEM 4 ---- -->
+  <div class="sec-title">Problem 4 — Cauchy Integral Formula</div>
+  <div class="card">
+    <div class="card-title"><span class="hw-number">4</span>$\displaystyle\int_C \frac{\cos z}{3z - \pi}\,dz$, where $C = \{|z| = 2\}$</div>
+    <p>The Cauchy integral formula states: if $f$ is analytic inside and on $C$ and $z_0$ is inside $C$, then $\oint_C \frac{f(z)}{z - z_0}\,dz = 2\pi i\, f(z_0)$. To apply it, you first need to massage the denominator into the form $(z - z_0)$ with a leading coefficient of $1$, by factoring out constants. Then identify $f(z)$ (everything except the $1/(z-z_0)$ factor) and check that $z_0$ is inside $C$.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Factor out the coefficient of $z$ from the denominator: $3z - \pi = 3(z - \pi/3)$.</p>
+      <p>2. Check: is $z_0 = \pi/3$ inside $|z| = 2$? Compute $|\pi/3| \approx 1.05 &lt; 2$. Yes.</p>
+      <p>3. Identify $f(z) = \cos z$ (the rest of the integrand after removing $1/(z - z_0)$).</p>
+      <p>4. Apply the formula, accounting for the factor of $1/3$ from the denominator.</p>
+    </div>
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
+        <div class="box-label">Solution</div>
+        <p>Factor: $3z - \pi = 3\!\left(z - \frac{\pi}{3}\right)$. So:</p>
+        $$\int_C \frac{\cos z}{3z - \pi}\,dz = \frac{1}{3}\int_C \frac{\cos z}{z - \pi/3}\,dz$$
+        <p>Check: $z_0 = \pi/3$. $|z_0| = \pi/3 \approx 1.047 &lt; 2$, so $z_0$ is inside $C = \{|z| = 2\}$. ✓</p>
+        <p>$f(z) = \cos z$ is entire, so it's analytic inside $C$. Apply the Cauchy integral formula with $z_0 = \pi/3$:</p>
+        $$\frac{1}{3} \cdot 2\pi i \cdot \cos\!\left(\frac{\pi}{3}\right) = \frac{2\pi i}{3} \cdot \frac{1}{2} = \boxed{\frac{\pi i}{3}}$$
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- PROBLEM 5 ---- -->
+  <div class="sec-title">Problem 5 — Cauchy Integral Formula with Partial Fractions</div>
+  <div class="card">
+    <div class="card-title"><span class="hw-number">5</span>$\displaystyle\int_C \frac{\sin z}{z^2 + \pi^2}\,dz$, where $C = \{|z - 2i| = 2\}$</div>
+    <p>The denominator $z^2 + \pi^2$ factors over $\mathbb{C}$ as $(z - \pi i)(z + \pi i)$, giving two singularities. The contour $C$ is a circle centered at $2i$ with radius $2$, so you need to check which singularities lie inside $C$. Only the ones inside contribute — the others can be ignored. Once you've identified which singularity is inside, the integral reduces directly to the Cauchy integral formula with $f(z)$ being the remaining analytic factor.</p>
+    <div class="box amber">
+      <div class="box-label">Approach</div>
+      <p>1. Factor: $z^2 + \pi^2 = (z - \pi i)(z + \pi i)$. Singularities at $z = \pi i$ and $z = -\pi i$.</p>
+      <p>2. Check which singularities are inside $C = \{|z - 2i| = 2\}$ (center $2i$, radius $2$):</p>
+      <p>&emsp;$|z_0 - 2i|$ for each: $|\pi i - 2i| = |(\pi-2)i| = \pi - 2 \approx 1.14 &lt; 2$ ✓ (inside)</p>
+      <p>&emsp;$|-\pi i - 2i| = |(-\pi-2)i| = \pi + 2 \approx 5.14 > 2$ ✗ (outside)</p>
+      <p>3. Only $z = \pi i$ is inside. Write the integrand as $\frac{f(z)}{z - \pi i}$ where $f(z) = \frac{\sin z}{z + \pi i}$.</p>
+      <p>4. Verify $f(z) = \sin z/(z + \pi i)$ is analytic inside $C$ (the only singularity $-\pi i$ is outside). Apply the formula.</p>
+      <p>5. Evaluate $\sin(\pi i)$: recall $\sin(w) = (e^{iw} - e^{-iw})/(2i)$, so $\sin(\pi i) = (e^{-\pi} - e^{\pi})/(2i) = i\sinh(\pi)$.</p>
+    </div>
+    <button class="sol-btn" onclick="toggleSol(this)">Show Solution</button>
+    <div class="collapse-body closed" style="max-height:0">
+      <div class="box blue" style="margin-top:10px">
+        <div class="box-label">Solution</div>
+        <p>Factor: $z^2 + \pi^2 = (z - \pi i)(z + \pi i)$.</p>
+        <p>Only $z_0 = \pi i$ is inside $C$ (distance to center $2i$: $|\pi i - 2i| = \pi - 2 \approx 1.14 &lt; 2$).</p>
+        <p>Write: $\displaystyle\frac{\sin z}{(z - \pi i)(z + \pi i)} = \frac{f(z)}{z - \pi i}$ where $f(z) = \dfrac{\sin z}{z + \pi i}$.</p>
+        <p>$f(z)$ is analytic inside $C$ (its only singularity $z = -\pi i$ is outside). Apply Cauchy integral formula:</p>
+        $$\int_C \frac{\sin z}{z^2 + \pi^2}\,dz = 2\pi i \cdot f(\pi i) = 2\pi i \cdot \frac{\sin(\pi i)}{\pi i + \pi i} = 2\pi i \cdot \frac{\sin(\pi i)}{2\pi i} = \sin(\pi i)$$
+        <p>Now evaluate $\sin(\pi i)$ using the complex sine formula:</p>
+        $$\sin(\pi i) = \frac{e^{i(\pi i)} - e^{-i(\pi i)}}{2i} = \frac{e^{-\pi} - e^{\pi}}{2i} = \frac{-(e^\pi - e^{-\pi})}{2i} = \frac{-(e^\pi - e^{-\pi})}{2i} \cdot \frac{i}{i} = \frac{i(e^\pi - e^{-\pi})}{2}$$
+        <p>Since $\sinh(\pi) = (e^\pi - e^{-\pi})/2$ by definition:</p>
+        $$\boxed{\int_C \frac{\sin z}{z^2 + \pi^2}\,dz = i\sinh(\pi)}$$
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================= QUICK REFERENCE ============================= -->
+<div id="ref" class="panel">
+
+  <div class="sec-title">Core Formulas — Lecture 18</div>
+  <div class="card">
+    <div class="card-title">The Cauchy-Riemann Equations</div>
+    <div class="row"><span class="lbl">CR Equation 1</span><span>$\partial_x u = \partial_y v$</span></div>
+    <div class="row"><span class="lbl">CR Equation 2</span><span>$\partial_y u = -\partial_x v$</span></div>
+    <div class="row"><span class="lbl">$f'(z)$ (horiz.)</span><span>$\partial_x u + i\,\partial_x v$</span></div>
+    <div class="row"><span class="lbl">$f'(z)$ (vert.)</span><span>$\partial_y v - i\,\partial_y u$</span></div>
+    <div class="row"><span class="lbl">Theorem (full)</span><span>$f$ analytic $\Leftrightarrow$ $u, v \in C^1$ and satisfy CR</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Complex Line Integrals</div>
+    <div class="row"><span class="lbl">Parametric def.</span><span>$\int_C f\,dz = \int_0^1 f(\gamma(t))\,\gamma'(t)\,dt$</span></div>
+    <div class="row"><span class="lbl">$P, Q$ form</span><span>$\int_C f\,dz = \int_C P\,dx + Q\,dy$, $\;P = u+iv$, $\;Q = -v+iu$</span></div>
+    <div class="row"><span class="lbl">ML inequality</span><span>$\left|\int_C f\,dz\right| \leq M \cdot L$ where $M = \max_C |f|$, $L = \text{length}(C)$</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Cauchy's Theorem and Consequences</div>
+    <div class="row"><span class="lbl">Cauchy's Thm.</span><span>$\oint_C f\,dz = 0$ if $f$ analytic on and inside $C$</span></div>
+    <div class="row"><span class="lbl">Proof route</span><span>Green's Thm. $\to$ CR $\to$ integrand $= 0$</span></div>
+    <div class="row"><span class="lbl">FTC (primitive)</span><span>If $F' = f$: $\int_C f\,dz = F(b) - F(a)$</span></div>
+    <div class="row"><span class="lbl">Cauchy Int. Formula</span><span>$\oint_C \frac{f(z)}{z - z_0}\,dz = 2\pi i\, f(z_0)$, $\;z_0$ inside $C$</span></div>
+    <div class="row"><span class="lbl">If $z_0$ outside</span><span>$\oint_C \frac{f(z)}{z - z_0}\,dz = 0$ (by Cauchy's Thm.)</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Key Examples — CR at a Glance</div>
+    <div class="row"><span class="lbl">$z^n$</span><span>Entire, $(z^n)' = nz^{n-1}$. CR holds everywhere.</span></div>
+    <div class="row"><span class="lbl">$e^z$</span><span>Entire, $(e^z)' = e^z$. CR: $\partial_x(e^x\cos y) = e^x\cos y = \partial_y(e^x\sin y)$.</span></div>
+    <div class="row"><span class="lbl">$\sin z$, $\cos z$</span><span>Entire. $(\sin z)' = \cos z$, $(\cos z)' = -\sin z$.</span></div>
+    <div class="row"><span class="lbl">$|z|^2$</span><span>CR fails everywhere except $z = 0$. Not analytic.</span></div>
+    <div class="row"><span class="lbl">$\bar{z}$</span><span>CR fails everywhere. Nowhere complex differentiable.</span></div>
+    <div class="row"><span class="lbl">$\text{Re}(z)$, $\text{Im}(z)$</span><span>CR fails everywhere. Not analytic.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Exam Checklist — CR Problems</div>
+    <ul class="notes">
+      <li>Write down $u$ and $v$ explicitly before computing anything.</li>
+      <li>Compute all four: $\partial_x u$, $\partial_y u$, $\partial_x v$, $\partial_y v$.</li>
+      <li>Check CR1 ($\partial_x u = \partial_y v$) and CR2 ($\partial_y u = -\partial_x v$) — both must hold.</li>
+      <li>If both hold everywhere on an open set → analytic. If only on a discrete set → differentiable at those points but not analytic.</li>
+      <li>State the derivative using $f'(z) = \partial_x u + i\,\partial_x v$ if asked.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Exam Checklist — Cauchy Integral Formula Problems</div>
+    <ul class="notes">
+      <li>Factor the denominator completely over $\mathbb{C}$ to find all singularities.</li>
+      <li>For each singularity $z_0$: compute $|z_0 - \text{center}|$ and compare to radius.</li>
+      <li>Only singularities <em>strictly inside</em> $C$ contribute.</li>
+      <li>For each interior singularity: pull out the factor $(z - z_0)$ and identify the analytic $f(z)$.</li>
+      <li>Apply $2\pi i\,f(z_0)$ for each interior singularity and sum the results.</li>
+      <li>For $\sin(ai)$ or $\cos(ai)$: use $\sin(ai) = i\sinh(a)$ and $\cos(ai) = \cosh(a)$.</li>
+    </ul>
+  </div>
+
+</div>
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function toggleSol(btn) {
+  const body = btn.nextElementSibling;
+  const closed = body.classList.toggle('closed');
+  body.style.maxHeight = closed ? '0' : body.scrollHeight + 'px';
+  btn.textContent = closed ? 'Show Solution' : 'Hide Solution';
+}
+
+function initAll() {
+  document.querySelectorAll('.collapse-body').forEach(b => {
+    if (!b.classList.contains('closed')) b.style.maxHeight = b.scrollHeight + 'px';
+  });
+  drawCR();
+  drawCauchy();
+}
+
+function drawCR() {
+  const canvas = document.getElementById('crCanvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.offsetWidth, H = 200;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = '#f0f1f7';
+  ctx.fillRect(0, 0, W, H);
+
+  const cx = W * 0.42, cy = H * 0.5;
+
+  // Axes
+  ctx.strokeStyle = '#9ca3af';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx - 90, cy); ctx.lineTo(cx + 90, cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy - 80); ctx.lineTo(cx, cy + 80); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#9ca3af';
+  ctx.font = '11px JetBrains Mono, monospace';
+  ctx.fillText('Re', cx + 92, cy + 4);
+  ctx.fillText('Im', cx + 4, cy - 82);
+
+  // Point z0
+  ctx.beginPath();
+  ctx.arc(cx, cy, 4, 0, 2 * Math.PI);
+  ctx.fillStyle = '#6d28d9';
+  ctx.fill();
+  ctx.fillStyle = '#6d28d9';
+  ctx.font = '12px Outfit, sans-serif';
+  ctx.fillText('z₀', cx + 6, cy - 8);
+
+  // Horizontal arrow (real direction)
+  const hx = cx + 60, hy = cy;
+  ctx.strokeStyle = '#047857';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(hx, hy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx - 8, hy - 5); ctx.lineTo(hx - 8, hy + 5); ctx.closePath();
+  ctx.fillStyle = '#047857'; ctx.fill();
+  ctx.fillStyle = '#047857';
+  ctx.font = '11px JetBrains Mono, monospace';
+  ctx.fillText('h = Δx ∈ ℝ', hx + 4, hy + 4);
+  ctx.font = '11px Outfit, sans-serif';
+  ctx.fillStyle = '#047857';
+  ctx.fillText("f'(z) = ∂ₓu + i∂ₓv", cx + 4, cy + 22);
+
+  // Vertical arrow (imaginary direction)
+  const vx = cx, vy = cy - 60;
+  ctx.strokeStyle = '#be123c';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(vx, vy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(vx, vy); ctx.lineTo(vx - 5, vy + 8); ctx.lineTo(vx + 5, vy + 8); ctx.closePath();
+  ctx.fillStyle = '#be123c'; ctx.fill();
+  ctx.fillStyle = '#be123c';
+  ctx.font = '11px JetBrains Mono, monospace';
+  ctx.fillText('h = iΔy', cx - 68, vy - 4);
+  ctx.font = '11px Outfit, sans-serif';
+  ctx.fillText("f'(z) = ∂ᵧv − i∂ᵧu", cx - 120, vy - 18);
+
+  // Divider + label
+  ctx.strokeStyle = '#e2e4ef';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W * 0.72, 20); ctx.lineTo(W * 0.72, H - 20); ctx.stroke();
+
+  ctx.fillStyle = '#374151';
+  ctx.font = '12px Outfit, sans-serif';
+  const rx = W * 0.75;
+  ctx.fillText('Both limits must', rx, 60);
+  ctx.fillText('agree ⟹', rx, 78);
+  ctx.fillStyle = '#6d28d9';
+  ctx.font = '600 12px Outfit, sans-serif';
+  ctx.fillText('CR Equations', rx, 98);
+  ctx.font = '11px JetBrains Mono, monospace';
+  ctx.fillStyle = '#374151';
+  ctx.fillText('∂ₓu = ∂ᵧv', rx, 120);
+  ctx.fillText('∂ᵧu = −∂ₓv', rx, 138);
+}
+
+function drawCauchy() {
+  const canvas = document.getElementById('cauchyCanvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.offsetWidth, H = 220;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = '#f0f1f7';
+  ctx.fillRect(0, 0, W, H);
+
+  const cx = W * 0.35, cy = H * 0.5;
+  const r = 75;
+
+  // Shaded interior (analytic region)
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+  ctx.fillStyle = '#d1fae5';
+  ctx.fill();
+
+  // Contour C
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+  ctx.strokeStyle = '#047857';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Arrow on contour (counterclockwise direction)
+  const ax = cx + r * Math.cos(-Math.PI / 4), ay = cy + r * Math.sin(-Math.PI / 4);
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, -Math.PI/4 - 0.01, -Math.PI/4 + 0.01);
+  const tx = -Math.sin(-Math.PI/4), ty = Math.cos(-Math.PI/4);
+  ctx.save();
+  ctx.translate(ax, ay);
+  ctx.rotate(Math.atan2(ty, tx));
+  ctx.beginPath();
+  ctx.moveTo(0, 0); ctx.lineTo(-9, -5); ctx.lineTo(-9, 5); ctx.closePath();
+  ctx.fillStyle = '#047857'; ctx.fill();
+  ctx.restore();
+
+  // Label C
+  ctx.fillStyle = '#047857';
+  ctx.font = '600 13px Outfit, sans-serif';
+  ctx.fillText('C', cx + r + 6, cy - 6);
+
+  // "f analytic inside" label
+  ctx.fillStyle = '#047857';
+  ctx.font = '11px Outfit, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('f analytic', cx, cy - 10);
+  ctx.fillText('everywhere inside', cx, cy + 8);
+
+  // Result box
+  ctx.textAlign = 'left';
+  const rx2 = W * 0.65;
+  ctx.fillStyle = '#6d28d9';
+  ctx.font = '600 13px Outfit, sans-serif';
+  ctx.fillText('Cauchy\'s Theorem:', rx2, 70);
+  ctx.font = '13px JetBrains Mono, monospace';
+  ctx.fillStyle = '#374151';
+  ctx.fillText('∮_C f(z) dz = 0', rx2, 95);
+
+  ctx.strokeStyle = '#e2e4ef';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(rx2, 108); ctx.lineTo(W - 16, 108); ctx.stroke();
+
+  ctx.fillStyle = '#be123c';
+  ctx.font = '600 12px Outfit, sans-serif';
+  ctx.fillText('But if z₀ inside C:', rx2, 126);
+  ctx.font = '11px Outfit, sans-serif';
+  ctx.fillStyle = '#374151';
+  ctx.fillText('(singularity at z₀)', rx2, 142);
+  ctx.font = '12px JetBrains Mono, monospace';
+  ctx.fillText('∮_C f(z)/(z−z₀) dz', rx2, 162);
+  ctx.fillText('= 2πi · f(z₀)', rx2 + 12, 180);
+}
+</script>
+</body>
+</html>
