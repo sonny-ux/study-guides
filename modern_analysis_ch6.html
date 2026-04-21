@@ -134,9 +134,16 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
   .ord-step{padding:12px 10px;font-size:.84rem;}
   .drag-handle{font-size:1.15rem;min-width:20px;text-align:center;}
   .tf-btn,.sol-btn{min-height:48px;}
-  .nav-tab{padding:12px 14px;}
+  .mc-opt{min-height:48px;padding:12px 14px;font-size:.88rem;}
+  .nav-tab{padding:12px 14px;font-size:.8rem;}
+  .nav-scroll{gap:4px;}
   .hero{padding:24px 16px 20px;}
+  .hero h1{font-size:1.35rem;}
+  .sec h2{font-size:1rem;}
   .box-body{font-size:.86rem;}
+  .explain,.thm,.warn{padding:12px 14px;}
+  .drill-q{font-size:.9rem;line-height:1.6;}
+  p{font-size:.88rem;}
 }
 </style>
 </head>
@@ -163,93 +170,193 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 </div>
 
 <div class="sec">
-  <h2><span class="sec-num" style="color:var(--ch6b);">01</span> The Big Picture</h2>
-  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
-    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
-    <div class="mi-text">Chapter 5 gave you derivatives — the local, infinitesimal structure of a function. Chapter 6 asks the opposite question: given a function, can we reconstruct its "total accumulation" over an interval? Rudin builds the integral from scratch using the Darboux approach: approximate the area with rectangles from above and below, and squeeze until they meet.</div>
-  </div>
-  <div class="def-box" style="border-left-color:var(--ch6b);">
-    <div class="box-label" style="color:var(--ch6b);">The Core Logic</div>
-    <div class="box-body">Upper sums decrease as partitions get finer. Lower sums increase. Integrability means these two monotone sequences converge to the same value. Once you see that, the whole chapter unfolds naturally.<br><br>
-    <strong>Darboux vs. Riemann:</strong> Instead of picking arbitrary sample points (Riemann), Darboux uses the supremum and infimum of $f$ on each piece — the tallest and shortest possible rectangles. The two approaches are equivalent but Darboux is cleaner.</div>
-  </div>
-</div>
+  <h2><span class="sec-num" style="color:var(--ch6b);">01</span> Partitions and Darboux Sums</h2>
 
-<div class="sec">
-  <h2><span class="sec-num" style="color:var(--ch6b);">02</span> Partitions and Darboux Sums</h2>
-  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
-    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
-    <div class="mi-text">A partition chops an interval into subintervals. On each piece, take the supremum (upper rectangle) and infimum (lower rectangle) of $f$. Sum them weighted by width. The gap between upper and lower sum measures how oscillatory $f$ is.</div>
-  </div>
   <div class="def-box" style="border-left-color:var(--ch6b);">
-    <div class="box-label" style="color:var(--ch6b);">Definition — Partition and Darboux Sums</div>
-    <div class="box-body">A <strong>partition</strong> of $[a,b]$ is a finite set $P = \{x_0, x_1, \ldots, x_n\}$ with $a = x_0 < x_1 < \cdots < x_n = b$.<br><br>
-    On each subinterval $[x_{k-1}, x_k]$, define $M_k = \sup f$ and $m_k = \inf f$. Then:
-    $$U(P, f) = \sum_{k=1}^n M_k(x_k - x_{k-1}), \qquad L(P, f) = \sum_{k=1}^n m_k(x_k - x_{k-1})$$
-    Always $L(P,f) \leq U(P,f)$ since $m_k \leq M_k$.</div>
-  </div>
-  <div class="explain" style="border-left-color:var(--ch6);">
-    <div class="box-label">The Geometric Picture — What the Sums Actually Look Like</div>
-    <div class="box-body">$U(P,f)$ is the area of a staircase of rectangles that lies <em>above</em> the graph of $f$ — on each piece $[x_{k-1},x_k]$, the rectangle has height $M_k = \sup f$, the tallest possible. $L(P,f)$ is a staircase lying <em>below</em> the graph — height $m_k = \inf f$, the shortest possible.<br><br>
-    The true area under $f$ is trapped: $L(P,f) \leq \int_a^b f \leq U(P,f)$. If you want a better approximation, use a finer partition — more, thinner rectangles force $M_k$ and $m_k$ closer together on each subinterval. Integrability is the statement that you can make the gap $U-L$ as small as you like by refining $P$.<br><br>
-    <strong>Why sup and inf instead of sample points?</strong> Darboux deliberately picks the worst-case heights (tallest above, shortest below), giving the tightest possible bounds without any arbitrary choice. Riemann's approach picks an arbitrary sample point in each subinterval — same limit, messier bookkeeping.</div>
+    <div class="box-label" style="color:var(--ch6b);">Definition 6.1 — Partition</div>
+    <div class="box-body">A <strong>partition</strong> $P$ of $[a,b]$ is a finite set $\{x_0, x_1,\ldots,x_n\}$ with $a = x_0 < x_1 < \cdots < x_n = b$. Write $\Delta x_k = x_k - x_{k-1}$.<br><br>
+    On each $[x_{k-1},x_k]$ define $M_k = \sup f$ and $m_k = \inf f$. The <strong>upper and lower Darboux sums</strong> are:
+    $$U(P,f) = \sum_{k=1}^n M_k\,\Delta x_k \qquad L(P,f) = \sum_{k=1}^n m_k\,\Delta x_k$$</div>
   </div>
   <div class="explain">
-    <div class="box-label">Worked Example — $f(x)=x$ on $[0,1]$</div>
-    <div class="box-body">Uniform partition $P_n$: $x_k = k/n$. Since $f$ is increasing, $M_k = k/n$ and $m_k = (k-1)/n$.
-    $$U(P_n) = \frac{1}{n^2}\sum_{k=1}^n k = \frac{n+1}{2n} \to \tfrac{1}{2}, \qquad L(P_n) = \frac{n-1}{2n} \to \tfrac{1}{2}$$
-    Gap $= 1/n \to 0$. So $\int_0^1 x\,dx = 1/2$.</div>
+    <div class="box-label">What Rudin is doing</div>
+    <div class="box-body">Rather than picking a sample point in each subinterval (arbitrary), he uses sup and inf — the extremes $f$ can possibly take on each piece. $U$ is the total area if $f$ were at its highest on each piece; $L$ if at its lowest. The true area is trapped between them. The gap $U - L = \sum(M_k - m_k)\Delta x_k$ measures how much $f$ oscillates, weighted by interval width.</div>
   </div>
-</div>
 
-<div class="sec">
-  <h2><span class="sec-num" style="color:var(--ch6b);">03</span> Refinements and the Monotonicity Lemma</h2>
-  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
-    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
-    <div class="mi-text">Adding points to a partition can only make upper sums smaller and lower sums larger — the approximations tighten. This monotonicity is the engine behind integrability.</div>
-  </div>
-  <div class="thm">
-    <div class="box-label">Refinement Lemma (Rudin §6.4)</div>
-    <div class="box-body">If $P^*$ is a refinement of $P$, then: $L(P, f) \leq L(P^*, f) \leq U(P^*, f) \leq U(P, f)$<br><br>
-    <strong>Why:</strong> Adding one point replaces one term $M_k\Delta x_k$ with two terms whose $M$-values are each $\leq M_k$. The upper sum can only decrease. Symmetrically, the lower sum can only increase.</div>
-  </div>
-  <div class="thm">
-    <div class="box-label">Corollary — Any lower sum ≤ any upper sum</div>
-    <div class="box-body">For <em>any</em> two partitions $P_1$ and $P_2$: $L(P_1, f) \leq U(P_2, f)$.<br><br>
-    <strong>Proof:</strong> Let $P^* = P_1 \cup P_2$. Then $L(P_1) \leq L(P^*) \leq U(P^*) \leq U(P_2)$. This is crucial: the supremum of all lower sums and the infimum of all upper sums are well-defined.</div>
-  </div>
-</div>
-
-<div class="sec">
-  <h2><span class="sec-num" style="color:var(--ch6b);">04</span> The Definition of Integrability</h2>
   <div class="def-box" style="border-left-color:var(--ch6b);">
-    <div class="box-label" style="color:var(--ch6b);">Definition — Darboux Integrability (Rudin §6.1)</div>
-    <div class="box-body">The <strong>upper integral</strong> is $\overline{\int_a^b} f = \inf_P U(P,f)$ and the <strong>lower integral</strong> is $\underline{\int_a^b} f = \sup_P L(P,f)$. Always $\underline{\int} f \leq \overline{\int} f$.<br><br>
-    $f$ is <strong>Darboux integrable</strong> ($f \in \mathscr{R}$) if $\overline{\int_a^b} f = \underline{\int_a^b} f$. The common value is $\int_a^b f(x)\,dx$.</div>
+    <div class="box-label" style="color:var(--ch6b);">Definition 6.1 — Upper and Lower Integrals</div>
+    <div class="box-body">$$\overline{\int_a^b} f\,dx = \inf_P\, U(P,f) \qquad \underline{\int_a^b} f\,dx = \sup_P\, L(P,f)$$
+    $f$ is <strong>Riemann integrable</strong> ($f\in\mathscr{R}$) if these are equal. The common value is $\int_a^b f\,dx$.</div>
   </div>
-  <div class="def-box" style="border-left-color:var(--ch6b);">
-    <div class="box-label" style="color:var(--ch6b);">The Riemann Criterion — the practical test (Rudin §6.6)</div>
-    <div class="box-body">$f \in \mathscr{R}$ if and only if: for every $\varepsilon > 0$, there exists a partition $P$ such that
-    $$U(P, f) - L(P, f) < \varepsilon$$
-    Every integrability proof works by constructing such a partition.</div>
+  <div class="explain">
+    <div class="box-label">Why this is well-defined, and why it looks "backwards"</div>
+    <div class="box-body">Since $f$ is assumed <strong>bounded</strong>, there exist $m \leq f(x) \leq M$ globally, so $m(b-a) \leq L(P,f) \leq U(P,f) \leq M(b-a)$ for every $P$. The set of all $U$-values is bounded below; the set of all $L$-values is bounded above. <em>Recall Ch. 1</em>: completeness of $\mathbb{R}$ guarantees that any nonempty bounded set has a sup/inf. So $\overline{\int}f$ and $\underline{\int}f$ always exist as finite numbers.<br><br>
+    The inf of $U$'s is the <em>best possible overestimate</em> — the lowest ceiling. The sup of $L$'s is the <em>best possible underestimate</em> — the highest floor. Integrability means ceiling meets floor.</div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="dq1-1" data-correct="false">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>It is possible for $U(P,f) < \int_a^b f\,dx$ for some partition $P$.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('dq1-1','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('dq1-1','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">False</div><div class="box-body">Every $U(P,f)$ is an overestimate: $U(P,f) \geq \overline{\int}f = \int f$ (when $f\in\mathscr{R}$). The upper integral is the infimum of all upper sums, so no individual $U(P,f)$ can fall below $\int f$. Symmetrically, no $L(P,f)$ can exceed $\int f$.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="dq1-2">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>Why does Rudin use $M_k = \sup f$ and $m_k = \inf f$ on each subinterval rather than picking a sample point $t_k \in [x_{k-1},x_k]$?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="true" onclick="answerMC('dq1-2',this)"><span class="mc-lbl">A</span>Sup and inf are uniquely determined by $f$ and the partition — no arbitrary choice, and they give the tightest possible bounds from both sides.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq1-2',this)"><span class="mc-lbl">B</span>Sample points give a larger sum, which is easier to bound.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq1-2',this)"><span class="mc-lbl">C</span>Sup and inf always equal $f$ at the endpoints of each subinterval.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq1-2',this)"><span class="mc-lbl">D</span>It matches the definition of the Lebesgue integral.</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">A</div><div class="box-body">With sample points, the sum $\sum f(t_k)\Delta x_k$ depends on which $t_k$ you pick — different choices may give different values. Rudin avoids this by always taking the extremes. The result is the tightest possible overestimate ($U$) and underestimate ($L$) for that partition, with no degrees of freedom.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="dq1-3" data-correct="true">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>The upper and lower integrals $\overline{\int}f$ and $\underline{\int}f$ are defined for every bounded function $f$, whether or not $f\in\mathscr{R}$.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('dq1-3','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('dq1-3','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">True</div><div class="box-body">Boundedness of $f$ means all $U$- and $L$-values lie in $[m(b-a),\,M(b-a)]$, so the set of upper sums is bounded below and the set of lower sums is bounded above. Completeness of $\mathbb{R}$ guarantees $\inf U$ and $\sup L$ exist as finite numbers regardless of whether they are equal. Integrability is the additional requirement that they are equal.</div></div></div>
+    </div>
   </div>
 </div>
 
 <div class="sec">
-  <h2><span class="sec-num" style="color:var(--ch6b);">05</span> Which Functions Are Integrable?</h2>
+  <h2><span class="sec-num" style="color:var(--ch6b);">02</span> Refinements</h2>
+
   <div class="thm">
-    <div class="box-label">Theorem — Continuous ⟹ Integrable (Rudin §6.8)</div>
-    <div class="box-body">If $f: [a,b] \to \mathbb{R}$ is continuous, then $f \in \mathscr{R}$.<br><br>
-    <strong>Proof sketch:</strong> By compactness, $f$ is uniformly continuous. Given $\varepsilon > 0$, choose $\delta$ so $|x-y|<\delta \Rightarrow |f(x)-f(y)| < \varepsilon/(b-a)$. Take $P$ with all $\Delta x_k < \delta$. Then $M_k - m_k \leq \varepsilon/(b-a)$, giving $U-L \leq \varepsilon$.</div>
+    <div class="box-label">Theorem 6.4 — Refinement Lemma</div>
+    <div class="box-body">If $P^*$ is a refinement of $P$ (i.e. $P \subseteq P^*$), then $L(P,f) \leq L(P^*,f) \leq U(P^*,f) \leq U(P,f)$.<br><br>
+    Adding a point splits one subinterval into two. On each piece the sup can only be $\leq$ the original sup, so $U$ decreases (or stays). Symmetrically $L$ increases.</div>
   </div>
   <div class="thm">
-    <div class="box-label">Theorem — Monotone ⟹ Integrable (Rudin §6.9)</div>
-    <div class="box-body">If $f: [a,b] \to \mathbb{R}$ is monotone, then $f \in \mathscr{R}$.<br><br>
-    <strong>Proof (increasing $f$):</strong> Uniform partition $P_n$: $U-L = \frac{b-a}{n}(f(b)-f(a)) \to 0$. Monotone functions can have jump discontinuities — they're still integrable.</div>
+    <div class="box-label">Corollary 6.5 — Any $L \leq$ any $U$</div>
+    <div class="box-body">For <em>any</em> two partitions $P_1, P_2$: $L(P_1,f) \leq U(P_2,f)$.<br><br>
+    <em>Proof:</em> $P^* = P_1 \cup P_2$ is a refinement of both, so $L(P_1) \leq L(P^*) \leq U(P^*) \leq U(P_2)$.<br><br>
+    This is why $\overline{\int}f \geq \underline{\int}f$ always — the inf of all $U$'s is never below the sup of all $L$'s.</div>
   </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="dq2-1" data-correct="true">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>Adding a point to partition $P$ to get $P^*$ can only decrease $U(P,f)$ or keep it the same — it can never increase it.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('dq2-1','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('dq2-1','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">True</div><div class="box-body">Adding a point splits one subinterval $[x_{k-1},x_k]$ into two pieces. The sup of $f$ on each smaller piece is $\leq$ the sup on the whole interval. So each contributing term to $U$ can only shrink. The Refinement Lemma (6.4) captures this: $U(P^*,f) \leq U(P,f)$.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="dq2-2">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>Corollary 6.5 says any lower sum is $\leq$ any upper sum, even for completely unrelated partitions. What is the key step in the proof?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq2-2',this)"><span class="mc-lbl">A</span>Use the definition of sup and inf directly on the same partition.</button>
+        <button class="mc-opt" data-correct="true" onclick="answerMC('dq2-2',this)"><span class="mc-lbl">B</span>Form the common refinement $P^* = P_1 \cup P_2$ and apply the Refinement Lemma to each partition separately.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq2-2',this)"><span class="mc-lbl">C</span>Note that $f$ is bounded, so all sums lie in a finite range.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq2-2',this)"><span class="mc-lbl">D</span>Use the Riemann criterion to find a $P$ with small gap.</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">B</div><div class="box-body">$P^* = P_1 \cup P_2$ refines both $P_1$ and $P_2$. The Refinement Lemma gives $L(P_1) \leq L(P^*) \leq U(P^*) \leq U(P_2)$. Chaining these inequalities yields the corollary. This is also the key structural reason that $\underline{\int}f \leq \overline{\int}f$ always holds.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">03</span> The Riemann Criterion</h2>
+
+  <div class="thm">
+    <div class="box-label">Theorem 6.6 — Riemann Criterion</div>
+    <div class="box-body">$f\in\mathscr{R}$ if and only if for every $\varepsilon > 0$ there exists a partition $P$ with $U(P,f) - L(P,f) < \varepsilon$.</div>
+  </div>
+  <div class="explain">
+    <div class="box-label">Why this is the tool you actually use</div>
+    <div class="box-body">The definition of integrability ($\overline{\int}f = \underline{\int}f$) involves an inf and sup over all partitions — hard to compute directly. The criterion replaces that with a single partition you construct. Every integrability proof in PS8 works by exhibiting such a $P$ and bounding the gap.<br><br>
+    <strong>PS8 Ex.1 template:</strong> uniform partition $P_n$ on $[0,c]$, gap $= c^2/n \to 0$. Then $U(P_n) \to c^2/2$ and $L(P_n) \to c^2/2$ squeeze the integral to $c^2/2$.</div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="dq3-1" data-correct="false">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>To prove $f \in \mathscr{R}$ using the Riemann criterion, you must find a partition $P$ that works for <em>all</em> $\varepsilon > 0$ simultaneously.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('dq3-1','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('dq3-1','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">False</div><div class="box-body">For each $\varepsilon > 0$ you find a (possibly different) partition $P_\varepsilon$ with $U(P_\varepsilon,f) - L(P_\varepsilon,f) < \varepsilon$. The partition is allowed to depend on $\varepsilon$. In PS8 Ex.1, the uniform partition $P_n$ with $n > c^2/\varepsilon$ works — a finer partition for smaller $\varepsilon$.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="dq3-2">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>In PS8 Ex.1, you compute $\int_0^c x\,dx = c^2/2$ using the Riemann criterion. What quantity controls how small you can make $U(P_n,f) - L(P_n,f)$ for the uniform partition $P_n$ with $n$ subintervals?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq3-2',this)"><span class="mc-lbl">A</span>The number of discontinuities of $f(x) = x$.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq3-2',this)"><span class="mc-lbl">B</span>The value $c^2$ (the square of the upper limit).</button>
+        <button class="mc-opt" data-correct="true" onclick="answerMC('dq3-2',this)"><span class="mc-lbl">C</span>$c^2/n$ — the gap shrinks like $1/n$, so choosing $n > c^2/\varepsilon$ forces $U - L < \varepsilon$.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq3-2',this)"><span class="mc-lbl">D</span>The supremum of $f$ on $[0,c]$, which equals $c$.</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">C</div><div class="box-body">For $f(x) = x$ on $[0,c]$ with uniform partition $P_n$ (mesh $c/n$): on each piece $[x_{k-1},x_k]$, $M_k = x_k = kc/n$ and $m_k = x_{k-1} = (k-1)c/n$, so $M_k - m_k = c/n$. Summing over $n$ pieces of width $c/n$: $U - L = n \cdot (c/n) \cdot (c/n) = c^2/n$. Choose $n > c^2/\varepsilon$ to make this $< \varepsilon$.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num" style="color:var(--ch6b);">04</span> Which Functions Are Integrable?</h2>
+
+  <div class="thm">
+    <div class="box-label">Theorem 6.8 — Continuous ⟹ Integrable</div>
+    <div class="box-body">$f$ continuous on $[a,b]$ implies $f\in\mathscr{R}$.<br><br>
+    <em>Recall Ch. 4:</em> continuous on a compact set $\Rightarrow$ uniformly continuous. So given $\varepsilon$, choose $\delta$ with $|x-y|<\delta \Rightarrow |f(x)-f(y)|<\varepsilon/(b-a)$. Take any $P$ with $\Delta x_k < \delta$: then $M_k - m_k < \varepsilon/(b-a)$ on every piece, giving $U-L < \varepsilon$.</div>
+  </div>
+
+  <div class="thm">
+    <div class="box-label">Theorem 6.9 — Monotone ⟹ Integrable</div>
+    <div class="box-body">$f$ monotone on $[a,b]$ implies $f\in\mathscr{R}$, even if $f$ has jump discontinuities.<br><br>
+    For increasing $f$: on the uniform partition $P_n$, $M_k = f(x_k)$ and $m_k = f(x_{k-1})$, so the sum telescopes: $U - L = \tfrac{b-a}{n}(f(b)-f(a)) \to 0$.</div>
+  </div>
+
   <div class="warn">
-    <div class="box-label">Non-example — Dirichlet function is NOT integrable</div>
-    <div class="box-body">Let $f(x) = 1$ if $x \in \mathbb{Q}$, $f(x) = 0$ otherwise. On any subinterval, $M_k = 1$ and $m_k = 0$ (both $\mathbb{Q}$ and irrationals are dense). So $U(P,f) = b-a$ and $L(P,f) = 0$ for every partition — the gap is always $b-a$. So $f \notin \mathscr{R}$.</div>
+    <div class="box-label">Non-example — Dirichlet function $f = \mathbf{1}_\mathbb{Q}$</div>
+    <div class="box-body">On every subinterval, $\mathbb{Q}$ and $\mathbb{R}\setminus\mathbb{Q}$ are both dense (<em>recall Ch. 1</em>), so $M_k = 1$ and $m_k = 0$ for every $k$, every $P$. Thus $U(P,f) = b-a$ and $L(P,f) = 0$ always — the gap never shrinks. $f\notin\mathscr{R}$.</div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="dq4-1" data-correct="false">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>A function must be continuous on $[a,b]$ to be Riemann integrable on $[a,b]$.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('dq4-1','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('dq4-1','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">False</div><div class="box-body">Continuity implies integrability (Theorem 6.8), but not the other way. Monotone functions (Theorem 6.9) can have jump discontinuities at countably many points and still be integrable. The real condition, captured by Lebesgue's criterion, is that the set of discontinuities has measure zero — not that there are no discontinuities.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="dq4-2">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>The proof that continuous $\Rightarrow$ integrable (Theorem 6.8) uses <em>uniform</em> continuity, not just pointwise continuity. Why does the distinction matter?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq4-2',this)"><span class="mc-lbl">A</span>Pointwise continuity is too strong — it would make the proof harder.</button>
+        <button class="mc-opt" data-correct="true" onclick="answerMC('dq4-2',this)"><span class="mc-lbl">B</span>Uniform continuity gives a single $\delta$ that controls oscillation on every subinterval at once; pointwise continuity would give different $\delta$'s at different points, and the worst case could blow up.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq4-2',this)"><span class="mc-lbl">C</span>Uniform continuity is needed to ensure $f$ is bounded.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('dq4-2',this)"><span class="mc-lbl">D</span>Pointwise continuity does not imply $f \in \mathscr{R}$ because sample-point sums may not converge.</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">B</div><div class="box-body">The proof picks $\delta$ so that $|x-y| < \delta \Rightarrow |f(x)-f(y)| < \varepsilon/(b-a)$. This $\delta$ must work everywhere simultaneously — for all $k$ and all pairs of points within any subinterval of width $< \delta$. That's exactly uniform continuity. With only pointwise continuity, you get a separate $\delta_x$ at each point, and as $x$ varies these might shrink to zero, making a uniform partition useless. <em>Recall Ch. 4:</em> continuous on a compact set (here $[a,b]$) automatically gives uniform continuity.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="dq4-3" data-correct="false">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>The Dirichlet function $f = \mathbf{1}_\mathbb{Q}$ fails to be integrable because $\mathbb{Q}$ is countably infinite, whereas a function with only finitely many discontinuities would be integrable.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('dq4-3','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('dq4-3','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">False</div><div class="box-body">The Dirichlet function fails because it is discontinuous <em>everywhere</em> — not just at the rationals. At every irrational $x$, nearby rationals make $f$ jump, so $f$ is also discontinuous at irrationals. The discontinuity set is all of $[a,b]$, which has measure $b-a > 0$. The issue isn't countability of $\mathbb{Q}$ — it's that neither $\mathbb{Q}$ nor $\mathbb{R}\setminus\mathbb{Q}$ can be avoided in any subinterval (density from Ch. 1), so $M_k - m_k = 1$ always.</div></div></div>
+    </div>
   </div>
 </div>
 
@@ -266,15 +373,16 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
 <div class="sec">
   <h2><span class="sec-num" style="color:var(--ch6b);">01</span> Algebraic Properties</h2>
-  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
-    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
-    <div class="mi-text">The Riemann integral is a linear functional on the space of integrable functions: you can add under the integral and pull out constants. These require proof — they're not free.</div>
+  <div class="warn">
+    <div class="box-label">These need proof — they're not obvious from the definition</div>
+    <div class="box-body">In calculus you wrote $\int(f+g) = \int f + \int g$ without thought. Here you have to prove it because the integral is defined via inf/sup of sums, not a limit. The key inequality is $\sup(f+g) \leq \sup f + \sup g$ — NOT equality, because the sups might be achieved at different points. This inequality gives $U(P,f+g) \leq U(P,f) + U(P,g)$, and similarly $L(P,f+g) \geq L(P,f) + L(P,g)$. The squeeze from both sides gives additivity.<br><br>
+    The <strong>trap on PS8 Ex.2</strong> is the scalar case $c < 0$. When $c < 0$: $\sup(cf) = c \cdot \inf f$ (multiplying by a negative number flips the sup to an inf). So $U(P, cf) = c \cdot L(P, f)$ — the upper sum for $cf$ is $c$ times the LOWER sum for $f$. If you write $U(P,cf) = cU(P,f)$ and forget to flip, your proof breaks for $c < 0$.</div>
   </div>
   <div class="def-box" style="border-left-color:var(--ch6b);">
-    <div class="box-label" style="color:var(--ch6b);">Linearity (Rudin §6.12)</div>
-    <div class="box-body">If $f, g \in \mathscr{R}[a,b]$ and $c \in \mathbb{R}$, then $(f+g), (cf) \in \mathscr{R}$ and:
-    $$\int_a^b (f+g) = \int_a^b f + \int_a^b g, \qquad \int_a^b cf = c\int_a^b f$$
-    <strong>Proof idea:</strong> $\sup(f+g) \leq \sup f + \sup g$ gives $U(P,f+g) \leq U(P,f)+U(P,g)$. Similarly $L(P,f+g) \geq L(P,f)+L(P,g)$. These squeeze $\int(f+g)$ to equal $\int f + \int g$.</div>
+    <div class="box-label" style="color:var(--ch6b);">Linearity, Monotonicity, Triangle Inequality (Rudin §6.12)</div>
+    <div class="box-body">For $f, g \in \mathscr{R}[a,b]$ and $c \in \mathbb{R}$:
+    $$\int_a^b (f+g) = \int_a^b f + \int_a^b g \qquad \int_a^b cf = c\int_a^b f$$
+    If $f \leq g$ on $[a,b]$: $\int_a^b f \leq \int_a^b g$. &emsp; And: $\left|\int_a^b f\right| \leq \int_a^b |f|$.</div>
   </div>
   <div class="thm">
     <div class="box-label">Monotonicity</div>
@@ -287,20 +395,55 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
     <strong>Why $|f| \in \mathscr{R}$:</strong> $\big||f(x)|-|f(y)|\big| \leq |f(x)-f(y)|$, so oscillation of $|f|$ is no worse than $f$.<br>
     <strong>Why the bound:</strong> From $-|f| \leq f \leq |f|$, monotonicity gives $-\int|f| \leq \int f \leq \int|f|$.</div>
   </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="p2s1-1" data-correct="false">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>For bounded functions $f$ and $g$ on $[x_{k-1},x_k]$: $\sup(f+g) = \sup f + \sup g$.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('p2s1-1','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('p2s1-1','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="warn"><div class="box-label">False — equality fails in general</div><div class="box-body">The correct inequality is $\sup(f+g) \leq \sup f + \sup g$. Equality would require both sups to be attained at the same point, which needn't happen. This is exactly why $U(P,f+g) \leq U(P,f)+U(P,g)$ (not equality) — and why you need to squeeze from both $U$ and $L$ sides to prove additivity.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="p2s1-2">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>For a constant $c < 0$ and $f \in \mathscr{R}[a,b]$, what is the upper Darboux sum $U(P, cf)$ on a partition $P$?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p2s1-2',this)"><span class="mc-lbl">A</span>$c \cdot U(P,f)$</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p2s1-2',this)"><span class="mc-lbl">B</span>$|c| \cdot U(P,f)$</button>
+        <button class="mc-opt" data-correct="true" onclick="answerMC('p2s1-2',this)"><span class="mc-lbl">C</span>$c \cdot L(P,f)$</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p2s1-2',this)"><span class="mc-lbl">D</span>$-U(P,f)$</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">C — the sup flips when you multiply by a negative</div><div class="box-body">When $c < 0$: $\sup(cf) = c\inf f$ on each subinterval (multiplying by a negative number reverses the ordering). So $M_k(cf) = c\cdot m_k(f)$, and $U(P,cf) = \sum c\cdot m_k(f)\Delta x_k = c\cdot L(P,f)$. This is the hidden trap in PS8 Ex.2 — if you write $U(P,cf) = cU(P,f)$ for $c < 0$, your proof of linearity is wrong.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="p2s1-3" data-correct="true">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f \in \mathscr{R}[a,b]$ and $f(x) \geq 0$ for all $x$, then $\int_a^b f\,dx \geq 0$.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('p2s1-3','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('p2s1-3','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">True — monotonicity with $g \equiv 0$</div><div class="box-body">Apply monotonicity: $f \geq 0 = g$ on $[a,b]$ gives $\int f \geq \int g = 0$. Equivalently, $f \geq 0$ implies $m_k \geq 0$ on every subinterval, so $L(P,f) \geq 0$ for all $P$, hence $\underline{\int}f \geq 0$. Since $f \in \mathscr{R}$, $\int f = \underline{\int}f \geq 0$.</div></div></div>
+    </div>
+  </div>
 </div>
 
 <div class="sec">
   <h2><span class="sec-num" style="color:var(--ch6b);">02</span> Fundamental Theorem of Calculus</h2>
-  <div class="main-idea" style="background:linear-gradient(135deg,rgba(122,74,156,.07),rgba(58,56,106,.04));border:1px solid var(--ch6);">
-    <div class="mi-label" style="color:var(--ch6b);">Main Idea</div>
-    <div class="mi-text">The FTC reveals that integration and differentiation are inverse operations. Part 1: integrating produces a differentiable function — starting from $f$, you build $F(x)=\int_a^x f$ and recover $f$ by differentiating $F$. Part 2: you can evaluate integrals via antiderivatives — if you already know a function $F$ with $F'=f$, then $\int_a^b f = F(b)-F(a)$.</div>
+  <div class="warn">
+    <div class="box-label">FTC Part 1 and Part 2 are NOT the same theorem — know the difference</div>
+    <div class="box-body"><strong>Part 1:</strong> You start with an integrable $f$ (no antiderivative needed, no continuity required). You build the function $F(x) = \int_a^x f(t)\,dt$. Claim: $F$ is always continuous, and if $f$ happens to be continuous at $x_0$, then $F'(x_0) = f(x_0)$. The hypothesis is on $f$'s continuity; the conclusion is about $F$'s differentiability.<br><br>
+    <strong>Part 2:</strong> You start with a known antiderivative $F$ (a function you already have, with $F' = f$ on $(a,b)$). Claim: $\int_a^b f = F(b) - F(a)$. No continuity hypothesis on $f$ needed — just that $f \in \mathscr{R}$ and $F$ is continuous on $[a,b]$ with $F' = f$ on the open interval.<br><br>
+    <strong>Where students go wrong:</strong> Part 1 does NOT say $F' = f$ everywhere — only at points where $f$ is continuous. If $f$ has a jump discontinuity at $x_0$, then $F$ is still continuous there (it's Lipschitz) but $F'(x_0)$ may not exist. The F built in Part 1 and the F assumed in Part 2 are different objects with different hypotheses.</div>
   </div>
   <div class="explain" style="border-left-color:var(--ch6);">
-    <div class="box-label">Geometric Meaning — Why $F'(x_0) = f(x_0)$</div>
-    <div class="box-body">$F(x)=\int_a^x f(t)\,dt$ is the signed area under the graph of $f$ from $a$ to $x$ — a running total. When $x$ increases by a small amount $h$, the new area added is $\int_{x_0}^{x_0+h}f(t)\,dt$, which is approximately a thin rectangle of width $h$ and height $f(x_0)$, giving area $\approx f(x_0)\cdot h$. So:
-    $$\frac{F(x_0+h)-F(x_0)}{h}\approx\frac{f(x_0)\cdot h}{h}=f(x_0)$$
-    The approximation becomes exact as $h\to 0$, because continuity of $f$ at $x_0$ means the height of $f$ in $[x_0,x_0+h]$ is close to $f(x_0)$ for small $h$. This is why the continuity hypothesis on $f$ is necessary — without it, the "height of the thin strip" isn't well-defined, and $F$ may fail to be differentiable at that point.<br><br>
-    <strong>Geometric summary of Part 2:</strong> If $F$ is any antiderivative of $f$, then $F(b)-F(a)$ is the net change in $F$ over $[a,b]$, which equals the total signed area $\int_a^b f$. This works because $F$ and the Part 1 integral function $\int_a^x f$ differ by a constant (both have the same derivative $f$).</div>
+    <div class="box-label">Why $F'(x_0) = f(x_0)$ requires continuity of $f$ at $x_0$</div>
+    <div class="box-body">$F(x)=\int_a^x f(t)\,dt$ measures signed area up to $x$. The difference quotient:
+    $$\frac{F(x_0+h)-F(x_0)}{h} = \frac{1}{h}\int_{x_0}^{x_0+h} f(t)\,dt$$
+    This is the average value of $f$ on $[x_0, x_0+h]$. For this to converge to $f(x_0)$, you need $f(t)$ to be close to $f(x_0)$ for $t$ near $x_0$ — which is exactly continuity. Without continuity, the average over a shrinking interval might not converge to the pointwise value.<br><br>
+    <strong>Example of failure:</strong> Let $f = \mathbf{1}_{[1/2, 1]}$ on $[0,1]$ — integrable but not continuous at $1/2$. Then $F(x) = \max(0, x - 1/2)$, which has a kink at $x = 1/2$. $F$ is not differentiable there, confirming that Part 1 breaks at the discontinuity.</div>
   </div>
   <div class="def-box" style="border-left-color:var(--ch6b);">
     <div class="box-label" style="color:var(--ch6b);">FTC Part 1 — The integral function is differentiable (Rudin §6.20)</div>
@@ -318,6 +461,39 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
   <div class="warn">
     <div class="box-label">Common error on FTC Part 1</div>
     <div class="box-body">FTC Part 1 does NOT say $F'(x_0) = f(x_0)$ for all $x_0$ — only at points where $f$ is continuous. If $f$ has a jump at $x_0$, $F$ is still continuous there but may fail to be differentiable. $f \in \mathscr{R}$ is not enough to guarantee differentiability of $F$.</div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="p2s2-1" data-correct="false">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f \in \mathscr{R}[a,b]$, the function $F(x) = \int_a^x f(t)\,dt$ is differentiable at every point of $[a,b]$.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('p2s2-1','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('p2s2-1','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="warn"><div class="box-label">False — only where $f$ is continuous</div><div class="box-body">$F$ is always <em>continuous</em> (it's Lipschitz: $|F(x)-F(y)| \leq M|x-y|$ where $M = \sup|f|$). But differentiability requires the extra condition that $f$ is continuous at $x_0$. Example: $f = \mathbf{1}_{[1/2,1]}$ on $[0,1]$ gives $F(x) = \max(0, x-1/2)$, which has a corner at $x = 1/2$ — continuous but not differentiable there.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="p2s2-2" data-correct="false">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>FTC Part 2 only applies when $F$ is specifically defined by $F(x) = \int_a^x f(t)\,dt$.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('p2s2-2','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('p2s2-2','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">False — any antiderivative works</div><div class="box-body">FTC Part 2 applies to ANY $F$ satisfying: (1) $F$ continuous on $[a,b]$, and (2) $F' = f$ on the open interior $(a,b)$. This is what makes Part 2 useful for computation — you can use $F(x) = x^3/3$ to evaluate $\int_0^1 x^2\,dx$, no need to go back to Darboux sums. The $F$ in Part 1 and the $F$ in Part 2 are conceptually different objects.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="p2s2-3">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>Why is $F(x) = \int_a^x f(t)\,dt$ always continuous, even when $f$ has jump discontinuities?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p2s2-3',this)"><span class="mc-lbl">A</span>Because integrable functions can't have discontinuities.</button>
+        <button class="mc-opt" data-correct="true" onclick="answerMC('p2s2-3',this)"><span class="mc-lbl">B</span>$F$ is Lipschitz: $|F(x)-F(y)| \leq M|x-y|$ where $M = \sup|f|$, and Lipschitz implies continuous.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p2s2-3',this)"><span class="mc-lbl">C</span>Continuity of $F$ follows from FTC Part 2.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p2s2-3',this)"><span class="mc-lbl">D</span>Integration automatically removes all discontinuities from $f$.</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">B — Lipschitz continuity</div><div class="box-body">Since $f$ is bounded ($|f| \leq M$), for any $x < y$: $|F(y)-F(x)| = |\int_x^y f\,dt| \leq M(y-x)$. This is the definition of Lipschitz continuity with constant $M$, which implies uniform continuity. Crucially, this requires only boundedness of $f$, not continuity — so $F$ is continuous regardless of where $f$ jumps.</div></div></div>
+    </div>
   </div>
 </div>
 
@@ -338,6 +514,30 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
   <div class="explain">
     <div class="box-label">Exam trap — hypotheses matter</div>
     <div class="box-body">Substitution requires $f$ continuous on the range of $\varphi$ AND $\varphi$ continuously differentiable — not just differentiable. Always state these hypotheses explicitly when writing proofs.</div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="p2s3-1">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>Integration by parts is derived by applying FTC to which differentiation rule?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p2s3-1',this)"><span class="mc-lbl">A</span>Chain rule</button>
+        <button class="mc-opt" data-correct="true" onclick="answerMC('p2s3-1',this)"><span class="mc-lbl">B</span>Product rule: $(uv)' = u'v + uv'$</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p2s3-1',this)"><span class="mc-lbl">C</span>Quotient rule</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p2s3-1',this)"><span class="mc-lbl">D</span>L'Hôpital's rule</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">B — product rule reversed</div><div class="box-body">$(uv)' = u'v + uv'$. Integrate both sides over $[a,b]$ via FTC: $[uv]_a^b = \int u'v + \int uv'$. Rearrange to isolate $\int u'v$. Substitution instead comes from the chain rule: $(F\circ\varphi)' = f(\varphi(x))\varphi'(x)$, with FTC applied to the left side. Knowing which rule is being reversed tells you which formula you get.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="p2s3-2" data-correct="true">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>The substitution formula requires $\varphi \in C^1$ — a merely differentiable $\varphi$ (with discontinuous derivative) is not sufficient.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('p2s3-2','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('p2s3-2','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">True — $\varphi'$ must be continuous (or at least integrable)</div><div class="box-body">The proof uses FTC Part 2 applied to $F\circ\varphi$ on $[a,b]$, which requires $(F\circ\varphi)' = f(\varphi(x))\varphi'(x)$ to be integrable. If $\varphi'$ is discontinuous, $f(\varphi(x))\varphi'(x)$ may not be integrable, and FTC Part 2 cannot be invoked. $C^1$ (continuous derivative) guarantees $\varphi' \in \mathscr{R}$, making the formula valid. Always state this hypothesis explicitly in proofs.</div></div></div>
+    </div>
   </div>
 </div>
 
@@ -373,6 +573,39 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
     <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">⇒</div><div class="pw-c"><div class="pw-s">Define $D_\alpha = \{x : \omega(f,x) \geq \alpha\}$ where $\omega(f,x)$ is the oscillation at $x$. Show $D_\alpha$ is compact. By the Riemann criterion, choose $P$ with $U-L < \alpha\varepsilon$. Intervals meeting $D_\alpha$ have $M_k - m_k \geq \alpha$, so their total length $\leq \varepsilon$.</div><div class="pw-w"><strong>Then:</strong> $D = \bigcup D_{1/n}$ is a countable union of measure-zero sets, hence measure zero.</div></div></div>
     <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">⇐</div><div class="pw-c"><div class="pw-s">Cover discontinuity set $D$ by open intervals of total length $< \varepsilon/(4M)$. Let $K = [a,b] \setminus \text{cover}$. $K$ is compact and $f|_K$ is uniformly continuous. Handle $K$ by uniform continuity; handle the covering by bounding oscillation by $2M$. Combine to get $U-L < \varepsilon$.</div><div class="pw-w"><strong>Key:</strong> splitting into "good" (near $K$) and "bad" (near $D$) subintervals.</div></div></div>
   </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="p3s1-1" data-correct="true">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>Every countable subset of $\mathbb{R}$ has measure zero.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('p3s1-1','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('p3s1-1','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">True — cover the $n$-th point by a shrinking interval</div><div class="box-body">Let $A = \{a_1, a_2, \ldots\}$ be countable. Given $\varepsilon > 0$, cover $a_n$ by the open interval $(a_n - \varepsilon/2^{n+1},\, a_n + \varepsilon/2^{n+1})$, which has length $\varepsilon/2^n$. The total length is $\sum_{n=1}^\infty \varepsilon/2^n = \varepsilon$. So $A$ has measure zero. This is why countably many discontinuities (e.g., a monotone function's jumps) pose no obstacle to integrability.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="p3s1-2" data-correct="false">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>The Cantor set has positive measure because it is uncountable.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('p3s1-2','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('p3s1-2','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="warn"><div class="box-label">False — measure and cardinality are independent</div><div class="box-body">The Cantor set is uncountable AND has measure zero. Measure zero means the set can be covered by open intervals of arbitrarily small total length — this has nothing to do with how many points the set contains. The Cantor set has measure zero because at each stage of its construction you remove open intervals; the total length removed is $1/3 + 2/9 + 4/27 + \cdots = 1$, leaving a set of measure $0$.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="p3s1-3">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>Lebesgue's criterion immediately explains why monotone functions are integrable. What is the reason?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s1-3',this)"><span class="mc-lbl">A</span>Monotone functions are bounded, and bounded functions are integrable.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s1-3',this)"><span class="mc-lbl">B</span>Monotone functions have no discontinuities.</button>
+        <button class="mc-opt" data-correct="true" onclick="answerMC('p3s1-3',this)"><span class="mc-lbl">C</span>A monotone function can have at most countably many discontinuities, and countable sets have measure zero.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s1-3',this)"><span class="mc-lbl">D</span>Monotone functions satisfy the Riemann criterion with any uniform partition.</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">C — countable discontinuities = measure zero</div><div class="box-body">A monotone function can have jump discontinuities (countably many — each jump has positive height, and infinitely many positive-height jumps would force the function to be unbounded). Since countable sets have measure zero (shown above), Lebesgue's criterion immediately gives $f \in \mathscr{R}$. This is more elegant than the direct proof via telescoping sums, and shows that Thm 6.9 is just a special case of the general criterion.</div></div></div>
+    </div>
+  </div>
 </div>
 
 <div class="sec">
@@ -388,6 +621,30 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
     <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">1</div><div class="pw-c"><div class="pw-s"><strong>Young's inequality:</strong> $ab \leq a^p/p + b^q/q$ for $a,b \geq 0$.</div><div class="pw-w">Proof: fix $b$, minimize $g(a) = a^p/p + b^q/q - ab$ over $a \geq 0$. The minimum is $0$.</div></div></div>
     <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">2</div><div class="pw-c"><div class="pw-s">Let $A = \|f\|_p$ and $B = \|g\|_q$. If either is $0$, done. Otherwise normalize: $\tilde{f} = |f|/A$, $\tilde{g} = |g|/B$, so $\int\tilde{f}^p = \int\tilde{g}^q = 1$.</div><div class="pw-w">This reduces to the case where both $L^p$-norms equal $1$.</div></div></div>
     <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">3</div><div class="pw-c"><div class="pw-s">Apply Young's pointwise: $\tilde{f}(x)\tilde{g}(x) \leq \tilde{f}^p/p + \tilde{g}^q/q$. Integrate: $\int\tilde{f}\tilde{g} \leq 1/p + 1/q = 1$. Unscale: $\int|fg| \leq AB$. Then $|\int fg| \leq \int|fg| \leq AB$.</div></div></div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="p3s2-1" data-correct="true">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>The Cauchy-Schwarz inequality $\left|\int_a^b fg\right| \leq \sqrt{\int_a^b f^2}\cdot\sqrt{\int_a^b g^2}$ is a special case of Hölder's inequality.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('p3s2-1','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('p3s2-1','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">True — take $p = q = 2$</div><div class="box-body">With $p = q = 2$: $1/p + 1/q = 1/2 + 1/2 = 1$ ✓. Hölder gives $|\int fg| \leq \|f\|_2\|g\|_2 = (\int f^2)^{1/2}(\int g^2)^{1/2}$, which is exactly Cauchy-Schwarz. The Hölder inequality is the $L^p$-generalization of Cauchy-Schwarz to all conjugate pairs $p,q > 1$.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="p3s2-2">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>After normalizing $\tilde{f} = |f|/\|f\|_p$ and $\tilde{g} = |g|/\|g\|_q$ so that $\int\tilde{f}^p = \int\tilde{g}^q = 1$, and then applying Young's inequality pointwise and integrating, the right side becomes:</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s2-2',this)"><span class="mc-lbl">A</span>$p + q$</button>
+        <button class="mc-opt" data-correct="true" onclick="answerMC('p3s2-2',this)"><span class="mc-lbl">B</span>$\dfrac{1}{p}\int\tilde{f}^p + \dfrac{1}{q}\int\tilde{g}^q = \dfrac{1}{p} + \dfrac{1}{q} = 1$</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s2-2',this)"><span class="mc-lbl">C</span>$\|\tilde{f}\|_p + \|\tilde{g}\|_q = 2$</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s2-2',this)"><span class="mc-lbl">D</span>$\|f\|_p\|g\|_q$</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">B — normalization makes the bound collapse to $1$</div><div class="box-body">Young's gives $\tilde{f}(x)\tilde{g}(x) \leq \tilde{f}(x)^p/p + \tilde{g}(x)^q/q$ at each $x$. Integrate: $\int\tilde{f}\tilde{g} \leq \frac{1}{p}\int\tilde{f}^p + \frac{1}{q}\int\tilde{g}^q = \frac{1}{p}(1) + \frac{1}{q}(1) = \frac{1}{p}+\frac{1}{q} = 1$. The normalization was designed exactly so both integrals equal $1$, making the final bound $1$ rather than something involving $\|f\|_p$ and $\|g\|_q$. Unscaling then recovers the general inequality.</div></div></div>
+    </div>
   </div>
 </div>
 
@@ -408,6 +665,30 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
     $$\int_{-r}^r \frac{r}{\sqrt{r^2-x^2}}\,dx = r\left[\arcsin\frac{x}{r}\right]_{-r}^r = r\pi$$
     Total $= 2\pi r$.</div>
   </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="p3s3-1" data-correct="false">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>For any $f \in \mathscr{R}[a,b]$ with $f' \in \mathscr{R}[a,b]$, the arc length formula $\mathcal{L}(f) = \int_a^b\sqrt{1+f'(x)^2}\,dx$ holds.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('p3s3-1','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('p3s3-1','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="warn"><div class="box-label">False — need $f \in C^1$, not just $f' \in \mathscr{R}$</div><div class="box-body">The proof applies MVT on each subinterval to write $\Delta f_k = f'(c_k)\Delta x_k$. MVT requires $f$ to be differentiable, not just that $f'$ is integrable. More importantly, convergence of the chord sums to the integral requires the Riemann sums $\sum\sqrt{1+f'(c_k)^2}\,\Delta x_k$ to converge, which needs $\sqrt{1+f'^2}$ continuous — i.e., $f'$ continuous, i.e., $f \in C^1$. A function with an integrable but discontinuous derivative is not covered.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="p3s3-2">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>In the arc length proof, the MVT is applied on each subinterval $[x_{k-1},x_k]$ to write $f(x_k)-f(x_{k-1}) = f'(c_k)(x_k-x_{k-1})$. What does this accomplish?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s3-2',this)"><span class="mc-lbl">A</span>It shows that the chord sum $S(P)$ equals the integral exactly, with no error.</button>
+        <button class="mc-opt" data-correct="true" onclick="answerMC('p3s3-2',this)"><span class="mc-lbl">B</span>It converts each chord length $\sqrt{(\Delta x_k)^2+(\Delta f_k)^2}$ into $\sqrt{1+f'(c_k)^2}\,\Delta x_k$ — a term in a Riemann sum for $\int\sqrt{1+f'^2}$.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s3-2',this)"><span class="mc-lbl">C</span>It proves that $f$ is integrable on $[a,b]$.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s3-2',this)"><span class="mc-lbl">D</span>It shows that arc length equals the total variation $\int_a^b|f'|\,dx$.</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">B — MVT makes the chord look like a Riemann sum term</div><div class="box-body">With $\Delta f_k = f'(c_k)\Delta x_k$: chord length $= \sqrt{(\Delta x_k)^2 + (f'(c_k)\Delta x_k)^2} = \sqrt{1+f'(c_k)^2}\cdot\Delta x_k$. Summing over the partition gives $\sum\sqrt{1+f'(c_k)^2}\,\Delta x_k$, which is a Riemann sum for $\int_a^b\sqrt{1+f'^2}\,dx$. Since $f'$ is continuous, this Riemann sum converges to the integral as the mesh $\to 0$.</div></div></div>
+    </div>
+  </div>
 </div>
 
 <div class="sec">
@@ -421,6 +702,30 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
     <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">1</div><div class="pw-c"><div class="pw-s">Suppose $f(x_0) > 0$ for some $x_0$. By continuity, $f > 0$ on some interval $I = (x_0-\delta, x_0+\delta) \cap [a,b]$.</div></div></div>
     <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">2</div><div class="pw-c"><div class="pw-s">Choose a bump function: $\phi(x) = \max(0, \delta - |x-x_0|)$ (a tent function). This is continuous, zero outside $I$, positive inside $I$.</div><div class="pw-w"><strong>Test function technique</strong> — ubiquitous in PDEs and distribution theory.</div></div></div>
     <div class="pw-step"><div class="pw-n" style="color:var(--ch6b);">3</div><div class="pw-c"><div class="pw-s">Then $f(x)\phi(x) > 0$ on $I$ and $\geq 0$ elsewhere. So $\int_a^b f\phi > 0$ — contradiction. $\blacksquare$</div></div></div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ch6b);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">Check Your Understanding</div>
+
+    <div class="drill-card" id="p3s4-1" data-correct="true">
+      <div class="drill-q"><span class="drill-tag tf">T/F</span>There is a one-line proof of the fundamental lemma: since $f$ is continuous (hence $\phi = f$ is an allowed test function), taking $\phi = f$ in the hypothesis gives $\int_a^b f^2 = 0$; since $f^2 \geq 0$ and $f$ is continuous, this forces $f \equiv 0$.</div>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true" onclick="answerTF('p3s4-1','true')">True</button>
+        <button class="tf-btn" data-val="false" onclick="answerTF('p3s4-1','false')">False</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">True — this is a valid and elegant proof</div><div class="box-body">Since $f$ is continuous, $\phi = f$ is a legal test function. The hypothesis $\int f\phi = 0$ for all continuous $\phi$ then gives $\int_a^b f^2\,dx = 0$. Since $f^2 \geq 0$ and $f^2$ is continuous, $\int f^2 = 0$ forces $f^2 \equiv 0$ on $[a,b]$ — if $f^2(x_0) > 0$ at any point, continuity makes $f^2 > 0$ on a neighborhood, giving a positive integral. So $f \equiv 0$. The tent-function proof works more generally; this shortcut uses the specific hypothesis.</div></div></div>
+    </div>
+
+    <div class="drill-card" id="p3s4-2">
+      <div class="drill-q"><span class="drill-tag mc">MC</span>Why does the fundamental lemma require $f$ to be continuous? What goes wrong if $f$ is only assumed integrable?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s4-2',this)"><span class="mc-lbl">A</span>An integrable $f$ might not satisfy $\int f\phi = 0$ for all continuous $\phi$.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s4-2',this)"><span class="mc-lbl">B</span>Without continuity, $F(x) = \int_a^x f$ might not be well-defined.</button>
+        <button class="mc-opt" data-correct="true" onclick="answerMC('p3s4-2',this)"><span class="mc-lbl">C</span>An integrable function can be changed on a set of measure zero without affecting any integral — so the best possible conclusion is $f = 0$ almost everywhere, not everywhere.</button>
+        <button class="mc-opt" data-correct="false" onclick="answerMC('p3s4-2',this)"><span class="mc-lbl">D</span>The tent function $\phi$ would not be continuous if $f$ is discontinuous.</button>
+      </div>
+      <div class="drill-exp"><div class="thm"><div class="box-label">C — "almost everywhere" is the best without continuity</div><div class="box-body">If $f$ is integrable but not continuous, changing $f$ on a single point (or any measure-zero set) doesn't change any integral. So $\int f\phi = 0$ for all continuous $\phi$ only pins down $f$ up to measure-zero modification. For example, $f = \mathbf{1}_{\{c\}}$ (the indicator of a single point) satisfies $\int f\phi = 0$ for all $\phi$, yet $f \not\equiv 0$. Continuity rules this out: if $f(x_0) \neq 0$ and $f$ is continuous, the value propagates to a whole interval with positive measure.</div></div></div>
+    </div>
   </div>
 </div>
 
@@ -440,25 +745,33 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">PS8 Ex.1</span>Let $c > 0$. Evaluate $\int_0^c x\,dx$ using Darboux sums, without using FTC.<span class="ps-tag">PS8</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">This is the foundational computation of the chapter — computing a real integral from scratch, before FTC is available. The point is not just getting $c^2/2$; it's seeing how upper and lower sums squeeze toward each other, simultaneously proving the function is integrable and pinning down its value. Because $f(x) = x$ is monotone, the uniform partition is natural: the sup and inf on each piece are just the right endpoint and left endpoint.</p>
     <div class="explain" style="margin:0 0 8px;">
       <div class="box-label">Approach</div>
-      <div class="box-body">Take the uniform partition $P_n$. Since $f(x)=x$ is increasing, $M_k = kc/n$ and $m_k = (k-1)c/n$. Use $\sum_{k=1}^n k = n(n+1)/2$. Show both $U$ and $L$ converge to $c^2/2$.</div>
+      <div class="box-body">1. Take the uniform partition $P_n = \{0, c/n, 2c/n, \ldots, c\}$, mesh $= c/n$.<br>
+      2. Since $f$ is increasing: $M_k = kc/n$, $m_k = (k{-}1)c/n$ on the $k$-th piece.<br>
+      3. Compute $U(P_n)$ and $L(P_n)$ using $\sum_{k=1}^n k = n(n+1)/2$.<br>
+      4. Show the gap $U - L = c^2/n \to 0$, so $f \in \mathscr{R}$, and both sums converge to $c^2/2$.</div>
     </div>
     <button class="sol-btn" onclick="toggleSol('s1')">show solution</button>
     <div id="s1" style="display:none;margin-top:12px;">
       <div class="thm"><div class="box-label">Solution</div>
         <div class="box-body">$U(P_n) = \frac{c^2}{n^2}\sum_{k=1}^n k = \frac{c^2(n+1)}{2n} = \frac{c^2}{2}+\frac{c^2}{2n}$<br><br>
         $L(P_n) = \frac{c^2(n-1)}{2n} = \frac{c^2}{2}-\frac{c^2}{2n}$<br><br>
-        Gap $= c^2/n \to 0$. Since $L(P_n) \leq \underline{\int} \leq \overline{\int} \leq U(P_n)$ and both bounds $\to c^2/2$: $\int_0^c x\,dx = c^2/2$.</div>
+        Gap $= c^2/n \to 0$. Since $L(P_n) \leq \underline{\int} \leq \overline{\int} \leq U(P_n)$ and both bounds $\to c^2/2$: $\int_0^c x\,dx = c^2/2$. $\square$</div>
       </div>
     </div>
   </div>
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">PS8 Ex.2</span>Let $f,g \in \mathscr{R}[a,b]$. Prove linearity, monotonicity, and the triangle inequality for the Riemann integral.<span class="ps-tag">PS8</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">These feel obvious from calculus, but here you must prove them from the definition, because the integral is defined via inf/sup of sums — not a limit. The hidden trap is the scalar case $c < 0$: since $\sup(cf) = c\inf f$ when $c < 0$ (multiplying by a negative flips sup to inf), the upper sum for $cf$ equals $c$ times the <em>lower</em> sum for $f$. Writing $U(P,cf) = cU(P,f)$ for negative $c$ is the most common error here.</p>
     <div class="explain" style="margin:0 0 8px;">
       <div class="box-label">Approach</div>
-      <div class="box-body"><strong>Additivity:</strong> $\sup(f+g) \leq \sup f + \sup g$ gives $U(P,f+g) \leq U(P,f)+U(P,g)$. Squeeze.<br><strong>Scalar:</strong> Handle $c \geq 0$ and $c < 0$ separately ($\sup(cf) = c\inf f$ when $c < 0$).<br><strong>Monotonicity:</strong> $h = g-f \geq 0$ implies $L(P,h) \geq 0$ for all $P$.<br><strong>Triangle:</strong> Show $|f| \in \mathscr{R}$ via reverse triangle inequality, then apply $-|f| \leq f \leq |f|$.</div>
+      <div class="box-body">1. <strong>Additivity:</strong> Use $\sup(f{+}g) \leq \sup f + \sup g$ to get $U(P,f{+}g) \leq U(P,f)+U(P,g)$. Choose $P$ making each within $\varepsilon/2$ of its integral, then squeeze.<br>
+      2. <strong>Scalar $c < 0$:</strong> Note $\sup(cf) = c\inf f$, so $U(P,cf) = cL(P,f)$, not $cU(P,f)$. Handle $c \geq 0$ and $c < 0$ as separate cases.<br>
+      3. <strong>Monotonicity:</strong> Let $h = g - f \geq 0$; then $m_k(h) \geq 0$ for every subinterval, so $L(P,h) \geq 0$ for all $P$, giving $\int h \geq 0$.<br>
+      4. <strong>Triangle inequality:</strong> First prove $|f| \in \mathscr{R}$ via $\sup|f| - \inf|f| \leq \sup f - \inf f$ (reverse triangle inequality). Then $-|f| \leq f \leq |f|$ and monotonicity give $-\int|f| \leq \int f \leq \int|f|$.</div>
     </div>
     <button class="sol-btn" onclick="toggleSol('s2')">show solution</button>
     <div id="s2" style="display:none;margin-top:12px;">
@@ -473,6 +786,13 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">PS8 Ex.3</span>Prove that integration by parts and integration by substitution hold.<span class="ps-tag">PS8</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">Both formulas are just differentiation rules run in reverse and capped off with FTC. IBP comes from the product rule $(uv)' = u'v + uv'$ — integrate both sides and rearrange. Substitution comes from the chain rule $(F\circ\varphi)' = f(\varphi(x))\varphi'(x)$ — once you see that, FTC Part 2 gives you the formula in one step. In each case your job is to identify the right differentiation rule and then carefully state the hypotheses needed.</p>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body">1. <strong>IBP:</strong> Differentiate $uv$ by the product rule to get $(uv)' = u'v + uv'$. Integrate over $[a,b]$ via FTC Part 2: $[uv]_a^b = \int u'v + \int uv'$. Rearrange.<br>
+      2. <strong>Substitution:</strong> Let $F$ be an antiderivative of $f$ (exists since $f$ is continuous). By the chain rule, $(F\circ\varphi)' = f(\varphi(x))\varphi'(x)$. Apply FTC Part 2 to $(F\circ\varphi)$ on $[a,b]$, and separately to $F$ on $[\varphi(a),\varphi(b)]$; both give $F(\varphi(b)) - F(\varphi(a))$.<br>
+      3. State hypotheses explicitly: $u,v \in C^1$ for IBP; $\varphi \in C^1$ and $f$ continuous on range of $\varphi$ for substitution.</div>
+    </div>
     <button class="sol-btn" onclick="toggleSol('s3')">show solution</button>
     <div id="s3" style="display:none;margin-top:12px;">
       <div class="thm"><div class="box-label">IBP</div>
@@ -486,6 +806,12 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">PS8 Ex.4</span>Prove Lebesgue's criterion: $f \in \mathscr{R}[a,b]$ iff the discontinuity set of $f$ has measure zero.<span class="ps-tag">PS8</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">This is the deepest result of Ch. 6 — it completely characterizes which bounded functions are integrable. Both directions use a different structural idea. For $(\Rightarrow)$: if $f \in \mathscr{R}$, then the Riemann criterion forces most of $[a,b]$ to have small oscillation — the points where oscillation stays large can only form a set of measure zero. For $(\Leftarrow)$: split $[a,b]$ into "good" subintervals (away from the discontinuity set, where $f$ is nearly continuous) and "bad" ones (near discontinuities). Control each part separately using uniform continuity and boundedness.</p>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body">1. <strong>$(\Rightarrow)$:</strong> Define the oscillation at $x$ as $\omega(f,x) = \lim_{\delta\to 0}\sup_{|s-t|<\delta}|f(s)-f(t)|$. Let $D_\alpha = \{x:\omega(f,x)\geq\alpha\}$; show $D_\alpha$ is compact. Use the Riemann criterion to get $P$ with $U-L < \alpha\varepsilon$; intervals meeting $D_\alpha$ each have oscillation $\geq \alpha$, so their total length $\leq \varepsilon$. Then $D = \bigcup D_{1/n}$ is a countable union of measure-zero sets.<br>
+      2. <strong>$(\Leftarrow)$:</strong> Cover the discontinuity set $D$ by open intervals of total length $< \varepsilon/(4M)$. On the compact remainder $K$, $f$ is uniformly continuous — get $\delta$ controlling oscillation there. Take $P$ fine enough to separate good/bad intervals; bound each contribution to $U-L$ by $\varepsilon/2$.</div>
+    </div>
     <button class="sol-btn" onclick="toggleSol('s4')">show solution</button>
     <div id="s4" style="display:none;margin-top:12px;">
       <div class="thm"><div class="box-label">$(\Rightarrow)$ Integrability implies measure-zero discontinuities</div>
@@ -499,6 +825,12 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">PS8 Ex.5</span>Compute $\int_0^1 x^2 e^x\,dx$ and $\int_{-1}^1\sqrt{1-x^2}\,dx$.<span class="ps-tag">PS8</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">These are the standard applications of the formulas proved in Ex.3. For $\int x^2 e^x$: $x^2$ has a power that can be reduced by differentiating, while $e^x$ is its own integral — IBP is the tool, applied twice in succession. For $\int\sqrt{1-x^2}$: the integrand is the equation of a circle; the substitution $x = \sin\theta$ converts $\sqrt{1-x^2}$ into $\cos\theta$ and the integral becomes trigonometric. The answer has a geometric interpretation: it's the area of a unit semicircle.</p>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body">1. <strong>$\int x^2 e^x\,dx$:</strong> IBP with $u = x^2$, $v' = e^x$. This reduces the power of $x$ by one. Apply IBP again with $u = x$, $v' = e^x$ to finish. Combine.<br>
+      2. <strong>$\int\sqrt{1-x^2}\,dx$:</strong> Substitute $x = \sin\theta$, $dx = \cos\theta\,d\theta$. The limits become $-\pi/2$ to $\pi/2$. Then $\sqrt{1-\sin^2\theta} = \cos\theta$, so the integrand becomes $\cos^2\theta$. Use the identity $\cos^2\theta = (1+\cos 2\theta)/2$.</div>
+    </div>
     <button class="sol-btn" onclick="toggleSol('s5')">show solution</button>
     <div id="s5" style="display:none;margin-top:12px;">
       <div class="thm"><div class="box-label">$\int_0^1 x^2 e^x\,dx$</div>
@@ -516,6 +848,14 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">PS8 Ex.6</span>Prove Hölder's inequality: $|\int fg| \leq \|f\|_p \|g\|_q$ for conjugate exponents $p, q > 1$.<span class="ps-tag">PS8</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">Hölder's inequality is the central inequality of $L^p$ spaces. The proof has a clever structure: first reduce to the case where both $L^p$ norms equal $1$ (by dividing by them), then apply the pointwise lemma Young's inequality ($ab \leq a^p/p + b^q/q$), which converts the product $\tilde{f}\tilde{g}$ into a sum that separates $f$ and $g$. After integrating, the condition $1/p + 1/q = 1$ collapses both integrals to $1$. The case $p = q = 2$ recovers Cauchy-Schwarz.</p>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body">1. State Young's inequality: $ab \leq a^p/p + b^q/q$ for $a,b \geq 0$. (Prove by minimizing $g(a) = a^p/p + b^q/q - ab$ over $a \geq 0$.)<br>
+      2. Handle trivial case: if $\|f\|_p = 0$ or $\|g\|_q = 0$, both sides are zero.<br>
+      3. Normalize: set $\tilde{f} = |f|/\|f\|_p$ and $\tilde{g} = |g|/\|g\|_q$, so $\int\tilde{f}^p = \int\tilde{g}^q = 1$.<br>
+      4. Apply Young's pointwise to $\tilde{f}(x)\tilde{g}(x)$ and integrate. Use $1/p + 1/q = 1$ to bound by $1$. Unscale to get $\int|fg| \leq \|f\|_p\|g\|_q$. Conclude with $|\int fg| \leq \int|fg|$.</div>
+    </div>
     <button class="sol-btn" onclick="toggleSol('s6')">show solution</button>
     <div id="s6" style="display:none;margin-top:12px;">
       <div class="thm"><div class="box-label">Solution</div>
@@ -528,6 +868,14 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">PS8 Ex.7</span>Prove the arc length formula $\mathcal{L}(f) = \int_a^b\sqrt{1+f'(x)^2}\,dx$ and use it to show circumference $= 2\pi r$.<span class="ps-tag">PS8</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">Arc length is defined as the supremum of chord-sum approximations over all partitions — the same sup-over-partitions structure as the Darboux integral. The key step is MVT: on each subinterval $[x_{k-1},x_k]$, $\Delta f_k = f'(c_k)\Delta x_k$ for some sample point $c_k$, which turns each chord length into $\sqrt{1+f'(c_k)^2}\,\Delta x_k$ — exactly a Riemann sum for $\int\sqrt{1+f'^2}$. Since $f' \in C[a,b]$, this function is continuous and the Riemann sums converge.</p>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body">1. Write the chord-sum for partition $P$: $S(P) = \sum\sqrt{(\Delta x_k)^2 + (\Delta f_k)^2}$.<br>
+      2. Apply MVT on each $[x_{k-1},x_k]$: $\Delta f_k = f'(c_k)\Delta x_k$ for some $c_k$. Factor out $\Delta x_k$.<br>
+      3. Recognize the result as a Riemann sum for $\int_a^b\sqrt{1+f'^2}\,dx$. Since $f'$ is continuous, the integral exists and Riemann sums converge to it. Conclude $\mathcal{L}(f) = \sup_P S(P) = \int_a^b\sqrt{1+f'^2}$.<br>
+      4. For the circle: $f(x) = \sqrt{r^2-x^2}$; compute $1+f'^2 = r^2/(r^2-x^2)$ and evaluate $\int_{-r}^r r/\sqrt{r^2-x^2}\,dx$ via arcsin substitution.</div>
+    </div>
     <button class="sol-btn" onclick="toggleSol('s7')">show solution</button>
     <div id="s7" style="display:none;margin-top:12px;">
       <div class="thm"><div class="box-label">Arc length formula</div>
@@ -543,6 +891,14 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">PS8 Ex.8</span>Let $f$ be continuous on $[a,b]$ with $\int_a^b f\phi = 0$ for every continuous $\phi$. Show $f \equiv 0$.<span class="ps-tag">PS8</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">The hypothesis says $f$ is "orthogonal" (in the sense of the integral inner product) to every continuous function — a very strong condition. The proof is by contradiction. If $f(x_0) \neq 0$, continuity of $f$ promotes this to a whole interval $I$ where $f$ maintains its sign. The key move is to construct a specific continuous test function $\phi$ that is nonzero exactly on $I$ and zero outside — then $\int f\phi > 0$, contradicting the hypothesis. This test-function technique is ubiquitous in PDEs and distribution theory.</p>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body">1. Assume for contradiction that $f(x_0) > 0$ for some $x_0$ (the case $f(x_0) < 0$ is symmetric).<br>
+      2. By continuity of $f$, get an interval $I = (x_0-\delta, x_0+\delta) \cap [a,b]$ on which $f > 0$.<br>
+      3. Construct the tent function $\phi(x) = \max(0,\,\delta - |x-x_0|)$ — continuous, positive on $I$, zero outside $I$.<br>
+      4. Then $f(x)\phi(x) > 0$ on $I$ and $\geq 0$ elsewhere, so $\int_a^b f\phi > 0$, contradicting the hypothesis. $\square$</div>
+    </div>
     <button class="sol-btn" onclick="toggleSol('s8')">show solution</button>
     <div id="s8" style="display:none;margin-top:12px;">
       <div class="thm"><div class="box-label">Solution</div>
@@ -555,17 +911,31 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">Rudin 6.1</span>Suppose $f \in \mathscr{R}$ on $[a,b]$, $\alpha \leq f \leq \beta$, $\phi$ is continuous on $[\alpha,\beta]$, and $h = \phi\circ f$. Prove $h \in \mathscr{R}$.<span class="rudin-tag">RUDIN</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">This is the good/bad interval argument in its purest form. Since $\phi$ is uniformly continuous (recall: continuous on compact $[\alpha,\beta]$), wherever $f$ barely oscillates, $h = \phi \circ f$ barely oscillates too — that's the "good" intervals. The "bad" intervals where $f$ oscillates a lot must have small total length because $f \in \mathscr{R}$; and since $\phi$ is bounded, their contribution to $U(P,h)-L(P,h)$ is controlled by their length, not their oscillation.</p>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body">1. Use uniform continuity of $\phi$ on $[\alpha,\beta]$: get $\eta$ with $|s-t|<\eta \Rightarrow |\phi(s)-\phi(t)| < \varepsilon/(2(b-a))$.<br>
+      2. Let $M = \sup|\phi|$. Use $f \in \mathscr{R}$ to choose $P$ with $U(P,f)-L(P,f) < \eta\varepsilon/(4M)$.<br>
+      3. Split subintervals into good ($M_k(f)-m_k(f) < \eta$) and bad (otherwise). Good intervals: $h$ barely oscillates (via $\eta$ from step 1), contributing $\leq \varepsilon/2$. Bad intervals: short total length $< \varepsilon/(4M)$, bounded oscillation $\leq 2M$, contributing $< \varepsilon/2$. Sum $< \varepsilon$.</div>
+    </div>
     <button class="sol-btn" onclick="toggleSol('r1')">show solution</button>
     <div id="r1" style="display:none;margin-top:12px;">
       <div class="thm"><div class="box-label">Solution</div>
         <div class="box-body">$\phi$ is uniformly continuous on $[\alpha,\beta]$: for $\varepsilon > 0$, get $\eta > 0$ with $|s-t| < \eta \Rightarrow |\phi(s)-\phi(t)| < \varepsilon/(2(b-a))$. Let $M = \sup|\phi|$. Since $f \in \mathscr{R}$, choose $P$ with $U(P,f)-L(P,f) < \eta\varepsilon/(4M)$.<br><br>
-        Split subintervals: <strong>good</strong> ($M_k(f)-m_k(f) < \eta$) contribute $\leq \varepsilon/2$ to $U(P,h)-L(P,h)$ by $|\phi$ oscillation $| \leq \varepsilon/(2(b-a))$. <strong>Bad</strong> intervals have total length $\leq U(P,f)-L(P,f))/\eta < \varepsilon/(4M)$, contributing $\leq 2M\cdot\varepsilon/(4M) = \varepsilon/2$. Total $< \varepsilon$. $\square$</div>
+        Split subintervals: <strong>good</strong> ($M_k(f)-m_k(f) < \eta$) contribute $\leq \varepsilon/2$ to $U(P,h)-L(P,h)$ by $|\phi$ oscillation $| \leq \varepsilon/(2(b-a))$. <strong>Bad</strong> intervals have total length $\leq (U(P,f)-L(P,f))/\eta < \varepsilon/(4M)$, contributing $\leq 2M\cdot\varepsilon/(4M) = \varepsilon/2$. Total $< \varepsilon$. $\square$</div>
       </div>
     </div>
   </div>
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">Rudin 6.2</span>Suppose $f, g \in \mathscr{R}$ on $[a,b]$. Prove that $fg \in \mathscr{R}$.<span class="rudin-tag">RUDIN</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">Don't try to bound $U(P,fg) - L(P,fg)$ directly — the algebra gets messy because $\sup(fg) \neq (\sup f)(\sup g)$ in general. The elegant path is an algebraic identity that converts $fg$ into a combination of squares, where Rudin 6.1 (proved above) can handle each piece. The identity is $fg = \frac{1}{4}[(f+g)^2 - (f-g)^2]$.</p>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body">1. By Ex.2 linearity: $f+g$ and $f-g$ are both in $\mathscr{R}$.<br>
+      2. Apply Rudin 6.1 with $\phi(t) = t^2$ (continuous everywhere): $(f+g)^2$ and $(f-g)^2$ are in $\mathscr{R}$.<br>
+      3. By linearity: $fg = \frac{1}{4}[(f+g)^2-(f-g)^2] \in \mathscr{R}$.</div>
+    </div>
     <button class="sol-btn" onclick="toggleSol('r2')">show solution</button>
     <div id="r2" style="display:none;margin-top:12px;">
       <div class="thm"><div class="box-label">Solution</div>
@@ -576,6 +946,13 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card">
     <div class="drill-q"><span class="hw-num">Rudin 6.10</span>Let $p \geq 0$, $p \in \mathscr{R}$, and $f$ continuous on $[a,b]$. Show $\exists\,c \in [a,b]$ with $\int_a^b fp = f(c)\int_a^b p$.<span class="rudin-tag">RUDIN</span></div>
+    <p style="font-size:.9rem;line-height:1.75;margin:10px 0 12px;">This is a weighted mean value theorem for integrals. Think of $p$ as a weight function — since $p \geq 0$, the integral $\int fp$ is a weighted average of $f$, and any weighted average of a continuous function must equal $f$ at some interior point $c$ (by IVT applied to $f$, which is continuous on $[a,b]$). Watch the edge case: if $\int p = 0$, then since $p \geq 0$, we have $p \equiv 0$ and both sides are trivially zero.</p>
+    <div class="explain" style="margin:0 0 8px;">
+      <div class="box-label">Approach</div>
+      <div class="box-body">1. Let $m = \min f$, $M = \max f$ (attained since $f$ is continuous on compact $[a,b]$, by EVT from Ch. 4).<br>
+      2. Since $p \geq 0$: $m \cdot p(x) \leq f(x)p(x) \leq M \cdot p(x)$ pointwise. Integrate to get $m\int p \leq \int fp \leq M\int p$.<br>
+      3. If $\int p = 0$: $p \equiv 0$, so both sides are $0$. If $\int p > 0$: divide to get $m \leq \frac{\int fp}{\int p} \leq M$. By IVT on $f$, there exists $c$ with $f(c) = \frac{\int fp}{\int p}$.</div>
+    </div>
     <button class="sol-btn" onclick="toggleSol('r3')">show solution</button>
     <div id="r3" style="display:none;margin-top:12px;">
       <div class="thm"><div class="box-label">Solution</div>
@@ -602,6 +979,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="tf6-1" data-correct="true">
     <div class="drill-q"><span class="drill-tag tf">T/F</span>Every continuous function on $[a,b]$ is Riemann integrable.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall that continuous on compact $[a,b]$ implies uniformly continuous (Ch. 4). Uniform continuity hands you a single $\delta$ that makes the oscillation $M_k - m_k$ small on every subinterval simultaneously — exactly what the Riemann criterion demands.</p>
     <div class="tf-row">
       <button class="tf-btn" data-val="true" onclick="answerTF('tf6-1','true')">True</button>
       <button class="tf-btn" data-val="false" onclick="answerTF('tf6-1','false')">False</button>
@@ -611,6 +989,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="tf6-2" data-correct="false">
     <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f \in \mathscr{R}[a,b]$, then $f$ is continuous on $[a,b]$.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Thm 6.8 says continuous $\Rightarrow$ integrable. This question asks about the converse. Before answering, try to think of a concrete function that you know is integrable — does it have to be continuous? Monotone functions are a good test case.</p>
     <div class="tf-row">
       <button class="tf-btn" data-val="true" onclick="answerTF('tf6-2','true')">True</button>
       <button class="tf-btn" data-val="false" onclick="answerTF('tf6-2','false')">False</button>
@@ -620,6 +999,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="tf6-3" data-correct="false">
     <div class="drill-q"><span class="drill-tag tf">T/F</span>FTC Part 1: if $F(x) = \int_a^x f(t)\,dt$ and $f \in \mathscr{R}[a,b]$, then $F'(x) = f(x)$ for all $x \in [a,b]$.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall FTC Part 1 (Rudin §6.20): $F$ is always Lipschitz (hence continuous), since $f$ is bounded. But differentiability is a stronger statement — it holds at $x_0$ only when $f$ is continuous at $x_0$. The statement above says "for all $x$." Notice what hypothesis it's missing.</p>
     <div class="tf-row">
       <button class="tf-btn" data-val="true" onclick="answerTF('tf6-3','true')">True</button>
       <button class="tf-btn" data-val="false" onclick="answerTF('tf6-3','false')">False</button>
@@ -629,6 +1009,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="tf6-4" data-correct="false">
     <div class="drill-q"><span class="drill-tag tf">T/F</span>A refinement of a partition $P$ increases $U(f,P)$ and decreases $L(f,P)$.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall that a refinement adds points, splitting each subinterval into smaller pieces. Think about what happens to the sup of $f$ when you restrict to a smaller domain — can it get larger or only smaller? Then track which direction each of $U$ and $L$ must move.</p>
     <div class="tf-row">
       <button class="tf-btn" data-val="true" onclick="answerTF('tf6-4','true')">True</button>
       <button class="tf-btn" data-val="false" onclick="answerTF('tf6-4','false')">False</button>
@@ -638,6 +1019,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="tf6-5" data-correct="true">
     <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f$ is monotone on $[a,b]$, then $f \in \mathscr{R}[a,b]$.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall Rudin Thm 6.9: for increasing $f$, on a uniform partition of $n$ pieces $M_k = f(x_k)$ and $m_k = f(x_{k-1})$, so the sum $U - L$ telescopes. The key insight is that jump discontinuities don't block integrability — all that matters is the total variation $f(b)-f(a)$, which is finite.</p>
     <div class="tf-row">
       <button class="tf-btn" data-val="true" onclick="answerTF('tf6-5','true')">True</button>
       <button class="tf-btn" data-val="false" onclick="answerTF('tf6-5','false')">False</button>
@@ -647,6 +1029,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="tf6-6" data-correct="true">
     <div class="drill-q"><span class="drill-tag tf">T/F</span>For any bounded $f:[a,b]\to\mathbb{R}$ and any partition $P$: $L(f,P) \leq U(f,P)$.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">On any subinterval, $\inf f \leq \sup f$ is an elementary fact about infima and suprema — it has nothing to do with integrability. Ask yourself: does this inequality need $f \in \mathscr{R}$ to hold, or is it true for every bounded function on every partition?</p>
     <div class="tf-row">
       <button class="tf-btn" data-val="true" onclick="answerTF('tf6-6','true')">True</button>
       <button class="tf-btn" data-val="false" onclick="answerTF('tf6-6','false')">False</button>
@@ -662,6 +1045,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="ord6-1" data-answer="D,A,B,C,E">
     <div class="drill-q"><span class="drill-tag ord">ORDER</span>Drag to arrange: prove that if $f \in \mathscr{R}[a,b]$, then for every $\varepsilon > 0$ there exists a partition $P$ with $U(f,P)-L(f,P) < \varepsilon$.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall: $f \in \mathscr{R}$ means $\overline{\int}f = \underline{\int}f$, i.e., $\inf_P U = \sup_P L$. The approximation property of inf/sup (Ch. 1) says any inf can be approached to within $\varepsilon/2$ by some element — use this to extract near-optimal $P_1, P_2$, then combine via common refinement.</p>
     <div class="ord-steps">
       <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Since $f \in \mathscr{R}$: $\overline{\int} f = \underline{\int} f$. Unpack: $\overline{\int} f = \inf_P U(P)$ and $\underline{\int} f = \sup_P L(P)$.</span></div>
       <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>By the approximation property of $\inf$/$\sup$: $\exists\,P_1, P_2$ with $U(P_2) < \overline{\int}f + \varepsilon/2$ and $L(P_1) > \underline{\int}f - \varepsilon/2$.</span></div>
@@ -679,6 +1063,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="ord6-2" data-answer="B,A,C,D">
     <div class="drill-q"><span class="drill-tag ord">ORDER</span>Drag to arrange: prove FTC Part 1 — if $f$ is continuous at $x_0$ and $F(x) = \int_a^x f$, then $F'(x_0) = f(x_0)$.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall: to show $F'(x_0) = f(x_0)$, write the difference quotient and subtract $f(x_0)$ — the key algebraic step is expressing the error as $\frac{1}{h}\int_{x_0}^{x_0+h}(f(t)-f(x_0))\,dt$. Continuity of $f$ at $x_0$ is exactly what makes this average converge to zero as $h\to 0$.</p>
     <div class="ord-steps">
       <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Write $\dfrac{F(x)-F(x_0)}{x-x_0} - f(x_0) = \dfrac{1}{x-x_0}\int_{x_0}^x(f(t)-f(x_0))\,dt$.</span></div>
       <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Since $f$ is continuous at $x_0$: for any $\varepsilon > 0$, $\exists\,\delta > 0$ such that $|t-x_0|<\delta \Rightarrow |f(t)-f(x_0)|<\varepsilon$.</span></div>
@@ -695,6 +1080,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="ord6-3" data-answer="A,D,C,E,B">
     <div class="drill-q"><span class="drill-tag ord">ORDER</span><span class="ps-tag" style="margin-right:7px;">PS8 Ex.1</span>Drag to arrange: prove $\int_0^c x\,dx = c^2/2$ using Darboux sums on the uniform partition, without FTC.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall: the Riemann criterion — to prove $\int_0^c x\,dx = c^2/2$, exhibit a sequence of partitions where both $U$ and $L$ converge to $c^2/2$ and the gap goes to zero. Because $f(x) = x$ is monotone, $M_k$ and $m_k$ are just the endpoint values on each subinterval, and the sum telescopes cleanly.</p>
     <div class="ord-steps">
       <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Take the uniform partition $P_n = \{0, c/n, 2c/n, \ldots, c\}$, giving $n$ subintervals of width $\Delta x = c/n$.</span></div>
       <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>The gap $U(P_n)-L(P_n) = c^2/n \to 0$, so $f \in \mathscr{R}$ and $\int_0^c x\,dx = c^2/2$. $\blacksquare$</span></div>
@@ -712,6 +1098,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="ord6-4" data-answer="C,A,D,B">
     <div class="drill-q"><span class="drill-tag ord">ORDER</span><span class="ps-tag" style="margin-right:7px;">PS8 Ex.8</span>Drag to arrange: prove that if $\int_a^b f\phi\,dx = 0$ for every continuous $\phi$, then $f \equiv 0$.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">This is a proof by contradiction. The key move: if $f(x_0) > 0$, continuity promotes this to a whole interval where $f$ stays positive. Then construct a test function $\phi$ that is nonzero exactly on that interval — the integral $\int f\phi$ must then be strictly positive, contradicting the hypothesis.</p>
     <div class="ord-steps">
       <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>By continuity of $f$ at $x_0$, $\exists\,\delta > 0$ such that $f > 0$ throughout $I = (x_0-\delta, x_0+\delta)\cap[a,b]$.</span></div>
       <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Then $f(x)\phi(x) > 0$ on $I$ and $\geq 0$ elsewhere, so $\int_a^b f\phi > 0$ — contradiction. Therefore $f \equiv 0$. $\blacksquare$</span></div>
@@ -728,6 +1115,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="ord6-5" data-answer="D,B,E,A,C">
     <div class="drill-q"><span class="drill-tag ord">ORDER</span><span class="ps-tag" style="margin-right:7px;">PS8 Ex.6</span>Drag to arrange: prove Hölder's inequality $|\int fg| \leq \|f\|_p\|g\|_q$ for conjugate exponents $p,q > 1$.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall: Young's inequality ($ab \leq a^p/p + b^q/q$, conjugate exponents $1/p+1/q=1$) is the engine. The normalization step is why the proof works cleanly: dividing $f$ and $g$ by their norms makes $\int\tilde{f}^p = \int\tilde{g}^q = 1$, so after integrating Young's bound the right side collapses to $1/p + 1/q = 1$ exactly.</p>
     <div class="ord-steps">
       <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>Integrate the Young bound: $\int_a^b \tilde{f}\tilde{g} \leq \frac{1}{p}\int\tilde{f}^p + \frac{1}{q}\int\tilde{g}^q = \frac{1}{p}+\frac{1}{q} = 1$.</span></div>
       <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Normalize: set $\tilde{f} = |f|/\|f\|_p$ and $\tilde{g} = |g|/\|g\|_q$, so $\int\tilde{f}^p = \int\tilde{g}^q = 1$.</span></div>
@@ -745,6 +1133,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="ord6-6" data-answer="D,B,F,A,E,C">
     <div class="drill-q"><span class="drill-tag ord">ORDER</span><span class="rudin-tag" style="margin-right:7px;">Rudin 6.1</span>Drag to arrange: prove that if $f \in \mathscr{R}[a,b]$ and $\phi$ is continuous on $[\alpha,\beta] \supseteq f([a,b])$, then $h = \phi \circ f \in \mathscr{R}[a,b]$.</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall the good/bad split strategy: uniform continuity of $\phi$ controls $h$'s oscillation wherever $f$ doesn't oscillate much (good intervals). Wherever $f$ does oscillate (bad intervals), $f \in \mathscr{R}$ forces their total length to be small — and $\phi$ is bounded, so you control bad intervals by their length, not their oscillation.</p>
     <div class="ord-steps">
       <div class="ord-step" data-label="A" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">A</span><span>On <em>good</em> intervals ($M_k(f)-m_k(f) &lt; \eta$): $M_k(h)-m_k(h) &lt; \varepsilon/(2(b-a))$, so their total contribution to $U(P,h)-L(P,h)$ is $\leq \varepsilon/2$.</span></div>
       <div class="ord-step" data-label="B" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" ontouchstart="touchStart(event)"><span class="drag-handle">⠿</span><span class="ord-lbl">B</span><span>Since $f \in \mathscr{R}$, choose a partition $P$ with $U(P,f)-L(P,f) &lt; \eta\varepsilon/(4M)$ where $M = \sup|\phi|$.</span></div>
@@ -768,6 +1157,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="mc6-1">
     <div class="drill-q"><span class="drill-tag mc">MULTI</span>The Riemann criterion says $f \in \mathscr{R}[a,b]$ if and only if:</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall that checking $\overline{\int}f = \underline{\int}f$ directly is hard — you'd need to compute two inf/sup over all partitions. The Riemann criterion reframes this as constructing a single partition. The quantifiers matter enormously here: look carefully at "for every $\varepsilon$" vs "there exists" and where each appears in each option.</p>
     <div class="mc-opts">
       <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-1',this)"><span class="mc-lbl">A</span>$U(f,P) = L(f,P)$ for some partition $P$</button>
       <button class="mc-opt" data-correct="true" onclick="answerMC('mc6-1',this)"><span class="mc-lbl">B</span>For every $\varepsilon > 0$, $\exists$ a partition $P$ with $U(f,P)-L(f,P) < \varepsilon$</button>
@@ -779,6 +1169,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="mc6-2">
     <div class="drill-q"><span class="drill-tag mc">MULTI</span>FTC Part 2 ($\int_a^b f = F(b)-F(a)$) requires $F$ to satisfy:</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall that FTC Part 2 (Rudin §6.21) applies to any antiderivative $F$ — not just $F(x) = \int_a^x f$ from Part 1. That generality is exactly what makes it useful for computation. The subtlety: must $F' = f$ on the closed interval $[a,b]$ or only on the open interior? And what continuity is required?</p>
     <div class="mc-opts">
       <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-2',this)"><span class="mc-lbl">A</span>$F'(x) = f(x)$ for all $x \in [a,b]$ including endpoints</button>
       <button class="mc-opt" data-correct="true" onclick="answerMC('mc6-2',this)"><span class="mc-lbl">B</span>$F$ continuous on $[a,b]$, $F'(x) = f(x)$ for all $x \in (a,b)$</button>
@@ -790,6 +1181,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 
   <div class="drill-card" id="mc6-3">
     <div class="drill-q"><span class="drill-tag mc">MULTI</span>Which function is NOT guaranteed to be in $\mathscr{R}[0,1]$?</div>
+    <p style="font-size:.88rem;color:#9aacbc;line-height:1.7;margin:8px 0 12px;">Recall Lebesgue's criterion from §3 of this guide: $f \in \mathscr{R}$ if and only if its discontinuity set has measure zero. Finite or countably infinite sets of discontinuities are measure zero and pose no problem. A discontinuity set that is <em>dense</em> in $[0,1]$, however, fills the interval — it has positive measure. Use this to screen each option.</p>
     <div class="mc-opts">
       <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-3',this)"><span class="mc-lbl">A</span>A monotone increasing function $f:[0,1]\to\mathbb{R}$</button>
       <button class="mc-opt" data-correct="false" onclick="answerMC('mc6-3',this)"><span class="mc-lbl">B</span>A continuous function $f:[0,1]\to\mathbb{R}$</button>
@@ -804,6 +1196,8 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font
 </div><!-- end p5 -->
 
 <script>
+function initAll() {}
+
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
