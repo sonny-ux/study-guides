@@ -140,12 +140,12 @@ li strong, li b{color:var(--text);}
 <div>
 <div class="block">
   <div class="block-title">Ordered Set</div>
-  <p>A set $S$ with relation $<$ satisfying: (i) <strong>trichotomy</strong> — exactly one of $x<y$, $x=y$, $y<x$ holds; (ii) <strong>transitivity</strong> — $x<y$ and $y<z\Rightarrow x<z$.</p>
+  <p>A set $S$ with relation $\lt$ satisfying: (i) <strong>trichotomy</strong> — exactly one of $x\lt y$, $x=y$, $y\lt x$ holds; (ii) <strong>transitivity</strong> — $x\lt y$ and $y\lt z\Rightarrow x\lt z$.</p>
 </div>
 <div class="block">
   <div class="block-title">LUB Property</div>
   <p>Every nonempty $E\subseteq S$ that is bounded above has a <strong>least upper bound</strong> (supremum) in $S$.</p>
-  <p>$\mathbb{R}$ has the LUB property. $\mathbb{Q}$ does <em>not</em>: $\{q\in\mathbb{Q}:q^2<2\}$ is bounded above in $\mathbb{Q}$ but its sup $(\sqrt{2})$ is not in $\mathbb{Q}$.</p>
+  <p>$\mathbb{R}$ has the LUB property. $\mathbb{Q}$ does <em>not</em>: $\{q\in\mathbb{Q}:q^2\lt 2\}$ is bounded above in $\mathbb{Q}$ but its sup $(\sqrt{2})$ is not in $\mathbb{Q}$.</p>
   <div class="trap">
     <div class="trap-title">Trap</div>
     <p>The LUB property is an <strong>axiom</strong> of $\mathbb{R}$, not something you prove. It's what distinguishes $\mathbb{R}$ from $\mathbb{Q}$ and is the engine behind every completeness argument.</p>
@@ -156,14 +156,14 @@ li strong, li b{color:var(--text);}
   <p>Set with $+$ and $\cdot$ satisfying commutativity, associativity, distributivity, identities ($0,1$), and inverses. $\mathbb{R}$ and $\mathbb{Q}$ are ordered fields. $\mathbb{C}$ is a field but <strong>cannot be ordered</strong> compatibly with arithmetic.</p>
   <div class="trap">
     <div class="trap-title">Trap — No ordering on ℂ</div>
-    <p>If $i>0$, then $i\cdot i>0$, i.e. $-1>0$, contradiction. If $i<0$, then $-i>0$, so $(-i)(-i)=-1>0$, same contradiction.</p>
+    <p>If $i\gt 0$, then $i\cdot i\gt 0$, i.e. $-1\gt 0$, contradiction. If $i\lt 0$, then $-i\gt 0$, so $(-i)(-i)=-1\gt 0$, same contradiction.</p>
   </div>
 </div>
 </div>
 <div>
 <div class="block">
   <div class="block-title">Sup &amp; Inf — The Machinery</div>
-  <p>$\alpha=\sup E$ iff: (i) $\alpha\geq e$ for all $e\in E$; (ii) if $\beta<\alpha$ then $\exists e\in E$ with $e>\beta$.</p>
+  <p>$\alpha=\sup E$ iff: (i) $\alpha\geq e$ for all $e\in E$; (ii) if $\beta\lt\alpha$ then $\exists e\in E$ with $e\gt\beta$.</p>
   <p>Equivalently: $\alpha=\sup E$ iff $\alpha$ is an upper bound AND $\forall\varepsilon>0,\;\exists e\in E: e>\alpha-\varepsilon$.</p>
   <p>$\inf(-E)=-\sup E$. If $E\subseteq F$ and both have sups, then $\sup E\leq\sup F$.</p>
   <div class="move">
@@ -173,16 +173,16 @@ li strong, li b{color:var(--text);}
   </div>
   <div class="trap">
     <div class="trap-title">Trap — Ambient Set Matters</div>
-    <p>$\sup E$ depends on which ordered set $E$ lives in. Always specify. $\sup\{q\in\mathbb{Q}:q^2<2\}$ doesn't exist in $\mathbb{Q}$ but equals $\sqrt{2}$ in $\mathbb{R}$.</p>
+    <p>$\sup E$ depends on which ordered set $E$ lives in. Always specify. $\sup\{q\in\mathbb{Q}:q^2\lt 2\}$ doesn't exist in $\mathbb{Q}$ but equals $\sqrt{2}$ in $\mathbb{R}$.</p>
   </div>
 </div>
 <div class="block">
   <div class="block-title">Archimedean &amp; Density</div>
   <div class="row"><span class="lbl">Archimedean:</span><span class="val">$\forall x\in\mathbb{R},\;\exists n\in\mathbb{N}$ with $n>x$. Equivalently, $\inf\{1/n:n\in\mathbb{N}\}=0$.</span></div>
-  <div class="row"><span class="lbl">Density of $\mathbb{Q}$:</span><span class="val">Between any $x<y$ in $\mathbb{R}$, $\exists p\in\mathbb{Q}$ with $x<p<y$. Also $\exists$ irrationals in $(x,y)$.</span></div>
+  <div class="row"><span class="lbl">Density of $\mathbb{Q}$:</span><span class="val">Between any $x\lt y$ in $\mathbb{R}$, $\exists p\in\mathbb{Q}$ with $x\lt p\lt y$. Also $\exists$ irrationals in $(x,y)$.</span></div>
   <div class="move">
     <div class="move-title">Density Proof</div>
-    <p>Find $n\in\mathbb{N}$ with $n(y-x)>1$ (Archimedean). Then $\exists m\in\mathbb{Z}$ with $nx<m\leq nx+1\leq ny$. Set $p=m/n\in(x,y)$.</p>
+    <p>Find $n\in\mathbb{N}$ with $n(y-x)\gt 1$ (Archimedean). Then $\exists m\in\mathbb{Z}$ with $nx\lt m\leq nx+1\leq ny$. Set $p=m/n\in(x,y)$.</p>
   </div>
 </div>
 </div>
@@ -242,7 +242,7 @@ li strong, li b{color:var(--text);}
 <div class="block">
   <div class="block-title">Metric Space $(X,d)$</div>
   <p>$d:X\times X\to\mathbb{R}$ satisfies: (i) $d(x,y)\geq 0$, $=0\iff x=y$; (ii) $d(x,y)=d(y,x)$; (iii) $d(x,z)\leq d(x,y)+d(y,z)$.</p>
-  <div class="row"><span class="lbl">Open ball:</span><span class="val">$B_r(x)=\{y\in X:d(x,y)<r\}$</span></div>
+  <div class="row"><span class="lbl">Open ball:</span><span class="val">$B_r(x)=\{y\in X:d(x,y)\lt r\}$</span></div>
   <div class="row"><span class="lbl">Open set:</span><span class="val">every point is interior: $\forall p\in E,\;\exists r>0: B_r(p)\subseteq E$</span></div>
   <div class="row"><span class="lbl">Closed set:</span><span class="val">contains all its limit points ($E^c$ is open)</span></div>
   <div class="row"><span class="lbl">Limit point:</span><span class="val">every $B_r(p)$ contains a point of $E\setminus\{p\}$</span></div>
@@ -343,13 +343,13 @@ li strong, li b{color:var(--text);}
 <div>
 <div class="block">
   <div class="block-title">Convergence</div>
-  <p>$a_n\to L$ iff $\forall\varepsilon>0,\;\exists N\in\mathbb{N}: n\geq N\Rightarrow|a_n-L|<\varepsilon$. Limit is unique.</p>
+  <p>$a_n\to L$ iff $\forall\varepsilon>0,\;\exists N\in\mathbb{N}: n\geq N\Rightarrow|a_n-L|\lt\varepsilon$. Limit is unique.</p>
   <p><strong>Bounded + monotone $\Rightarrow$ convergent</strong> (in $\mathbb{R}$; uses LUB property).</p>
   <p><strong>Subsequences:</strong> $a_n\to L\Rightarrow$ every subsequence $\to L$. Two subsequences with different limits $\Rightarrow$ $a_n$ diverges.</p>
 </div>
 <div class="block">
   <div class="block-title">Cauchy Sequences</div>
-  <p>$\{a_n\}$ is <strong>Cauchy</strong> iff $\forall\varepsilon>0,\;\exists N: m,n\geq N\Rightarrow|a_m-a_n|<\varepsilon$.</p>
+  <p>$\{a_n\}$ is <strong>Cauchy</strong> iff $\forall\varepsilon>0,\;\exists N: m,n\geq N\Rightarrow|a_m-a_n|\lt\varepsilon$.</p>
   <p>In $\mathbb{R}^k$: <strong>Cauchy $\iff$ convergent</strong> (completeness). In $\mathbb{Q}$: Cauchy $\not\Rightarrow$ convergent.</p>
   <p>Every convergent sequence is Cauchy. Every Cauchy sequence is bounded.</p>
   <div class="move">
@@ -381,15 +381,15 @@ li strong, li b{color:var(--text);}
 <div class="block">
   <div class="block-title">Series Basics</div>
   <p>$\sum_{n=1}^\infty a_n$ converges iff partial sums $S_N=\sum_{n=1}^N a_n$ converge. <strong>Necessary:</strong> $a_n\to 0$ (contrapositive: $a_n\not\to 0\Rightarrow$ diverges).</p>
-  <p><strong>Absolute convergence:</strong> $\sum|a_n|<\infty\Rightarrow\sum a_n$ converges. Converse false: $\sum(-1)^n/n$ converges conditionally.</p>
+  <p><strong>Absolute convergence:</strong> $\sum|a_n|\lt\infty\Rightarrow\sum a_n$ converges. Converse false: $\sum(-1)^n/n$ converges conditionally.</p>
 </div>
 <div class="block">
   <div class="block-title">Convergence Tests</div>
   <table class="ref-table">
     <tr><th>Test</th><th>Condition</th><th>Conclusion</th></tr>
     <tr><td>Comparison</td><td>$0\leq a_n\leq b_n$, $\sum b_n$ conv</td><td>$\sum a_n$ conv; if $\sum b_n$ div, $\sum a_n$ div</td></tr>
-    <tr><td>Root (3.33)</td><td>$\alpha=\limsup|a_n|^{1/n}$</td><td>$\alpha<1$: abs conv; $\alpha>1$: div; $\alpha=1$: inconclusive</td></tr>
-    <tr><td>Ratio (3.34)</td><td>$L=\limsup|a_{n+1}/a_n|$</td><td>$L<1$: abs conv; $\liminf>1$: div; $L=1$: inconclusive</td></tr>
+    <tr><td>Root (3.33)</td><td>$\alpha=\limsup|a_n|^{1/n}$</td><td>$\alpha\lt 1$: abs conv; $\alpha\gt 1$: div; $\alpha=1$: inconclusive</td></tr>
+    <tr><td>Ratio (3.34)</td><td>$L=\limsup|a_{n+1}/a_n|$</td><td>$L\lt 1$: abs conv; $\liminf\gt 1$: div; $L=1$: inconclusive</td></tr>
     <tr><td>Alternating</td><td>$|a_n|\searrow 0$, signs alternate</td><td>conv (Leibniz/alternating series test)</td></tr>
     <tr><td>Dirichlet</td><td>$|\sum_{k=1}^N a_k|\leq M$; $b_n\searrow 0$</td><td>$\sum a_nb_n$ conv</td></tr>
     <tr><td>Abel</td><td>$\sum a_n$ conv; $b_n$ monotone bounded</td><td>$\sum a_nb_n$ conv</td></tr>
@@ -404,11 +404,11 @@ li strong, li b{color:var(--text);}
   <div class="block-title">Power Series</div>
   <p>$\sum_{n=0}^\infty c_nz^n$, $c_n,z\in\mathbb{C}$. Radius of convergence:</p>
   $$R=\frac{1}{\limsup_{n\to\infty}|c_n|^{1/n}}$$
-  <p>Converges absolutely for $|z|<R$; diverges for $|z|>R$; boundary $|z|=R$ requires separate analysis.</p>
-  <p>On any $|z|\leq r<R$, convergence is uniform. The sum is a continuous function of $z$ on $|z|<R$.</p>
+  <p>Converges absolutely for $|z|\lt R$; diverges for $|z|\gt R$; boundary $|z|=R$ requires separate analysis.</p>
+  <p>On any $|z|\leq r\lt R$, convergence is uniform. The sum is a continuous function of $z$ on $|z|\lt R$.</p>
   <table class="ref-table" style="margin-top:8px;">
     <tr><th>Series</th><th>Radius $R$</th><th>Sum</th></tr>
-    <tr><td>$\sum z^n$</td><td>$1$</td><td>$1/(1-z)$, $|z|<1$</td></tr>
+    <tr><td>$\sum z^n$</td><td>$1$</td><td>$1/(1-z)$, $|z|\lt 1$</td></tr>
     <tr><td>$\sum z^n/n!$</td><td>$\infty$</td><td>$e^z$</td></tr>
     <tr><td>$\sum(-1)^nz^{2n}/(2n)!$</td><td>$\infty$</td><td>$\cos z$</td></tr>
     <tr><td>$\sum 1/n^p$</td><td>—</td><td>conv iff $p>1$</td></tr>
@@ -433,13 +433,13 @@ li strong, li b{color:var(--text);}
 <div>
 <div class="block">
   <div class="block-title">Limit of a Function</div>
-  <p>$\lim_{x\to p}f(x)=q$ iff $\forall\varepsilon>0,\;\exists\delta>0: 0<d_X(x,p)<\delta\Rightarrow d_Y(f(x),q)<\varepsilon$.</p>
+  <p>$\lim_{x\to p}f(x)=q$ iff $\forall\varepsilon>0,\;\exists\delta>0: 0\lt d_X(x,p)\lt\delta\Rightarrow d_Y(f(x),q)\lt\varepsilon$.</p>
   <p>$x=p$ is <em>excluded</em> from the limit condition. $p$ must be a limit point of the domain.</p>
 </div>
 <div class="block">
   <div class="block-title">Continuity at a Point</div>
   <p>$f:X\to Y$ is continuous at $p$ iff $\lim_{x\to p}f(x)=f(p)$:</p>
-  <p style="padding-left:8px;">$\forall\varepsilon>0,\;\exists\delta>0: d_X(x,p)<\delta\Rightarrow d_Y(f(x),f(p))<\varepsilon$</p>
+  <p style="padding-left:8px;">$\forall\varepsilon>0,\;\exists\delta>0: d_X(x,p)\lt\delta\Rightarrow d_Y(f(x),f(p))\lt\varepsilon$</p>
   <p>Composition of continuous functions is continuous. Arithmetic of continuous real functions is continuous.</p>
 </div>
 </div>
@@ -470,12 +470,12 @@ li strong, li b{color:var(--text);}
 <div class="block">
   <div class="block-title">Uniform Continuity</div>
   <p>$f:X\to Y$ is uniformly continuous iff $\forall\varepsilon>0,\;\exists\delta>0:\forall x,y\in X,$</p>
-  <p style="padding-left:8px;">$d_X(x,y)<\delta\Rightarrow d_Y(f(x),f(y))<\varepsilon$</p>
+  <p style="padding-left:8px;">$d_X(x,y)\lt\delta\Rightarrow d_Y(f(x),f(y))\lt\varepsilon$</p>
   <p>One $\delta$ works for <em>all pairs</em> simultaneously. Uniform $\Rightarrow$ continuous; converse fails on non-compact sets.</p>
   <div class="thm">
     <div class="thm-title">Thm 4.19</div>
     <p>Continuous on compact $\Rightarrow$ uniformly continuous.</p>
-    <p class="note">Proof: if not, find $p_n,q_n$ with $d(p_n,q_n)<1/n$ but $d(f(p_n),f(q_n))\geq\varepsilon_0$. Compactness gives subsequence of $p_n$ converging to some $p^*$; then $q_n\to p^*$ too; but $f$ continuous at $p^*$ gives $f(p_n),f(q_n)\to f(p^*)$, contradicting the gap.</p>
+    <p class="note">Proof: if not, find $p_n,q_n$ with $d(p_n,q_n)\lt 1/n$ but $d(f(p_n),f(q_n))\geq\varepsilon_0$. Compactness gives subsequence of $p_n$ converging to some $p^*$; then $q_n\to p^*$ too; but $f$ continuous at $p^*$ gives $f(p_n),f(q_n)\to f(p^*)$, contradicting the gap.</p>
   </div>
   <div class="trap">
     <div class="trap-title">Trap — x² on ℝ</div>
@@ -486,12 +486,12 @@ li strong, li b{color:var(--text);}
 <div>
 <div class="block">
   <div class="block-title">Intermediate Value Theorem (4.23)</div>
-  <p>$f:[a,b]\to\mathbb{R}$ continuous, $f(a)<\gamma<f(b)$ $\Rightarrow\exists c\in(a,b): f(c)=\gamma$.</p>
+  <p>$f:[a,b]\to\mathbb{R}$ continuous, $f(a)\lt\gamma\lt f(b)$ $\Rightarrow\exists c\in(a,b): f(c)=\gamma$.</p>
   <div class="move">
     <div class="move-title">IVT Proof Move</div>
-    <p>Let $A=\{x\in[a,b]:f(x)<\gamma\}$. Set $c=\sup A$ (exists since $A$ nonempty and bounded).</p>
-    <p>If $f(c)>\gamma$: continuity gives $\delta$ with $f(x)>\gamma$ on $(c-\delta,c+\delta)$, contradicting $c=\sup A$.</p>
-    <p>If $f(c)<\gamma$: continuity gives points beyond $c$ still in $A$, contradicting $c$ as sup.</p>
+    <p>Let $A=\{x\in[a,b]:f(x)\lt\gamma\}$. Set $c=\sup A$ (exists since $A$ nonempty and bounded).</p>
+    <p>If $f(c)\gt\gamma$: continuity gives $\delta$ with $f(x)\gt\gamma$ on $(c-\delta,c+\delta)$, contradicting $c=\sup A$.</p>
+    <p>If $f(c)\lt\gamma$: continuity gives points beyond $c$ still in $A$, contradicting $c$ as sup.</p>
     <p>So $f(c)=\gamma$.</p>
   </div>
 </div>
@@ -635,7 +635,7 @@ li strong, li b{color:var(--text);}
 <div>
 <div class="block">
   <div class="block-title">Setup</div>
-  <p><strong>Partition</strong> $P=\{x_0<x_1<\cdots<x_n\}$ of $[a,b]$; $\Delta x_k=x_k-x_{k-1}$.</p>
+  <p><strong>Partition</strong> $P=\{x_0\lt x_1\lt\cdots\lt x_n\}$ of $[a,b]$; $\Delta x_k=x_k-x_{k-1}$.</p>
   <p>$M_k=\sup_{[x_{k-1},x_k]}f$, $m_k=\inf_{[x_{k-1},x_k]}f$.</p>
   $$U(P,f)=\sum_{k=1}^n M_k\Delta x_k,\qquad L(P,f)=\sum_{k=1}^n m_k\Delta x_k$$
   $$\overline{\int_a^b}f=\inf_P U(P,f),\qquad\underline{\int_a^b}f=\sup_P L(P,f)$$
@@ -703,11 +703,11 @@ li strong, li b{color:var(--text);}
 <div class="block">
   <div class="block-title">Fundamental Theorem of Calculus</div>
   <p><strong>FTC Part 1 (6.20):</strong> Let $f\in\mathscr{R}[a,b]$ and $F(x)=\int_a^x f$. Then $F$ is continuous on $[a,b]$. If $f$ is continuous at $x_0$, then $F'(x_0)=f(x_0)$.</p>
-  <p class="note">Proof of differentiability: $\frac{F(x)-F(x_0)}{x-x_0}=\frac{1}{x-x_0}\int_{x_0}^x f(t)\,dt$. For $|t-x_0|<|x-x_0|$: $\left|\frac{1}{x-x_0}\int_{x_0}^x(f(t)-f(x_0))dt\right|\leq\sup_{|t-x_0|\leq|x-x_0|}|f(t)-f(x_0)|\to 0$ by continuity of $f$ at $x_0$.</p>
+  <p class="note">Proof of differentiability: $\frac{F(x)-F(x_0)}{x-x_0}=\frac{1}{x-x_0}\int_{x_0}^x f(t)\,dt$. For $|t-x_0|\lt|x-x_0|$: $\left|\frac{1}{x-x_0}\int_{x_0}^x(f(t)-f(x_0))dt\right|\leq\sup_{|t-x_0|\leq|x-x_0|}|f(t)-f(x_0)|\to 0$ by continuity of $f$ at $x_0$.</p>
   <hr>
   <p><strong>FTC Part 2 (6.21):</strong> $f\in\mathscr{R}[a,b]$, $F$ continuous on $[a,b]$, $F'=f$ on $(a,b)$ $\Rightarrow$</p>
   $$\int_a^b f(x)\,dx = F(b)-F(a)$$
-  <p class="note">Proof: given $\varepsilon$, pick $P$ with $U-L<\varepsilon$. MVT gives $F(x_k)-F(x_{k-1})=f(t_k)\Delta x_k$ for some $t_k$. Then $F(b)-F(a)=\sum f(t_k)\Delta x_k\in[L(P),U(P)]$, and so does $\int f$, so $|F(b)-F(a)-\int f|<\varepsilon$.</p>
+  <p class="note">Proof: given $\varepsilon$, pick $P$ with $U-L\lt\varepsilon$. MVT gives $F(x_k)-F(x_{k-1})=f(t_k)\Delta x_k$ for some $t_k$. Then $F(b)-F(a)=\sum f(t_k)\Delta x_k\in[L(P),U(P)]$, and so does $\int f$, so $|F(b)-F(a)-\int f|\lt\varepsilon$.</p>
   <div class="trap">
     <div class="trap-title">Trap — Volterra Function</div>
     <p>A function $F$ can be differentiable everywhere with $F'=f$ bounded, yet $f\notin\mathscr{R}$. FTC Part 2 requires both $F'=f$ AND $f\in\mathscr{R}$. Also: $F'$ existing everywhere does NOT guarantee $F'\in\mathscr{R}$.</p>
@@ -759,7 +759,7 @@ li strong, li b{color:var(--text);}
     <li><strong>Cauchy = convergent in $\mathbb{R}$:</strong> show $|a_m-a_n|\to 0$ to prove convergence without knowing the limit.</li>
     <li><strong>Compactness in $\mathbb{R}^k$:</strong> show closed + bounded (or sequential compactness).</li>
     <li><strong>Continuity globally:</strong> preimage of every open set is open.</li>
-    <li><strong>IVT:</strong> let $A=\{x:f(x)<\gamma\}$, take $c=\sup A$, show $f(c)=\gamma$ by ruling out $>$ and $<$.</li>
+    <li><strong>IVT:</strong> let $A=\{x:f(x)\lt\gamma\}$, take $c=\sup A$, show $f(c)=\gamma$ by ruling out $\gt$ and $\lt$.</li>
     <li><strong>MVT application:</strong> bound $|f(b)-f(a)|$ by $\max|f'|\cdot|b-a|$.</li>
     <li><strong>Riemann integrability:</strong> construct partition, bound $U-L=\sum(M_k-m_k)\Delta x_k$.</li>
     <li><strong>FTC2 proof:</strong> MVT on each subinterval, telescope, compare to Riemann sum.</li>
