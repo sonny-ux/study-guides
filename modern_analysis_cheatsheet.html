@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Modern Analysis — Ch 1–6 Cheat Sheet</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{
+  --bg:#08080c;--surface:#0f0f14;--card:#141419;--border:#1e1e28;--border2:#2e2e3e;
+  --text:#e2dced;--muted:#5a5a7a;
+  --acc:#7a6acc;--acc2:#aaa0ee;
+  --green:#4a8c5a;--green2:#7abc8a;
+  --red:#9c4a4a;--red2:#cc7070;
+  --gold:#9c7a3a;--gold2:#ccaa6a;
+  --blue:#3a6a9c;--blue2:#6a9acc;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{background:var(--bg);color:var(--text);font-family:'Georgia','Times New Roman',serif;font-size:15px;line-height:1.75;overflow-x:hidden;}
+
+/* ── NAV ── */
+.topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(8,8,12,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.nav-inner::-webkit-scrollbar{display:none;}
+.nav-label{flex-shrink:0;font-family:'Georgia',serif;font-size:11px;color:var(--acc2);padding:0 14px 0 16px;white-space:nowrap;letter-spacing:.04em;border-right:1px solid var(--border);height:48px;display:flex;align-items:center;}
+.nav-tab{flex-shrink:0;height:48px;padding:0 16px;font-family:'Georgia',serif;font-size:12px;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.nav-tab:hover{color:var(--acc2);}
+.nav-tab.active{color:var(--acc2);border-bottom-color:var(--acc);}
+
+.pbar{position:fixed;top:48px;left:0;right:0;height:2px;background:var(--border);z-index:199;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:0%;transition:width .15s;}
+
+/* ── PAGES ── */
+.page{display:none;padding-top:58px;min-height:100vh;padding-bottom:40px;}
+.page.active{display:block;}
+
+/* ── HERO ── */
+.hero{padding:28px 20px 22px;border-bottom:1px solid var(--border);}
+.ch-badge{display:inline-block;font-family:'Georgia',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;padding:3px 10px;border-radius:2px;margin-bottom:10px;border:1px solid var(--acc);color:var(--acc2);background:rgba(122,106,204,.08);}
+.hero h1{font-size:1.55rem;font-weight:normal;line-height:1.25;margin-bottom:6px;color:var(--text);}
+.hero-sub{font-size:.82rem;color:var(--muted);font-style:italic;}
+
+/* ── SECTIONS ── */
+.sec{padding:20px 20px;border-bottom:1px solid var(--border);}
+.sec-title{font-size:.78rem;font-family:'Georgia',serif;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.sec-title::after{content:'';flex:1;height:.5px;background:var(--border2);}
+
+/* ── BLOCKS ── */
+.block{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:14px 16px;margin-bottom:10px;break-inside:avoid;}
+.block-title{font-size:.78rem;font-weight:bold;letter-spacing:.07em;text-transform:uppercase;color:var(--acc2);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+
+/* ── ROW / TABLE ── */
+.row{display:flex;gap:8px;align-items:baseline;margin-bottom:4px;font-size:.88rem;}
+.lbl{font-weight:bold;white-space:nowrap;min-width:80px;color:var(--text);font-size:.85rem;flex-shrink:0;}
+.val{color:#9aacbc;line-height:1.55;}
+hr{border:none;border-top:.5px solid var(--border2);margin:8px 0;}
+p{margin-bottom:5px;font-size:.88rem;color:#9aacbc;line-height:1.65;}
+p:last-child{margin-bottom:0;}
+p strong, p b{color:var(--text);}
+ul{padding-left:16px;margin-bottom:5px;}
+li{font-size:.87rem;color:#9aacbc;margin-bottom:3px;line-height:1.55;}
+li strong, li b{color:var(--text);}
+.katex{font-size:.9em;}
+.katex-display{margin:6px 0 !important;}
+
+/* ── SPECIAL BLOCKS ── */
+.trap{border:1px solid rgba(204,112,112,.4);border-left:3px solid var(--red2);border-radius:0 3px 3px 0;padding:10px 13px;margin:8px 0;background:rgba(156,74,74,.06);}
+.trap-title{font-size:.7rem;font-weight:bold;letter-spacing:.08em;text-transform:uppercase;color:var(--red2);margin-bottom:4px;}
+.trap p,.trap li{color:#ac8a8a;font-size:.85rem;}
+
+.move{border:1px solid rgba(106,154,204,.35);border-left:3px solid var(--blue2);border-radius:0 3px 3px 0;padding:10px 13px;margin:8px 0;background:rgba(58,106,156,.06);}
+.move-title{font-size:.7rem;font-weight:bold;letter-spacing:.08em;text-transform:uppercase;color:var(--blue2);margin-bottom:4px;}
+.move p,.move li{color:#8a9aac;font-size:.85rem;}
+.move p strong,.move li strong{color:#aabbcc;}
+
+.thm{border:1px solid rgba(122,188,138,.3);border-left:3px solid var(--green2);border-radius:0 3px 3px 0;padding:10px 13px;margin:8px 0;background:rgba(74,140,90,.05);}
+.thm-title{font-size:.7rem;font-weight:bold;letter-spacing:.08em;text-transform:uppercase;color:var(--green2);margin-bottom:4px;}
+.thm p,.thm li{color:#8aac8a;font-size:.85rem;}
+.thm p strong,.thm li strong{color:#aaccaa;}
+
+/* ── TWO COLUMN ON WIDE ── */
+@media(min-width:700px){
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;}
+}
+
+/* ── TABLE ── */
+.ref-table{width:100%;border-collapse:collapse;font-size:.83rem;margin:6px 0;}
+.ref-table th{color:var(--acc2);font-weight:bold;border-bottom:.75px solid var(--border2);padding:4px 8px;text-align:left;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;}
+.ref-table td{padding:4px 8px;border-bottom:.4px solid var(--border);color:#9aacbc;vertical-align:top;line-height:1.5;}
+.ref-table td:first-child{color:var(--text);font-size:.82rem;}
+
+/* ── NOTE ── */
+.note{font-size:.78rem;color:var(--muted);font-style:italic;margin-top:4px;}
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  .hero{padding:22px 16px 18px;}
+  .hero h1{font-size:1.25rem;}
+  .sec{padding:16px 14px;}
+  .block{padding:12px 13px;}
+  .lbl{min-width:70px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-inner">
+    <div class="nav-label">Rudin</div>
+    <button class="nav-tab active" onclick="show('ch1',this)">Ch 1 — Reals</button>
+    <button class="nav-tab" onclick="show('ch2',this)">Ch 2 — Topology</button>
+    <button class="nav-tab" onclick="show('ch3',this)">Ch 3 — Sequences</button>
+    <button class="nav-tab" onclick="show('ch4',this)">Ch 4 — Continuity</button>
+    <button class="nav-tab" onclick="show('ch5',this)">Ch 5 — Derivatives</button>
+    <button class="nav-tab" onclick="show('ch6',this)">Ch 6 — Integration</button>
+    <button class="nav-tab" onclick="show('ref',this)">Quick Ref</button>
+  </div>
+</nav>
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--                   CH 1 — REAL NUMBERS                -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page active" id="ch1">
+<div class="hero">
+  <div class="ch-badge">Chapter 1</div>
+  <h1>The Real &amp; Complex Number Systems</h1>
+  <p class="hero-sub">Ordered fields · LUB property · Archimedean · Density · Cauchy-Schwarz</p>
+</div>
+
+<div class="sec">
+<div class="sec-title">Ordered Sets &amp; Fields</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Ordered Set</div>
+  <p>A set $S$ with relation $<$ satisfying: (i) <strong>trichotomy</strong> — exactly one of $x<y$, $x=y$, $y<x$ holds; (ii) <strong>transitivity</strong> — $x<y$ and $y<z\Rightarrow x<z$.</p>
+</div>
+<div class="block">
+  <div class="block-title">LUB Property</div>
+  <p>Every nonempty $E\subseteq S$ that is bounded above has a <strong>least upper bound</strong> (supremum) in $S$.</p>
+  <p>$\mathbb{R}$ has the LUB property. $\mathbb{Q}$ does <em>not</em>: $\{q\in\mathbb{Q}:q^2<2\}$ is bounded above in $\mathbb{Q}$ but its sup $(\sqrt{2})$ is not in $\mathbb{Q}$.</p>
+  <div class="trap">
+    <div class="trap-title">Trap</div>
+    <p>The LUB property is an <strong>axiom</strong> of $\mathbb{R}$, not something you prove. It's what distinguishes $\mathbb{R}$ from $\mathbb{Q}$ and is the engine behind every completeness argument.</p>
+  </div>
+</div>
+<div class="block">
+  <div class="block-title">Field</div>
+  <p>Set with $+$ and $\cdot$ satisfying commutativity, associativity, distributivity, identities ($0,1$), and inverses. $\mathbb{R}$ and $\mathbb{Q}$ are ordered fields. $\mathbb{C}$ is a field but <strong>cannot be ordered</strong> compatibly with arithmetic.</p>
+  <div class="trap">
+    <div class="trap-title">Trap — No ordering on ℂ</div>
+    <p>If $i>0$, then $i\cdot i>0$, i.e. $-1>0$, contradiction. If $i<0$, then $-i>0$, so $(-i)(-i)=-1>0$, same contradiction.</p>
+  </div>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Sup &amp; Inf — The Machinery</div>
+  <p>$\alpha=\sup E$ iff: (i) $\alpha\geq e$ for all $e\in E$; (ii) if $\beta<\alpha$ then $\exists e\in E$ with $e>\beta$.</p>
+  <p>Equivalently: $\alpha=\sup E$ iff $\alpha$ is an upper bound AND $\forall\varepsilon>0,\;\exists e\in E: e>\alpha-\varepsilon$.</p>
+  <p>$\inf(-E)=-\sup E$. If $E\subseteq F$ and both have sups, then $\sup E\leq\sup F$.</p>
+  <div class="move">
+    <div class="move-title">The Move — Proving α = sup E</div>
+    <p><strong>Step 1:</strong> Show $\alpha$ is an upper bound ($\alpha\geq e$ for all $e\in E$).</p>
+    <p><strong>Step 2:</strong> For any $\varepsilon>0$, exhibit an element of $E$ greater than $\alpha-\varepsilon$ (usually by direct construction or Archimedean).</p>
+  </div>
+  <div class="trap">
+    <div class="trap-title">Trap — Ambient Set Matters</div>
+    <p>$\sup E$ depends on which ordered set $E$ lives in. Always specify. $\sup\{q\in\mathbb{Q}:q^2<2\}$ doesn't exist in $\mathbb{Q}$ but equals $\sqrt{2}$ in $\mathbb{R}$.</p>
+  </div>
+</div>
+<div class="block">
+  <div class="block-title">Archimedean &amp; Density</div>
+  <div class="row"><span class="lbl">Archimedean:</span><span class="val">$\forall x\in\mathbb{R},\;\exists n\in\mathbb{N}$ with $n>x$. Equivalently, $\inf\{1/n:n\in\mathbb{N}\}=0$.</span></div>
+  <div class="row"><span class="lbl">Density of $\mathbb{Q}$:</span><span class="val">Between any $x<y$ in $\mathbb{R}$, $\exists p\in\mathbb{Q}$ with $x<p<y$. Also $\exists$ irrationals in $(x,y)$.</span></div>
+  <div class="move">
+    <div class="move-title">Density Proof</div>
+    <p>Find $n\in\mathbb{N}$ with $n(y-x)>1$ (Archimedean). Then $\exists m\in\mathbb{Z}$ with $nx<m\leq nx+1\leq ny$. Set $p=m/n\in(x,y)$.</p>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sec">
+<div class="sec-title">Complex Numbers &amp; Cauchy-Schwarz</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Complex Arithmetic</div>
+  <div class="row"><span class="lbl">Form:</span><span class="val">$z=x+iy$, $\bar z=x-iy$, $|z|=\sqrt{x^2+y^2}$</span></div>
+  <div class="row"><span class="lbl">Key id:</span><span class="val">$z\bar z=|z|^2$; $|zw|=|z||w|$</span></div>
+  <div class="row"><span class="lbl">Divide:</span><span class="val">$z/w = z\bar w/|w|^2$ — multiply top &amp; bottom by $\bar w$</span></div>
+  <div class="row"><span class="lbl">Triangle:</span><span class="val">$|z+w|\leq|z|+|w|$; reverse: $\bigl||z|-|w|\bigr|\leq|z-w|$</span></div>
+  <div class="row"><span class="lbl">Extended $\mathbb{R}$:</span><span class="val">$\infty-\infty$, $0\cdot\infty$ undefined. $\sup\emptyset=-\infty$, $\inf\emptyset=+\infty$.</span></div>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Cauchy-Schwarz (Thm 1.35)</div>
+  $$\left|\sum_{j=1}^n a_j\overline{b_j}\right|^2\leq\left(\sum_{j=1}^n|a_j|^2\right)\!\left(\sum_{j=1}^n|b_j|^2\right)$$
+  <p class="note">Proof: set $B=\sum|b_j|^2$. If $B=0$, all $b_j=0$ and the inequality is trivial. Otherwise let $\lambda=\sum a_j\overline{b_j}$ and expand $0\leq\sum|Ba_j-\lambda b_j|^2=B^2\sum|a_j|^2-B|\lambda|^2$. Divide by $B$.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sec">
+<div class="sec-title">Proof Strategies — Ch 1</div>
+<div class="block">
+  <ul>
+    <li>Show $\sqrt{2}\notin\mathbb{Q}$: suppose $p/q$ in lowest terms, get $p^2=2q^2$, so $p$ even, write $p=2m$, then $q^2=2m^2$, so $q$ even — contradicts $\gcd(p,q)=1$.</li>
+    <li>$\inf\{1/n\}=0$: for any $\varepsilon>0$, Archimedean gives $n>1/\varepsilon$, so $1/n<\varepsilon$. Zero is a lower bound (trivially). Hence $\inf=0$.</li>
+    <li>To show $\sup E=\alpha$: upper bound is usually easy. For tightness, if someone claims $\alpha-\varepsilon$ is an upper bound, produce an element of $E$ exceeding it.</li>
+    <li>$\mathbb{R}$ is uncountable: Cantor diagonal. $\mathbb{Q}$ is countable: list as $p/q$ with $|p|+q\leq n$.</li>
+  </ul>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--                  CH 2 — TOPOLOGY                     -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="ch2">
+<div class="hero">
+  <div class="ch-badge">Chapter 2</div>
+  <h1>Basic Topology</h1>
+  <p class="hero-sub">Metric spaces · Open/closed · Compact · Heine-Borel · Connected · Cantor</p>
+</div>
+
+<div class="sec">
+<div class="sec-title">Metric Spaces &amp; Open/Closed Sets</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Metric Space $(X,d)$</div>
+  <p>$d:X\times X\to\mathbb{R}$ satisfies: (i) $d(x,y)\geq 0$, $=0\iff x=y$; (ii) $d(x,y)=d(y,x)$; (iii) $d(x,z)\leq d(x,y)+d(y,z)$.</p>
+  <div class="row"><span class="lbl">Open ball:</span><span class="val">$B_r(x)=\{y\in X:d(x,y)<r\}$</span></div>
+  <div class="row"><span class="lbl">Open set:</span><span class="val">every point is interior: $\forall p\in E,\;\exists r>0: B_r(p)\subseteq E$</span></div>
+  <div class="row"><span class="lbl">Closed set:</span><span class="val">contains all its limit points ($E^c$ is open)</span></div>
+  <div class="row"><span class="lbl">Limit point:</span><span class="val">every $B_r(p)$ contains a point of $E\setminus\{p\}$</span></div>
+  <div class="row"><span class="lbl">Closure $\bar E$:</span><span class="val">$E\cup E'$ = smallest closed set $\supseteq E$</span></div>
+  <div class="row"><span class="lbl">Interior $E^\circ$:</span><span class="val">largest open set $\subseteq E$</span></div>
+</div>
+<div class="block">
+  <div class="block-title">Union/Intersection Rules</div>
+  <ul>
+    <li>Arbitrary union of <strong>open</strong> sets is open.</li>
+    <li>Finite intersection of <strong>open</strong> sets is open.</li>
+    <li>Arbitrary intersection of <strong>closed</strong> sets is closed.</li>
+    <li>Finite union of <strong>closed</strong> sets is closed.</li>
+  </ul>
+  <div class="trap">
+    <div class="trap-title">Trap — Open ≠ Not Closed</div>
+    <p>Open and closed are <strong>not</strong> opposites. Sets can be: open only, closed only, <em>both</em> (clopen), or <em>neither</em>. $\mathbb{R}$ and $\emptyset$ are clopen. $[a,b)$ is neither. $\bigcap_{n=1}^\infty(-1/n,\,1/n)=\{0\}$ is closed — infinite intersections of open sets can be closed.</p>
+  </div>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Compactness</div>
+  <p>$K$ is <strong>compact</strong> if every open cover of $K$ has a <strong>finite subcover</strong>.</p>
+  <div class="thm">
+    <div class="thm-title">Key Facts</div>
+    <p><strong>Thm 2.34:</strong> Compact $\Rightarrow$ closed and bounded (in any metric space).</p>
+    <p><strong>Heine-Borel (2.41, $\mathbb{R}^k$):</strong> $E$ compact $\iff$ $E$ closed and bounded. Only in $\mathbb{R}^k$!</p>
+    <p><strong>Seq. compact (2.37):</strong> In metric spaces, compact $\iff$ every sequence has a convergent subsequence with limit in $K$.</p>
+    <p><strong>B-W (2.42):</strong> Every bounded infinite subset of $\mathbb{R}^k$ has a limit point in $\mathbb{R}^k$.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-title">Trap — Heine-Borel fails in ∞-dim</div>
+    <p>Closed unit ball in $\ell^2$ is closed and bounded but <strong>not compact</strong> — the sequence $e_n$ (standard basis) has no convergent subsequence.</p>
+  </div>
+</div>
+<div class="block">
+  <div class="block-title">Cantor Intersection &amp; Nested Sets</div>
+  <p><strong>Thm 2.36:</strong> If $\{K_n\}$ is a sequence of nonempty compact sets with $K_1\supseteq K_2\supseteq\cdots$, then $\bigcap K_n\neq\emptyset$.</p>
+  <p>If additionally $\text{diam}(K_n)\to 0$, the intersection consists of exactly <strong>one point</strong>.</p>
+  <div class="move">
+    <div class="move-title">The Move — Proving Compact</div>
+    <p>In $\mathbb{R}^k$: show closed (complement open, or sequences in $E$ converging in $\mathbb{R}^k$ land in $E$) and bounded (all points within radius $R$ of origin). To show <em>not</em> compact: exhibit a sequence with no convergent subsequence, or an open cover with no finite subcover.</p>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sec">
+<div class="sec-title">Connectedness &amp; Special Sets</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Connectedness</div>
+  <p>$E$ is <strong>connected</strong> if it cannot be written as $A\cup B$ where $A,B$ are nonempty and <strong>separated</strong>: $\bar A\cap B=\emptyset$ and $A\cap\bar B=\emptyset$.</p>
+  <p>$\mathbb{R}$ is connected. The connected subsets of $\mathbb{R}$ are exactly the intervals (including rays and $\mathbb{R}$ itself). $\mathbb{Q}$ is <em>not</em> connected.</p>
+  <div class="trap">
+    <div class="trap-title">Trap</div>
+    <p>Compact $\not\Rightarrow$ connected ($\{0,1\}$ is compact, not connected). Connected $\not\Rightarrow$ compact ($\mathbb{R}$ is connected, not compact).</p>
+  </div>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Perfect Sets &amp; Cantor Set</div>
+  <p><strong>Perfect set:</strong> closed + every point is a limit point. No isolated points.</p>
+  <p>Every perfect set in $\mathbb{R}^k$ is <strong>uncountable</strong> (Thm 2.43).</p>
+  <hr>
+  <p><strong>Cantor set:</strong> Remove open middle thirds from $[0,1]$ iteratively. Result is: perfect, nowhere dense, uncountable, has measure zero, totally disconnected. The canonical example of a "large" set that is topologically negligible.</p>
+</div>
+<div class="block">
+  <div class="block-title">Countability Facts</div>
+  <ul>
+    <li>$\mathbb{N},\mathbb{Z},\mathbb{Q}$: countable. $\mathbb{R}$: uncountable (Cantor diagonal).</li>
+    <li>Countable union of countable sets is countable.</li>
+    <li>Any perfect set is uncountable. Algebraic numbers: countable.</li>
+  </ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--               CH 3 — SEQUENCES & SERIES              -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="ch3">
+<div class="hero">
+  <div class="ch-badge">Chapter 3</div>
+  <h1>Sequences &amp; Series</h1>
+  <p class="hero-sub">Cauchy · limsup/liminf · Convergence tests · Power series</p>
+</div>
+
+<div class="sec">
+<div class="sec-title">Sequences</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Convergence</div>
+  <p>$a_n\to L$ iff $\forall\varepsilon>0,\;\exists N\in\mathbb{N}: n\geq N\Rightarrow|a_n-L|<\varepsilon$. Limit is unique.</p>
+  <p><strong>Bounded + monotone $\Rightarrow$ convergent</strong> (in $\mathbb{R}$; uses LUB property).</p>
+  <p><strong>Subsequences:</strong> $a_n\to L\Rightarrow$ every subsequence $\to L$. Two subsequences with different limits $\Rightarrow$ $a_n$ diverges.</p>
+</div>
+<div class="block">
+  <div class="block-title">Cauchy Sequences</div>
+  <p>$\{a_n\}$ is <strong>Cauchy</strong> iff $\forall\varepsilon>0,\;\exists N: m,n\geq N\Rightarrow|a_m-a_n|<\varepsilon$.</p>
+  <p>In $\mathbb{R}^k$: <strong>Cauchy $\iff$ convergent</strong> (completeness). In $\mathbb{Q}$: Cauchy $\not\Rightarrow$ convergent.</p>
+  <p>Every convergent sequence is Cauchy. Every Cauchy sequence is bounded.</p>
+  <div class="move">
+    <div class="move-title">The Move — Proving Convergence Without Knowing Limit</div>
+    <p>Show the sequence is Cauchy: estimate $|a_m-a_n|$ by telescoping or geometric series, show it $\to 0$. In $\mathbb{R}$ this is enough.</p>
+  </div>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">limsup &amp; liminf</div>
+  <p>Let $s_n^*=\sup\{a_n,a_{n+1},\ldots\}$ and $s_{n*}=\inf\{a_n,a_{n+1},\ldots\}$. Then:</p>
+  $$\limsup_{n\to\infty}a_n=\lim_{n\to\infty}s_n^*=\inf_n s_n^*$$
+  $$\liminf_{n\to\infty}a_n=\lim_{n\to\infty}s_{n*}=\sup_n s_{n*}$$
+  <p>Always defined in extended $\mathbb{R}$ (even for divergent sequences). $\liminf\leq\limsup$ always.</p>
+  <p>$a_n\to L$ $\iff$ $\limsup a_n=\liminf a_n=L$.</p>
+  <p>$\limsup a_n$ is the <em>largest</em> subsequential limit; $\liminf$ is the smallest.</p>
+  <div class="trap">
+    <div class="trap-title">Trap</div>
+    <p>$\limsup$ and $\liminf$ <strong>always exist</strong> (possibly $\pm\infty$). Use them for divergent sequences too. $(-1)^n$: $\limsup=1$, $\liminf=-1$.</p>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sec">
+<div class="sec-title">Series &amp; Convergence Tests</div>
+<div class="block">
+  <div class="block-title">Series Basics</div>
+  <p>$\sum_{n=1}^\infty a_n$ converges iff partial sums $S_N=\sum_{n=1}^N a_n$ converge. <strong>Necessary:</strong> $a_n\to 0$ (contrapositive: $a_n\not\to 0\Rightarrow$ diverges).</p>
+  <p><strong>Absolute convergence:</strong> $\sum|a_n|<\infty\Rightarrow\sum a_n$ converges. Converse false: $\sum(-1)^n/n$ converges conditionally.</p>
+</div>
+<div class="block">
+  <div class="block-title">Convergence Tests</div>
+  <table class="ref-table">
+    <tr><th>Test</th><th>Condition</th><th>Conclusion</th></tr>
+    <tr><td>Comparison</td><td>$0\leq a_n\leq b_n$, $\sum b_n$ conv</td><td>$\sum a_n$ conv; if $\sum b_n$ div, $\sum a_n$ div</td></tr>
+    <tr><td>Root (3.33)</td><td>$\alpha=\limsup|a_n|^{1/n}$</td><td>$\alpha<1$: abs conv; $\alpha>1$: div; $\alpha=1$: inconclusive</td></tr>
+    <tr><td>Ratio (3.34)</td><td>$L=\limsup|a_{n+1}/a_n|$</td><td>$L<1$: abs conv; $\liminf>1$: div; $L=1$: inconclusive</td></tr>
+    <tr><td>Alternating</td><td>$|a_n|\searrow 0$, signs alternate</td><td>conv (Leibniz/alternating series test)</td></tr>
+    <tr><td>Dirichlet</td><td>$|\sum_{k=1}^N a_k|\leq M$; $b_n\searrow 0$</td><td>$\sum a_nb_n$ conv</td></tr>
+    <tr><td>Abel</td><td>$\sum a_n$ conv; $b_n$ monotone bounded</td><td>$\sum a_nb_n$ conv</td></tr>
+  </table>
+  <div class="trap">
+    <div class="trap-title">Trap — Root vs Ratio</div>
+    <p>Root test $\geq$ ratio test in strength: root $=1$ whenever ratio $=1$. Both inconclusive at 1. $\sum 1/n$ and $\sum 1/n^2$ both give ratio $\to 1$ — opposite behaviors. Always try root first; fall back to comparison or integral test for $p$-series.</p>
+  </div>
+</div>
+
+<div class="block">
+  <div class="block-title">Power Series</div>
+  <p>$\sum_{n=0}^\infty c_nz^n$, $c_n,z\in\mathbb{C}$. Radius of convergence:</p>
+  $$R=\frac{1}{\limsup_{n\to\infty}|c_n|^{1/n}}$$
+  <p>Converges absolutely for $|z|<R$; diverges for $|z|>R$; boundary $|z|=R$ requires separate analysis.</p>
+  <p>On any $|z|\leq r<R$, convergence is uniform. The sum is a continuous function of $z$ on $|z|<R$.</p>
+  <table class="ref-table" style="margin-top:8px;">
+    <tr><th>Series</th><th>Radius $R$</th><th>Sum</th></tr>
+    <tr><td>$\sum z^n$</td><td>$1$</td><td>$1/(1-z)$, $|z|<1$</td></tr>
+    <tr><td>$\sum z^n/n!$</td><td>$\infty$</td><td>$e^z$</td></tr>
+    <tr><td>$\sum(-1)^nz^{2n}/(2n)!$</td><td>$\infty$</td><td>$\cos z$</td></tr>
+    <tr><td>$\sum 1/n^p$</td><td>—</td><td>conv iff $p>1$</td></tr>
+  </table>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--                 CH 4 — CONTINUITY                    -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="ch4">
+<div class="hero">
+  <div class="ch-badge">Chapter 4</div>
+  <h1>Continuity</h1>
+  <p class="hero-sub">Limits · Continuous functions · Compactness · Uniform continuity · IVT · Discontinuities</p>
+</div>
+
+<div class="sec">
+<div class="sec-title">Definitions &amp; Global Characterization</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Limit of a Function</div>
+  <p>$\lim_{x\to p}f(x)=q$ iff $\forall\varepsilon>0,\;\exists\delta>0: 0<d_X(x,p)<\delta\Rightarrow d_Y(f(x),q)<\varepsilon$.</p>
+  <p>$x=p$ is <em>excluded</em> from the limit condition. $p$ must be a limit point of the domain.</p>
+</div>
+<div class="block">
+  <div class="block-title">Continuity at a Point</div>
+  <p>$f:X\to Y$ is continuous at $p$ iff $\lim_{x\to p}f(x)=f(p)$:</p>
+  <p style="padding-left:8px;">$\forall\varepsilon>0,\;\exists\delta>0: d_X(x,p)<\delta\Rightarrow d_Y(f(x),f(p))<\varepsilon$</p>
+  <p>Composition of continuous functions is continuous. Arithmetic of continuous real functions is continuous.</p>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Global Characterization (Thm 4.8)</div>
+  <p>$f:X\to Y$ is continuous $\iff$ $f^{-1}(V)$ is open in $X$ for every open $V\subseteq Y$.</p>
+  <p>Equivalently: $f^{-1}(F)$ is closed in $X$ for every closed $F\subseteq Y$.</p>
+  <div class="thm">
+    <div class="thm-title">Key Consequences</div>
+    <p><strong>Thm 4.14:</strong> $f$ continuous, $K\subseteq X$ compact $\Rightarrow f(K)$ compact.</p>
+    <p><strong>Thm 4.16:</strong> $f$ continuous on compact $K$ $\Rightarrow$ $f$ attains its max and min on $K$.</p>
+    <p><strong>Thm 4.22:</strong> $f$ continuous, $E\subseteq X$ connected $\Rightarrow f(E)$ connected.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-title">Trap — Images of Closed Sets</div>
+    <p>$f(\text{compact})$ = compact ✓. But $f(\text{closed})$ need not be closed: $f(x)=1/x$ maps the closed set $[1,\infty)$ to $(0,1]$, which is not closed.</p>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sec">
+<div class="sec-title">Uniform Continuity &amp; IVT</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Uniform Continuity</div>
+  <p>$f:X\to Y$ is uniformly continuous iff $\forall\varepsilon>0,\;\exists\delta>0:\forall x,y\in X,$</p>
+  <p style="padding-left:8px;">$d_X(x,y)<\delta\Rightarrow d_Y(f(x),f(y))<\varepsilon$</p>
+  <p>One $\delta$ works for <em>all pairs</em> simultaneously. Uniform $\Rightarrow$ continuous; converse fails on non-compact sets.</p>
+  <div class="thm">
+    <div class="thm-title">Thm 4.19</div>
+    <p>Continuous on compact $\Rightarrow$ uniformly continuous.</p>
+    <p class="note">Proof: if not, find $p_n,q_n$ with $d(p_n,q_n)<1/n$ but $d(f(p_n),f(q_n))\geq\varepsilon_0$. Compactness gives subsequence of $p_n$ converging to some $p^*$; then $q_n\to p^*$ too; but $f$ continuous at $p^*$ gives $f(p_n),f(q_n)\to f(p^*)$, contradicting the gap.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-title">Trap — x² on ℝ</div>
+    <p>$f(x)=x^2$ is continuous on $\mathbb{R}$ but not uniformly continuous: $x_n=n+1/n$, $y_n=n$ give $|x_n-y_n|=1/n\to 0$ but $|x_n^2-y_n^2|=2+1/n^2\geq 2$.</p>
+  </div>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Intermediate Value Theorem (4.23)</div>
+  <p>$f:[a,b]\to\mathbb{R}$ continuous, $f(a)<\gamma<f(b)$ $\Rightarrow\exists c\in(a,b): f(c)=\gamma$.</p>
+  <div class="move">
+    <div class="move-title">IVT Proof Move</div>
+    <p>Let $A=\{x\in[a,b]:f(x)<\gamma\}$. Set $c=\sup A$ (exists since $A$ nonempty and bounded).</p>
+    <p>If $f(c)>\gamma$: continuity gives $\delta$ with $f(x)>\gamma$ on $(c-\delta,c+\delta)$, contradicting $c=\sup A$.</p>
+    <p>If $f(c)<\gamma$: continuity gives points beyond $c$ still in $A$, contradicting $c$ as sup.</p>
+    <p>So $f(c)=\gamma$.</p>
+  </div>
+</div>
+<div class="block">
+  <div class="block-title">Discontinuities &amp; Monotone Functions</div>
+  <table class="ref-table">
+    <tr><th>Type</th><th>Characterization</th></tr>
+    <tr><td>Removable</td><td>$\lim_{x\to p}f(x)$ exists but $\neq f(p)$</td></tr>
+    <tr><td>Jump</td><td>$f(p^-)$ and $f(p^+)$ exist but unequal</td></tr>
+    <tr><td>Essential</td><td>At least one of $f(p^\pm)$ fails to exist</td></tr>
+  </table>
+  <p><strong>Monotone functions (4.30):</strong> have only jump discontinuities; the set of jumps is <em>at most countable</em>.</p>
+  <p class="note">Proof idea: each jump has positive size; only finitely many jumps can exceed $1/n$; countable union of finite sets is countable.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--               CH 5 — DIFFERENTIATION                 -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="ch5">
+<div class="hero">
+  <div class="ch-badge">Chapter 5</div>
+  <h1>Differentiation</h1>
+  <p class="hero-sub">Derivative · Chain rule · Local extrema · MVT · L'Hôpital · Taylor · Darboux</p>
+</div>
+
+<div class="sec">
+<div class="sec-title">The Derivative &amp; Algebra</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Definition (5.1)</div>
+  <p>$f'(x)=\lim_{t\to x}\dfrac{f(t)-f(x)}{t-x}$ (Rudin's form — $t$ lives in the domain).</p>
+  <p>Equivalent $h\to 0$ form: $f'(x)=\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}$.</p>
+  <p><strong>Thm 5.2:</strong> Differentiable at $x\Rightarrow$ continuous at $x$. Converse false.</p>
+  <p class="note">Proof: $f(t)-f(x)=\frac{f(t)-f(x)}{t-x}\cdot(t-x)\to f'(x)\cdot 0=0$ as $t\to x$.</p>
+  <div class="trap">
+    <div class="trap-title">Trap — Converse is False</div>
+    <p>$f(x)=|x|$ is continuous at 0 but not differentiable: $f'_+(0)=1\neq-1=f'_-(0)$. Weierstrass function: continuous everywhere, differentiable nowhere.</p>
+  </div>
+</div>
+<div class="block">
+  <div class="block-title">Algebra of Derivatives</div>
+  <div class="row"><span class="lbl">Sum:</span><span class="val">$(f+g)'=f'+g'$</span></div>
+  <div class="row"><span class="lbl">Product:</span><span class="val">$(fg)'=f'g+fg'$</span></div>
+  <div class="row"><span class="lbl">Quotient:</span><span class="val">$(f/g)'=(f'g-fg')/g^2$ (where $g\neq 0$)</span></div>
+  <div class="row"><span class="lbl">Chain:</span><span class="val">$(g\circ f)'(x)=g'(f(x))\cdot f'(x)$</span></div>
+  <div class="move">
+    <div class="move-title">Product Rule Proof Move</div>
+    <p>Write $f(t)g(t)-f(x)g(x)=[f(t)-f(x)]g(t)+f(x)[g(t)-g(x)]$. Divide by $t-x$; the second piece → $f(x)g'(x)$; first piece → $f'(x)g(x)$ since $g(t)\to g(x)$ (differentiable ⇒ continuous).</p>
+  </div>
+  <div class="move">
+    <div class="move-title">Chain Rule Proof Move (No Division by Zero)</div>
+    <p>Define auxiliary: $q(t)=\frac{g(f(t))-g(f(x))}{f(t)-f(x)}$ when $f(t)\neq f(x)$, and $q(t)=g'(f(x))$ otherwise. Then $q$ is continuous at $t=x$ and $g(f(t))-g(f(x))=q(t)[f(t)-f(x)]$ always. Divide by $t-x$ and take limit.</p>
+  </div>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Local Extrema (Thm 5.8)</div>
+  <p>If $f$ has a local max or min at $x\in(a,b)$ and $f'(x)$ exists, then $f'(x)=0$.</p>
+  <p class="note">Proof: from the right, $(f(t)-f(x))/(t-x)\leq 0$ (since $f(t)\leq f(x)$ near max), so $f'(x)\leq 0$. From the left, ratio $\geq 0$, so $f'(x)\geq 0$. Hence $f'(x)=0$.</p>
+  <div class="trap">
+    <div class="trap-title">Trap — f'(x)=0 ≠ Extremum</div>
+    <p>$f(x)=x^3$ at $x=0$: $f'(0)=0$ but $f$ is strictly increasing — no extremum. The theorem is one-directional: extremum $\Rightarrow f'=0$, not $f'=0\Rightarrow$ extremum.</p>
+  </div>
+</div>
+<div class="block">
+  <div class="block-title">Darboux's Theorem (5.12)</div>
+  <p>If $f'$ exists on $[a,b]$, then $f'$ has the <strong>intermediate value property</strong> — even if $f'$ is <em>not continuous</em>.</p>
+  <p>Consequence: $f'$ <strong>cannot have jump discontinuities</strong>. If $f'(a)\neq f'(b)$, then $f'$ takes every value between them.</p>
+  <div class="trap">
+    <div class="trap-title">Trap</div>
+    <p>A derivative need not be continuous (it can have essential discontinuities), but it can never have jump discontinuities. Darboux rules that out.</p>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sec">
+<div class="sec-title">MVT, L'Hôpital &amp; Taylor</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Mean Value Theorem (5.11)</div>
+  <p>$f$ continuous on $[a,b]$, differentiable on $(a,b)$ $\Rightarrow\exists c\in(a,b)$:</p>
+  $$f(b)-f(a)=f'(c)(b-a)$$
+  <p class="note">Proof via Rolle's (5.10): apply to $h(t)=f(t)-\frac{f(b)-f(a)}{b-a}(t-a)$; $h(a)=h(b)=0$; by Rolle $\exists c: h'(c)=0$.</p>
+  <div class="thm">
+    <div class="thm-title">Key Applications</div>
+    <p>$f'\equiv 0$ on $(a,b)$ $\Rightarrow f$ constant. $|f'|\leq M$ $\Rightarrow |f(b)-f(a)|\leq M|b-a|$ (Lipschitz). $f'\geq 0$ $\Rightarrow f$ nondecreasing.</p>
+  </div>
+  <p><strong>Cauchy MVT (5.26):</strong> $\exists c$: $[f(b)-f(a)]g'(c)=[g(b)-g(a)]f'(c)$. Used to derive L'Hôpital.</p>
+</div>
+<div class="block">
+  <div class="block-title">L'Hôpital's Rule (5.13)</div>
+  <p>If $f,g\to 0$ as $x\to a$ (or $g\to\pm\infty$), $g'(x)\neq 0$ near $a$, and $\lim_{x\to a}\frac{f'(x)}{g'(x)}=L$, then $\lim_{x\to a}\frac{f(x)}{g(x)}=L$.</p>
+  <div class="trap">
+    <div class="trap-title">Trap — Check f'/g' First</div>
+    <p>L'Hôpital requires $f'/g'\to L$ to hold. If $f'/g'$ oscillates or diverges, no conclusion about $f/g$ (even if $f/g$ converges). Never apply L'Hôpital without verifying the limit of $f'/g'$ first.</p>
+  </div>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Taylor's Theorem (5.15)</div>
+  <p>$f:\mathbb{R}\to\mathbb{R}$, $f^{(n)}$ exists on $[a,b]$. For $\alpha,\beta\in[a,b]$:</p>
+  $$f(\beta)=\sum_{k=0}^{n}\frac{f^{(k)}(\alpha)}{k!}(\beta-\alpha)^k+\frac{f^{(n+1)}(c)}{(n+1)!}(\beta-\alpha)^{n+1}$$
+  <p>where $c$ lies strictly between $\alpha$ and $\beta$. The remainder is <strong>exact</strong> (Lagrange form).</p>
+  <div class="move">
+    <div class="move-title">Taylor Proof Move</div>
+    <p>Define $M$ by $f(\beta)=P_n(\beta)+M(\beta-\alpha)^{n+1}$ (the polynomial is the sum). Apply Rolle $n+1$ times to $g(t)=f(\beta)-P_n^\alpha(t)-M(\beta-t)^{n+1}$ (which vanishes at $t=\alpha$ and $t=\beta$ with appropriate conditions), yielding $g^{(n+1)}(c)=0$. Solve: $M=f^{(n+1)}(c)/(n+1)!$.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-title">Trap — n! vs (n+1)!</div>
+    <p>The remainder is $f^{(n+1)}(c)/(n+1)!$, not $f^{(n+1)}(c)/n!$. The polynomial terms use $k!$ but the remainder uses $(n+1)!$.</p>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--                 CH 6 — INTEGRATION                   -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="ch6">
+<div class="hero">
+  <div class="ch-badge">Chapter 6</div>
+  <h1>The Riemann-Darboux Integral</h1>
+  <p class="hero-sub">Darboux sums · Riemann criterion · FTC · Lebesgue criterion</p>
+</div>
+
+<div class="sec">
+<div class="sec-title">Partitions &amp; Integrability</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Setup</div>
+  <p><strong>Partition</strong> $P=\{x_0<x_1<\cdots<x_n\}$ of $[a,b]$; $\Delta x_k=x_k-x_{k-1}$.</p>
+  <p>$M_k=\sup_{[x_{k-1},x_k]}f$, $m_k=\inf_{[x_{k-1},x_k]}f$.</p>
+  $$U(P,f)=\sum_{k=1}^n M_k\Delta x_k,\qquad L(P,f)=\sum_{k=1}^n m_k\Delta x_k$$
+  $$\overline{\int_a^b}f=\inf_P U(P,f),\qquad\underline{\int_a^b}f=\sup_P L(P,f)$$
+  <p>$f\in\mathscr{R}$ iff $\overline{\int}f=\underline{\int}f$. Both always exist (bounded $f$ + completeness of $\mathbb{R}$).</p>
+</div>
+<div class="block">
+  <div class="block-title">Refinement &amp; Riemann Criterion</div>
+  <p><strong>Refinement Lemma (6.4):</strong> $P\subseteq P^*\Rightarrow L(P)\leq L(P^*)\leq U(P^*)\leq U(P)$.</p>
+  <p>Adding points narrows the gap. <strong>Corollary (6.5):</strong> For any two partitions $P_1,P_2$: $L(P_1)\leq U(P_2)$.</p>
+  <p class="note">Proof of corollary: form $P^*=P_1\cup P_2$; apply refinement lemma to each.</p>
+  <hr>
+  <p><strong>Riemann Criterion (6.6):</strong> $f\in\mathscr{R}$ $\iff$ $\forall\varepsilon>0,\;\exists P: U(P,f)-L(P,f)<\varepsilon$.</p>
+  <div class="move">
+    <div class="move-title">The Move — Proving Integrability</div>
+    <p>Construct an explicit partition (e.g. uniform $P_n$ with $n$ subintervals). Bound the gap: $U-L=\sum(M_k-m_k)\Delta x_k$. Use uniform continuity (for continuous $f$) or monotonicity to bound $M_k-m_k$ on each piece. Choose $n$ large enough that the total gap $<\varepsilon$.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-title">Trap</div>
+    <p>The partition $P$ in the Riemann criterion can depend on $\varepsilon$ — you do NOT need one $P$ for all $\varepsilon$ simultaneously. A finer partition for smaller $\varepsilon$ is perfectly fine.</p>
+  </div>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Integrability Theorems</div>
+  <div class="thm">
+    <div class="thm-title">Sufficient Conditions for f ∈ ℛ</div>
+    <p><strong>Thm 6.8:</strong> $f$ continuous on $[a,b]$ $\Rightarrow$ $f\in\mathscr{R}$. (Continuity on compact $\Rightarrow$ uniform continuity; use Riemann criterion.)</p>
+    <p><strong>Thm 6.9:</strong> $f$ monotone on $[a,b]$ $\Rightarrow$ $f\in\mathscr{R}$. Uniform partition with $n$ points gives $U-L=(f(b)-f(a))/n\to 0$.</p>
+    <p><strong>Thm 6.11:</strong> $f\in\mathscr{R}$, $\phi$ continuous on range of $f$ $\Rightarrow\phi\circ f\in\mathscr{R}$. In particular: $f^2\in\mathscr{R}$, $|f|\in\mathscr{R}$.</p>
+    <p><strong>Lebesgue criterion:</strong> $f\in\mathscr{R}$ $\iff$ $f$ bounded and discontinuous on a set of measure zero.</p>
+  </div>
+  <div class="trap">
+    <div class="trap-title">Trap — Dirichlet Function</div>
+    <p>$f=\mathbf{1}_\mathbb{Q}$ (1 on rationals, 0 on irrationals): bounded, discontinuous everywhere — NOT in $\mathscr{R}$ (both $U\equiv 1$ and $L\equiv 0$ for any partition). Modified Dirichlet ($f(p/q)=1/q$ in lowest terms, $f(\text{irrationals})=0$): IS in $\mathscr{R}$ — discontinuities only at rationals, a countable (measure zero) set.</p>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sec">
+<div class="sec-title">Properties &amp; Fundamental Theorem</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Properties of ∫</div>
+  <ul>
+    <li><strong>Linearity:</strong> $\int(f+g)=\int f+\int g$; $\int cf=c\int f$.</li>
+    <li><strong>Monotone:</strong> $f\leq g$ on $[a,b]$ $\Rightarrow\int_a^b f\leq\int_a^b g$.</li>
+    <li><strong>Triangle:</strong> $\left|\int_a^b f\right|\leq\int_a^b|f|$.</li>
+    <li><strong>Additivity:</strong> $\int_a^b f=\int_a^c f+\int_c^b f$ for $c\in[a,b]$.</li>
+    <li><strong>Product:</strong> $f,g\in\mathscr{R}\Rightarrow fg\in\mathscr{R}$.</li>
+  </ul>
+</div>
+<div class="block">
+  <div class="block-title">Integration by Parts &amp; Substitution</div>
+  $$\int_a^b f'g\,dx = \bigl[fg\bigr]_a^b - \int_a^b fg'\,dx$$
+  <p>Requires $f',g'\in\mathscr{R}$ and $f,g$ continuous.</p>
+  $$\int_a^b f(\phi(t))\phi'(t)\,dt=\int_{\phi(a)}^{\phi(b)}f(x)\,dx$$
+  <p>Requires $\phi'$ continuous and $f$ continuous on range of $\phi$.</p>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Fundamental Theorem of Calculus</div>
+  <p><strong>FTC Part 1 (6.20):</strong> Let $f\in\mathscr{R}[a,b]$ and $F(x)=\int_a^x f$. Then $F$ is continuous on $[a,b]$. If $f$ is continuous at $x_0$, then $F'(x_0)=f(x_0)$.</p>
+  <p class="note">Proof of differentiability: $\frac{F(x)-F(x_0)}{x-x_0}=\frac{1}{x-x_0}\int_{x_0}^x f(t)\,dt$. For $|t-x_0|<|x-x_0|$: $\left|\frac{1}{x-x_0}\int_{x_0}^x(f(t)-f(x_0))dt\right|\leq\sup_{|t-x_0|\leq|x-x_0|}|f(t)-f(x_0)|\to 0$ by continuity of $f$ at $x_0$.</p>
+  <hr>
+  <p><strong>FTC Part 2 (6.21):</strong> $f\in\mathscr{R}[a,b]$, $F$ continuous on $[a,b]$, $F'=f$ on $(a,b)$ $\Rightarrow$</p>
+  $$\int_a^b f(x)\,dx = F(b)-F(a)$$
+  <p class="note">Proof: given $\varepsilon$, pick $P$ with $U-L<\varepsilon$. MVT gives $F(x_k)-F(x_{k-1})=f(t_k)\Delta x_k$ for some $t_k$. Then $F(b)-F(a)=\sum f(t_k)\Delta x_k\in[L(P),U(P)]$, and so does $\int f$, so $|F(b)-F(a)-\int f|<\varepsilon$.</p>
+  <div class="trap">
+    <div class="trap-title">Trap — Volterra Function</div>
+    <p>A function $F$ can be differentiable everywhere with $F'=f$ bounded, yet $f\notin\mathscr{R}$. FTC Part 2 requires both $F'=f$ AND $f\in\mathscr{R}$. Also: $F'$ existing everywhere does NOT guarantee $F'\in\mathscr{R}$.</p>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--                   QUICK REFERENCE                    -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="ref">
+<div class="hero">
+  <div class="ch-badge">Quick Reference</div>
+  <h1>Master Table</h1>
+  <p class="hero-sub">Counterexamples · Proof moves · Theorem lookup</p>
+</div>
+
+<div class="sec">
+<div class="sec-title">Counterexamples</div>
+<div class="block">
+  <table class="ref-table">
+    <tr><th>False Claim</th><th>Counterexample</th><th>Why</th></tr>
+    <tr><td>Convergent $\Rightarrow$ absolutely convergent</td><td>$\sum(-1)^n/n$</td><td>Conditionally convergent; $\sum 1/n$ diverges</td></tr>
+    <tr><td>Continuous $\Rightarrow$ differentiable</td><td>$|x|$ at 0</td><td>Left/right derivatives $\pm 1$ don't match</td></tr>
+    <tr><td>$f'(x)=0\Rightarrow$ local extremum</td><td>$x^3$ at 0</td><td>$f'(0)=0$ but strictly increasing through 0</td></tr>
+    <tr><td>Closed + bounded $\Rightarrow$ compact (in general)</td><td>Closed unit ball in $\ell^2$</td><td>Infinite-dimensional; $e_n$ has no convergent subseq</td></tr>
+    <tr><td>Compact $\Rightarrow$ connected</td><td>$\{0\}\cup\{1\}\subset\mathbb{R}$</td><td>Two separated points</td></tr>
+    <tr><td>$f\in\mathscr{R}\Rightarrow f$ continuous</td><td>Any monotone step function</td><td>Jump discontinuities allowed; still integrable</td></tr>
+    <tr><td>$F'$ exists everywhere $\Rightarrow F'\in\mathscr{R}$</td><td>Volterra function</td><td>$F'$ bounded but not Riemann integrable</td></tr>
+    <tr><td>Cauchy in $\mathbb{Q}\Rightarrow$ converges in $\mathbb{Q}$</td><td>$3,3.1,3.14,\ldots\to\pi\notin\mathbb{Q}$</td><td>$\mathbb{Q}$ is not complete</td></tr>
+    <tr><td>Open and closed are opposites</td><td>$\mathbb{R},\emptyset$ are both; $[a,b)$ is neither</td><td>Clopen sets exist in every metric space</td></tr>
+    <tr><td>$f'$ continuous (if $f$ differentiable)</td><td>$x^2\sin(1/x)$ at 0</td><td>$f'$ exists everywhere but $f'$ not continuous at 0</td></tr>
+    <tr><td>$\sum a_n$ conv, $\sum b_n$ conv $\Rightarrow \sum a_nb_n$ conv</td><td>$a_n=b_n=(-1)^n/\sqrt{n}$</td><td>Both conv (alternating), but $a_nb_n=1/n$, diverges</td></tr>
+  </table>
+</div>
+</div>
+
+<div class="sec">
+<div class="sec-title">Proof Moves — At a Glance</div>
+<div class="two-col">
+<div>
+<div class="block">
+  <div class="block-title">Universal Moves</div>
+  <ul>
+    <li><strong>Show sup/inf:</strong> upper/lower bound + tightness ($\forall\varepsilon$, exhibit element in $(α-ε, α]$).</li>
+    <li><strong>Cauchy = convergent in $\mathbb{R}$:</strong> show $|a_m-a_n|\to 0$ to prove convergence without knowing the limit.</li>
+    <li><strong>Compactness in $\mathbb{R}^k$:</strong> show closed + bounded (or sequential compactness).</li>
+    <li><strong>Continuity globally:</strong> preimage of every open set is open.</li>
+    <li><strong>IVT:</strong> let $A=\{x:f(x)<\gamma\}$, take $c=\sup A$, show $f(c)=\gamma$ by ruling out $>$ and $<$.</li>
+    <li><strong>MVT application:</strong> bound $|f(b)-f(a)|$ by $\max|f'|\cdot|b-a|$.</li>
+    <li><strong>Riemann integrability:</strong> construct partition, bound $U-L=\sum(M_k-m_k)\Delta x_k$.</li>
+    <li><strong>FTC2 proof:</strong> MVT on each subinterval, telescope, compare to Riemann sum.</li>
+  </ul>
+</div>
+</div>
+<div>
+<div class="block">
+  <div class="block-title">Theorem Number Lookup</div>
+  <table class="ref-table">
+    <tr><th>Thm</th><th>Statement</th></tr>
+    <tr><td>1.20</td><td>Archimedean property; density of $\mathbb{Q}$</td></tr>
+    <tr><td>1.35</td><td>Cauchy-Schwarz inequality</td></tr>
+    <tr><td>2.34</td><td>Compact $\Rightarrow$ closed and bounded</td></tr>
+    <tr><td>2.36</td><td>Nested compact sets have nonempty intersection</td></tr>
+    <tr><td>2.41</td><td>Heine-Borel: compact $\iff$ closed + bounded in $\mathbb{R}^k$</td></tr>
+    <tr><td>2.42</td><td>Bolzano-Weierstrass: bounded $\Rightarrow$ limit point exists</td></tr>
+    <tr><td>3.33</td><td>Root test</td></tr>
+    <tr><td>3.34</td><td>Ratio test</td></tr>
+    <tr><td>4.8</td><td>Continuity $\iff$ preimages of open sets open</td></tr>
+    <tr><td>4.14</td><td>Continuous image of compact = compact</td></tr>
+    <tr><td>4.19</td><td>Continuous on compact $\Rightarrow$ uniformly continuous</td></tr>
+    <tr><td>4.22</td><td>Continuous image of connected = connected</td></tr>
+    <tr><td>4.23</td><td>Intermediate Value Theorem</td></tr>
+    <tr><td>5.2</td><td>Differentiable $\Rightarrow$ continuous</td></tr>
+    <tr><td>5.8</td><td>Local extremum $\Rightarrow f'=0$</td></tr>
+    <tr><td>5.10</td><td>Rolle's theorem</td></tr>
+    <tr><td>5.11</td><td>Mean Value Theorem</td></tr>
+    <tr><td>5.12</td><td>Darboux: $f'$ has IVP</td></tr>
+    <tr><td>5.13</td><td>L'Hôpital's rule</td></tr>
+    <tr><td>5.15</td><td>Taylor's theorem (Lagrange remainder)</td></tr>
+    <tr><td>6.6</td><td>Riemann criterion for integrability</td></tr>
+    <tr><td>6.8</td><td>Continuous $\Rightarrow$ integrable</td></tr>
+    <tr><td>6.20</td><td>FTC Part 1</td></tr>
+    <tr><td>6.21</td><td>FTC Part 2</td></tr>
+  </table>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0, 0);
+  updateBar();
+}
+
+function updateBar() {
+  const page = document.querySelector('.page.active');
+  if (!page) return;
+  const h = page.scrollHeight - window.innerHeight;
+  const pct = h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0;
+  document.getElementById('pf').style.width = pct + '%';
+}
+window.addEventListener('scroll', updateBar);
+updateBar();
+</script>
+</body>
+</html>
