@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Analysis — PS9 Study Guide (Chapter 7)</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']],
+    tags: 'ams',
+    macros: {
+      R: '\\mathbb{R}',
+      N: '\\mathbb{N}',
+      C: '\\mathbb{C}',
+      eps: '\\varepsilon',
+      del: '\\delta'
+    }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root {
+  --bg:#08080d;
+  --surface:#0e0e16;
+  --card:#131320;
+  --border:#1e1e2e;
+  --border2:#2a2a3e;
+  --text:#e2dced;
+  --muted:#5a5a7a;
+  --dim:#9090b0;
+
+  /* Chapter 7 color: warm indigo/violet */
+  --ch:#6a5acd;
+  --chb:#9a8aff;
+  --ch-glow:rgba(106,90,205,0.12);
+
+  --green:#4a8c5a;
+  --greenb:#7abc8a;
+  --gold:#9c7a3a;
+  --goldb:#ccaa6a;
+  --red:#9c4a4a;
+  --redb:#cc7070;
+  --teal:#3a8c8c;
+  --tealb:#6abcbc;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'EB Garamond',serif;
+  font-size:17px;
+  line-height:1.85;
+  overflow-x:hidden;
+}
+
+/* ── NAV ── */
+.topnav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(8,8,13,.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.nav-inner::-webkit-scrollbar{display:none;}
+.nav-tab{
+  flex-shrink:0;padding:13px 16px;
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;
+}
+.nav-tab.active,.nav-tab:hover{color:var(--chb);border-bottom-color:var(--ch);}
+
+.pbar{position:fixed;top:44px;left:0;right:0;height:2px;background:var(--border);z-index:199;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--ch),var(--chb));width:0%;transition:width .1s;}
+
+/* ── PAGES ── */
+.page{display:none;padding-top:52px;min-height:100vh;}
+.page.active{display:block;}
+
+/* ── HERO ── */
+.hero{
+  padding:36px 24px 30px;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 70% 50%,rgba(106,90,205,.08) 0%,transparent 65%);
+  pointer-events:none;
+}
+.badge{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;
+  padding:4px 10px;border-radius:2px;margin-bottom:12px;
+  background:var(--ch-glow);color:var(--chb);border:1px solid var(--ch);
+}
+.hero h1{font-family:'Cinzel',serif;font-size:1.85rem;font-weight:600;line-height:1.2;margin-bottom:8px;color:var(--chb);}
+.hero-sub{font-size:.9rem;color:var(--muted);font-style:italic;}
+
+/* ── SECTIONS ── */
+.sec{
+  padding:30px 24px;
+  border-bottom:1px solid var(--border);
+  max-width:860px;margin:0 auto;
+}
+.sec h2{
+  font-family:'Cinzel',serif;font-size:1.15rem;font-weight:600;
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;
+}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--chb);}
+
+.sec p{margin-bottom:1.1rem;font-size:.97rem;line-height:1.85;}
+.sec p:last-child{margin-bottom:0;}
+
+/* ── BOXES ── */
+.def-box,.thm,.warn,.explain,.note{
+  border-left:3px solid;border-radius:0 3px 3px 0;
+  padding:16px 20px;margin:16px 0;
+}
+.def-box{border-left-color:var(--chb);background:var(--card);}
+.thm{border-left-color:var(--greenb);background:#0a100a;}
+.warn{border-left-color:var(--redb);background:#100a0a;}
+.explain{border-left-color:var(--goldb);background:#0e0e0a;}
+.note{border-left-color:var(--tealb);background:#090e0e;}
+
+.box-label{
+  font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.22em;
+  text-transform:uppercase;margin-bottom:6px;
+}
+.def-box .box-label{color:var(--chb);}
+.thm .box-label{color:var(--greenb);}
+.warn .box-label{color:var(--redb);}
+.explain .box-label{color:var(--goldb);}
+.note .box-label{color:var(--tealb);}
+
+.box-title{font-family:'Cinzel',serif;font-size:.9rem;margin-bottom:8px;}
+.box-body{font-size:.9rem;line-height:1.8;}
+.def-box .box-body{color:#9aaccc;}
+.thm .box-body{color:#8aac8a;}
+.warn .box-body{color:#ac8a8a;}
+.explain .box-body{color:#9a9070;}
+.note .box-body{color:#7aacac;}
+
+.box-body strong{color:var(--text);}
+.box-body p{margin-bottom:.8rem;font-size:.9rem;line-height:1.8;}
+.box-body p:last-child{margin-bottom:0;}
+
+/* ── PROOF WALKTHROUGH ── */
+.pw{background:var(--card);border:1px solid var(--border2);border-radius:4px;padding:18px 20px;margin:16px 0;}
+.pw-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--chb);margin-bottom:14px;}
+.pw-step{display:flex;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.pw-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.pw-n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--chb);min-width:22px;padding-top:2px;}
+.pw-c{flex:1;}
+.pw-s{font-size:.9rem;margin-bottom:5px;line-height:1.65;}
+.pw-w{font-size:.83rem;color:var(--muted);font-style:italic;line-height:1.6;}
+.pw-w strong{color:#8898a8;font-style:normal;}
+
+/* ── PROBLEM SECTION ── */
+.prob-header{
+  background:var(--surface);
+  border:1px solid var(--border2);border-radius:4px;
+  padding:14px 20px;margin:20px 0 8px;
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+}
+.prob-num{
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--chb);background:var(--ch-glow);border:1px solid var(--ch);
+  border-radius:2px;padding:3px 9px;
+}
+.prob-title{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;}
+
+.prob-statement{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:18px 22px;
+  margin:10px 0 20px;
+  font-size:.92rem;
+  line-height:1.85;
+}
+.prob-statement .stmt-label{
+  font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;
+}
+
+/* ── EXERCISE DIVIDER ── */
+.ex-divider{
+  height:2px;
+  background:linear-gradient(90deg,var(--ch),transparent);
+  margin:40px 0 32px;
+  max-width:860px;
+  margin-left:auto;margin-right:auto;
+}
+
+/* ── PREP BLOCK ── */
+.prep-block{
+  background:linear-gradient(135deg,rgba(106,90,205,.06),rgba(106,90,205,.02));
+  border:1px solid rgba(106,90,205,.25);
+  border-radius:4px;
+  padding:20px 22px;
+  margin:16px 0 12px;
+}
+.prep-label{
+  font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--chb);margin-bottom:10px;
+}
+.prep-block p{margin-bottom:.9rem;font-size:.93rem;line-height:1.82;color:var(--dim);}
+.prep-block p:last-child{margin-bottom:0;}
+.prep-block strong{color:var(--text);}
+
+/* ── ACCORDIONS ── */
+.acc{background:var(--card);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin:8px 0;}
+.acc-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 18px;cursor:pointer;background:var(--surface);
+  font-size:.9rem;color:var(--dim);
+}
+.acc-hdr:hover{color:var(--text);}
+.acc-arrow{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);transition:transform .2s;}
+.acc.open .acc-arrow{transform:rotate(90deg);}
+.acc-body{display:none;padding:16px 18px;font-size:.88rem;color:#9090b0;line-height:1.8;border-top:1px solid var(--border);}
+.acc.open .acc-body{display:block;}
+
+/* ── DRILLS ── */
+.drill-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:16px 20px;margin-bottom:10px;}
+.drill-tag{
+  font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.08em;
+  border-radius:2px;padding:2px 7px;margin-right:7px;text-transform:uppercase;
+}
+.drill-tag.tf{background:rgba(106,90,205,.12);color:var(--chb);}
+.drill-tag.mc{background:rgba(74,140,90,.1);color:var(--greenb);}
+.drill-q{font-size:.9rem;color:var(--text);margin-bottom:14px;line-height:1.65;}
+.tf-row{display:flex;gap:8px;}
+.tf-btn{
+  flex:1;background:var(--surface);border:1px solid var(--border);border-radius:2px;
+  padding:10px 14px;min-height:44px;font-size:.85rem;font-family:'JetBrains Mono',monospace;
+  color:var(--muted);cursor:pointer;transition:border-color .13s;-webkit-tap-highlight-color:transparent;
+}
+.tf-btn:hover:not(:disabled){border-color:var(--chb);}
+.tf-btn.correct{border-color:var(--greenb)!important;background:rgba(74,140,90,.1)!important;color:var(--greenb)!important;}
+.tf-btn.wrong{border-color:var(--redb)!important;background:rgba(156,74,74,.08)!important;color:var(--redb)!important;}
+.drill-exp{margin-top:10px;display:none;}
+.mc-opts{display:flex;flex-direction:column;gap:6px;}
+.mc-opt{
+  background:var(--surface);border:1px solid var(--border);border-radius:2px;
+  padding:11px 14px;min-height:44px;font-size:.85rem;color:var(--muted);cursor:pointer;
+  text-align:left;font-family:'EB Garamond',serif;line-height:1.5;
+  transition:border-color .13s;display:flex;align-items:flex-start;gap:10px;width:100%;
+  -webkit-tap-highlight-color:transparent;
+}
+.mc-opt:hover:not(:disabled){border-color:var(--chb);}
+.mc-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--chb);min-width:16px;padding-top:2px;flex-shrink:0;}
+.mc-opt.correct{border-color:var(--greenb)!important;background:rgba(74,140,90,.1)!important;color:var(--greenb)!important;}
+.mc-opt.wrong{border-color:var(--redb)!important;background:rgba(156,74,74,.08)!important;}
+
+/* ── UTILITY ── */
+.divider{height:1px;background:var(--border);margin:24px 0;}
+.subsec-head{
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--chb);margin:22px 0 10px;
+}
+
+@media(max-width:600px){
+  .sec{padding:22px 16px;}
+  .hero{padding:28px 16px 22px;}
+  .hero h1{font-size:1.4rem;}
+  .prob-statement{padding:14px 16px;}
+  .pw{padding:14px 16px;}
+  .prep-block{padding:16px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-inner">
+    <button class="nav-tab active" onclick="showPage('p0',this)">Overview</button>
+    <button class="nav-tab" onclick="showPage('p1',this)">§ Uniform Conv.</button>
+    <button class="nav-tab" onclick="showPage('p2',this)">§ Equicontinuity</button>
+    <button class="nav-tab" onclick="showPage('p3',this)">§ Power Series</button>
+    <button class="nav-tab" onclick="showPage('pex',this)">Exercises</button>
+  </div>
+</nav>
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+
+<!-- ================================================================ -->
+<!-- PAGE 0: OVERVIEW -->
+<!-- ================================================================ -->
+<div class="page active" id="p0">
+<div class="hero">
+  <div class="badge">Chapter 7 · PS9 · Spring 2026</div>
+  <h1>Sequences and Series of Functions</h1>
+  <p class="hero-sub">Rudin Ch. 7 &mdash; Uniform Convergence, Equicontinuity, Power Series &mdash; Due 05/04/2026</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">00</span> What This Problem Set Is About</h2>
+
+  <p>Chapter 7 of Rudin is one of the most conceptually rich chapters in the book, and it sits at the heart of real analysis. The central question it asks is deceptively simple: when you have a sequence of functions $f_n \to f$, which properties of the $f_n$ carry over to the limit $f$? Is $f$ continuous if each $f_n$ is? Is $f$ integrable? Differentiable? Can you swap a limit with an integral or derivative?</p>
+
+  <p>The answer, it turns out, depends critically on what <em>kind</em> of convergence you have. Pointwise convergence alone is too weak to preserve most analytic properties. The right notion is <strong>uniform convergence</strong> — where the functions don't just converge at each individual point, but converge at the same rate everywhere simultaneously. This single upgrade from "pointwise" to "uniform" is what unlocks the theorems about continuity of limits, integrability of limits, and differentiability of limits.</p>
+
+  <p>PS9 tests your understanding of these ideas from several angles. Exercise 1 probes why products of uniformly convergent sequences need an extra boundedness assumption. Exercise 2 asks whether a natural space of functions is complete under a weaker norm. Exercise 3 uses equicontinuity to force a function to be constant — a surprising consequence of a very strong uniformity assumption. Exercise 4 is the integral test, which at its core is a comparison between a sum and an integral when both live under the same monotone decreasing function. Exercise 5 is the theorem that power series can be differentiated term-by-term — one of the central theorems of the chapter. Exercise 6 upgrades pointwise boundedness to uniform boundedness using compactness and equicontinuity.</p>
+
+  <p>The theory pages (tabs §1–§3) cover the essential background in depth. Read those first, then go to the Exercises tab, where each problem begins with a preparation section before the problem statement.</p>
+
+  <div class="note">
+    <div class="box-label">Rudin Reference</div>
+    <div class="box-body">Chapter 7, pp. 143–166 (3rd edition). Key theorems: 7.8 (uniform convergence preserves continuity), 7.16 (uniform convergence and integration), 7.17 (differentiation of uniformly convergent series), 7.24–7.26 (power series), 7.25 (radius of convergence of differentiated series), and the Arzelà–Ascoli theorem framework (7.22–7.25).</div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">01</span> Quick Map of the Six Problems</h2>
+
+  <div class="explain">
+    <div class="box-label">Problem Landscape</div>
+    <div class="box-body">
+      <p><strong>Ex 1 (Products, uniform convergence):</strong> Uniform convergence of products — why boundedness is necessary. Requires the algebra of uniform limits and a concrete counterexample.</p>
+      <p><strong>Ex 2 (Completeness, $L^1$ norm):</strong> Is $C_b([0,1])$ complete under the $L^1$ metric? The answer is no, and you need a sequence of continuous functions that is Cauchy in $L^1$ but converges to a discontinuous limit.</p>
+      <p><strong>Ex 3 (Equicontinuity forces constant):</strong> If the rescaled family $\{f(n\cdot)\}$ is uniformly equicontinuous, then $f$ itself must be constant. A beautiful argument using what equicontinuity means at scale.</p>
+      <p><strong>Ex 4 (Integral test):</strong> The standard integral test for series convergence, proved rigorously by squeezing partial sums between integrals using monotonicity.</p>
+      <p><strong>Ex 5 (Term-by-term differentiation of power series):</strong> This is Rudin Theorem 7.17 in action. The radius of convergence of the differentiated series equals that of the original.</p>
+      <p><strong>Ex 6 (Pointwise bounded + equicontinuous $\Rightarrow$ uniformly bounded):</strong> On a compact metric space, you can cover by finitely many equicontinuity balls and then use the pointwise bound at centers to get a global bound.</p>
+    </div>
+  </div>
+</div>
+</div><!-- end page 0 -->
+
+<!-- ================================================================ -->
+<!-- PAGE 1: THEORY — UNIFORM CONVERGENCE -->
+<!-- ================================================================ -->
+<div class="page" id="p1">
+<div class="hero">
+  <div class="badge">Theory § 1</div>
+  <h1>Uniform Convergence</h1>
+  <p class="hero-sub">The engine of Chapter 7 — definitions, the key theorems, and why they matter</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">1.1</span> Pointwise vs. Uniform Convergence</h2>
+
+  <p>Before we can understand uniform convergence, we need to be precise about what pointwise convergence says — and why it falls short. A sequence of functions $f_n : E \to \mathbb{R}$ converges <em>pointwise</em> to a function $f : E \to \mathbb{R}$ if, for every fixed $x \in E$, the real sequence $f_n(x)$ converges to $f(x)$. In other words, pick any $x$ and ask: does $f_n(x) \to f(x)$? If yes for every $x$, the convergence is pointwise.</p>
+
+  <p>The problem with this definition is that the rate of convergence is allowed to vary wildly from point to point. For a given $\varepsilon > 0$ and a given $x$, there is some threshold $N(x, \varepsilon)$ after which $|f_n(x) - f(x)| < \varepsilon$. But $N$ may depend on $x$ in an uncontrolled way — as $x$ ranges over $E$, the threshold $N(x, \varepsilon)$ might shoot off to infinity, meaning that no matter how large $n$ is, there are always some points where $f_n$ and $f$ are far apart.</p>
+
+  <div class="def-box">
+    <div class="box-label">Definition — Pointwise Convergence</div>
+    <div class="box-body">
+      <p>$f_n \to f$ <strong>pointwise</strong> on $E$ means: for every $x \in E$ and every $\varepsilon > 0$, there exists $N = N(x, \varepsilon)$ such that $n \geq N$ implies $|f_n(x) - f(x)| < \varepsilon$.</p>
+    </div>
+  </div>
+
+  <div class="def-box">
+    <div class="box-label">Definition 7.7 — Uniform Convergence</div>
+    <div class="box-body">
+      <p>$f_n \to f$ <strong>uniformly</strong> on $E$ means: for every $\varepsilon > 0$, there exists $N = N(\varepsilon)$ (independent of $x$) such that for all $n \geq N$ and all $x \in E$,
+      $$|f_n(x) - f(x)| < \varepsilon.$$</p>
+      <p>Equivalently, $\sup_{x \in E} |f_n(x) - f(x)| \to 0$ as $n \to \infty$.</p>
+    </div>
+  </div>
+
+  <p>The critical upgrade is that $N$ no longer depends on $x$. Once $n \geq N(\varepsilon)$, the function $f_n$ is within $\varepsilon$ of $f$ simultaneously at every point. Geometrically, $f_n$ lies inside a uniform $\varepsilon$-tube around $f$ for all large $n$.</p>
+
+  <div class="explain">
+    <div class="box-label">Reading the Sup Formulation</div>
+    <div class="box-body">
+      <p>The equivalent formulation $\sup_{x \in E} |f_n(x) - f(x)| \to 0$ is extremely useful. Define $\|g\|_\infty = \sup_{x \in E}|g(x)|$ — this is called the <strong>supremum norm</strong> or <strong>uniform norm</strong>. Then uniform convergence is exactly convergence in this norm: $\|f_n - f\|_\infty \to 0$. The space of bounded continuous functions on a compact set is complete under this norm — this is Rudin Theorem 7.15. By contrast, the $L^1$ norm $\|g\|_{L^1} = \int|g|$ gives a weaker notion where this completeness fails (see Exercise 2).</p>
+    </div>
+  </div>
+
+  <div class="subsec-head">A canonical example to hold in mind</div>
+
+  <p>Consider $f_n(x) = x^n$ on $[0, 1]$. The pointwise limit is $f(x) = 0$ for $x \in [0,1)$ and $f(1) = 1$. Each $f_n$ is continuous, but the limit $f$ is not continuous at $x = 1$ — it jumps. This is the paradigm case showing that pointwise convergence does not preserve continuity. But the convergence is not uniform: $\sup_{x \in [0,1]} |x^n - f(x)| = 1$ for every $n$ (the sup is nearly achieved near $x = 1$). By contrast, on $[0, r]$ for any $r < 1$, convergence is uniform, because $\sup_{x \in [0,r]} x^n = r^n \to 0$.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">1.2</span> The Cauchy Criterion for Uniform Convergence</h2>
+
+  <p>Just as Cauchy sequences in $\mathbb{R}$ converge without needing to know the limit in advance, there is a Cauchy criterion for uniform convergence. This is often the easiest way to prove uniform convergence in practice, since you do not need an explicit formula for the limit.</p>
+
+  <div class="thm">
+    <div class="box-label">Theorem 7.8 (Cauchy Criterion) — Rudin</div>
+    <div class="box-body">
+      <p>$\{f_n\}$ converges uniformly on $E$ if and only if for every $\varepsilon > 0$ there exists $N$ such that for all $m, n \geq N$ and all $x \in E$,
+      $$|f_n(x) - f_m(x)| < \varepsilon.$$</p>
+    </div>
+  </div>
+
+  <p>This is the uniform version of the real Cauchy criterion. The proof of the "if" direction proceeds by first using the pointwise Cauchy criterion at each $x$ to get a pointwise limit $f$, then upgrading to uniform convergence by a careful estimate. The "only if" direction is just the triangle inequality.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">1.3</span> Uniform Convergence Preserves Continuity</h2>
+
+  <p>Here is the central theorem that makes uniform convergence worth caring about. If each $f_n$ is continuous and convergence is uniform, then the limit is continuous. This fails for pointwise convergence, as the example $x^n$ on $[0,1]$ shows.</p>
+
+  <div class="thm">
+    <div class="box-label">Theorem 7.12 — Continuity of the Uniform Limit</div>
+    <div class="box-body">
+      <p>Suppose $f_n \to f$ uniformly on $E$ and each $f_n$ is continuous at a point $x_0 \in E$. Then $f$ is continuous at $x_0$.</p>
+      <p><strong>Proof sketch (the "split the $\varepsilon$ in three" argument):</strong></p>
+      <p>Fix $\varepsilon > 0$. By uniform convergence, choose $N$ so that $|f_n(x) - f(x)| < \varepsilon/3$ for all $x$, $n \geq N$. By continuity of $f_N$ at $x_0$, choose $\delta$ so that $|x - x_0| < \delta$ implies $|f_N(x) - f_N(x_0)| < \varepsilon/3$. Then:
+      $$|f(x) - f(x_0)| \leq |f(x) - f_N(x)| + |f_N(x) - f_N(x_0)| + |f_N(x_0) - f(x_0)| < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon.$$</p>
+    </div>
+  </div>
+
+  <div class="explain">
+    <div class="box-label">Why the three-term split is the standard move</div>
+    <div class="box-body">
+      <p>This "$\varepsilon/3$ argument" (or $\varepsilon/3$ split) appears constantly in Chapter 7. You cannot go directly from $f$ to $f(x_0)$ because you do not know $f$ is continuous — that is what you are trying to prove. Instead, you route through a known-continuous approximation $f_N$. The uniform convergence controls the outer two terms globally (same $N$ works for every $x$), while continuity of $f_N$ controls the middle term locally near $x_0$. Recognize this pattern: it is used in essentially the same form in Exercise 1, Exercise 3, and Exercise 6.</p>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">1.4</span> Algebra of Uniform Limits — Products</h2>
+
+  <p>Uniform convergence is compatible with the usual algebraic operations on functions — sums, scalar multiples, and (under a boundedness assumption) products. This is what Exercise 1 probes directly.</p>
+
+  <div class="thm">
+    <div class="box-label">Uniform Convergence is Preserved Under Sums</div>
+    <div class="box-body">
+      <p>If $f_n \to f$ and $g_n \to g$ uniformly on $E$, then $f_n + g_n \to f + g$ uniformly. This is immediate: $|(f_n + g_n) - (f + g)| \leq |f_n - f| + |g_n - g|$, and the right side goes to $0$ uniformly.</p>
+    </div>
+  </div>
+
+  <div class="thm">
+    <div class="box-label">Uniform Convergence of Products — Requires Boundedness</div>
+    <div class="box-body">
+      <p>If $f_n \to f$ and $g_n \to g$ uniformly, and both sequences are <strong>uniformly bounded</strong> (there exists $M$ with $|f_n(x)| \leq M$ and $|g_n(x)| \leq M$ for all $x$ and all $n$), then $f_n g_n \to fg$ uniformly.</p>
+      <p><strong>Key identity:</strong>
+      $$f_n g_n - fg = (f_n - f)g_n + f(g_n - g).$$
+      So $|f_n g_n - fg| \leq |f_n - f| \cdot |g_n| + |f| \cdot |g_n - g|.$</p>
+      <p>Boundedness controls $|g_n|$ and $|f|$ (bounded by $M$ and the limit also bounded by $M$), turning this into $M|f_n - f| + M|g_n - g| \to 0$ uniformly.</p>
+    </div>
+  </div>
+
+  <div class="warn">
+    <div class="box-label">Without Boundedness, Products Can Fail</div>
+    <div class="box-body">
+      <p>If $f_n$ and $g_n$ are unbounded (even though each uniformly converges), the product $f_n g_n$ can fail to converge uniformly. The term $|f_n - f| \cdot |g_n|$ cannot be bounded because $|g_n|$ has no uniform upper bound — the decay of $|f_n - f|$ can be cancelled by the growth of $|g_n|$. Exercise 1(b) asks for a concrete example of exactly this failure.</p>
+    </div>
+  </div>
+
+  <div class="subsec-head">Check Your Understanding</div>
+  <div class="drill-card" id="d1a">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f_n \to f$ uniformly on $(0,1)$ and each $f_n$ is bounded, then the limit $f$ is also bounded.</div>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="answerTF('d1a','true',true)">True</button>
+      <button class="tf-btn" onclick="answerTF('d1a','false',true)">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True</div><div class="box-body">By uniform convergence, there exists $N$ such that $|f_N(x) - f(x)| < 1$ for all $x$. Since $f_N$ is bounded by some $M$, we get $|f(x)| \leq |f_N(x)| + 1 \leq M + 1$ for all $x$. So $f$ is bounded by $M + 1$.</div></div></div>
+  </div>
+  <div class="drill-card" id="d1b">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f_n \to f$ pointwise and each $f_n$ is continuous, then $\int_0^1 f_n(x)\,dx \to \int_0^1 f(x)\,dx$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="answerTF('d1b','true',false)">True</button>
+      <button class="tf-btn" onclick="answerTF('d1b','false',false)">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">False</div><div class="box-body">Pointwise convergence does not allow swapping limits and integrals. The classic counterexample: $f_n(x) = n \cdot \mathbf{1}_{[0,1/n]}(x)$ converges pointwise to $0$ but $\int f_n = 1$ for all $n$. Uniform convergence is what guarantees the swap (Rudin Thm 7.16).</div></div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">1.5</span> Completeness of $C(K)$ Under the Sup Norm</h2>
+
+  <p>One of the most important structural facts about uniform convergence is that the space of continuous functions on a compact set is <em>complete</em> under the sup norm. This means that any Cauchy sequence of continuous functions (in the sup norm sense) converges uniformly to a continuous function. Nothing "escapes" the space.</p>
+
+  <div class="thm">
+    <div class="box-label">Theorem 7.15 — Rudin (Completeness of $C(K)$)</div>
+    <div class="box-body">
+      <p>Let $K$ be a compact metric space. The space $\mathscr{C}(K)$ of continuous functions $f: K \to \mathbb{R}$, equipped with the norm $\|f\|_\infty = \sup_{x \in K}|f(x)|$, is a complete metric space.</p>
+      <p><strong>Proof idea:</strong> If $\{f_n\}$ is Cauchy in $\mathscr{C}(K)$, then for each $x$ the sequence $f_n(x)$ is Cauchy in $\mathbb{R}$ (since $|f_n(x) - f_m(x)| \leq \|f_n - f_m\|_\infty \to 0$). By completeness of $\mathbb{R}$, define $f(x) = \lim f_n(x)$ pointwise. The Cauchy condition in sup norm upgrades this to uniform convergence ($N$ works for all $x$ simultaneously). Uniform convergence of continuous functions gives a continuous limit (Thm 7.12). So $f \in \mathscr{C}(K)$ and $\|f_n - f\|_\infty \to 0$.</p>
+    </div>
+  </div>
+
+  <p>The key insight: the sup norm is precisely calibrated to make this work. The $L^1$ norm does not have this property — see Exercise 2, where you will show $C_b([0,1])$ is <em>incomplete</em> under the $L^1$ metric.</p>
+</div>
+</div><!-- end page 1 -->
+
+<!-- ================================================================ -->
+<!-- PAGE 2: THEORY — EQUICONTINUITY -->
+<!-- ================================================================ -->
+<div class="page" id="p2">
+<div class="hero">
+  <div class="badge">Theory § 2</div>
+  <h1>Equicontinuity</h1>
+  <p class="hero-sub">Controlling an entire family of functions simultaneously</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">2.1</span> What Equicontinuity Means</h2>
+
+  <p>Continuity is a property of a single function at a single point: for a given $\varepsilon$, you find a $\delta$ that works for that function at that location. Uniform continuity removes the dependence on the point: a single $\delta$ works everywhere on the domain for a given function. <strong>Equicontinuity</strong> goes one step further: a single $\delta$ works simultaneously for every function in a family and every point in the domain.</p>
+
+  <p>To see why this matters, imagine you have infinitely many functions $f_n$ and you want to say something about their collective behavior. If each $f_n$ is just individually continuous, you have no control over the family as a whole — the $\delta$ for $f_1$ at a point might be $1$, while the $\delta$ for $f_n$ at the same point might be $1/n$, shrinking to zero as $n$ grows. Equicontinuity forbids this deterioration.</p>
+
+  <div class="def-box">
+    <div class="box-label">Definition 7.22 — Equicontinuity (Rudin)</div>
+    <div class="box-body">
+      <p>A family $\mathscr{F}$ of functions $f: X \to \mathbb{R}$ is <strong>equicontinuous</strong> at a point $x_0 \in X$ if: for every $\varepsilon > 0$, there exists $\delta > 0$ such that for all $f \in \mathscr{F}$ and all $x \in X$ with $d(x, x_0) < \delta$,
+      $$|f(x) - f(x_0)| < \varepsilon.$$</p>
+      <p>The family is <strong>uniformly equicontinuous</strong> (on $X$) if: for every $\varepsilon > 0$, there exists $\delta > 0$ such that for all $f \in \mathscr{F}$ and all $x, y \in X$ with $d(x, y) < \delta$,
+      $$|f(x) - f(y)| < \varepsilon.$$</p>
+    </div>
+  </div>
+
+  <div class="explain">
+    <div class="box-label">Parsing the Quantifier Order</div>
+    <div class="box-body">
+      <p>In uniform equicontinuity, the order of quantifiers is: $\forall \varepsilon > 0$, $\exists \delta > 0$, $\forall f \in \mathscr{F}$, $\forall x, y$ with $d(x,y) < \delta$: $|f(x) - f(y)| < \varepsilon$. The $\delta$ is chosen before $f$ is specified and before $x, y$ are chosen. A single $\delta$ controls oscillation for the entire family at once. This is the "uniform" in uniform equicontinuity — uniform over both the family and the domain.</p>
+    </div>
+  </div>
+
+  <p>Equicontinuity is closely connected to compactness of function families. The Arzelà–Ascoli theorem (Rudin Theorem 7.25) says that on a compact space, a family that is both pointwise bounded and equicontinuous is totally bounded in $C(K)$ — every sequence has a uniformly convergent subsequence. This is the function-space analogue of the Bolzano–Weierstrass theorem. Exercise 6 uses equicontinuity to prove uniform boundedness, which is one ingredient of Arzelà–Ascoli.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">2.2</span> Worked Example: Detecting Equicontinuity</h2>
+
+  <p>Consider the family $\{f_n\}$ where $f_n(x) = \sin(nx)$ on $\mathbb{R}$. Is this family equicontinuous? No. For any fixed $\delta > 0$, we can choose $x, y$ with $|x - y| < \delta$ such that $|f_n(x) - f_n(y)| = |\sin(nx) - \sin(ny)|$ is close to $2$ for large $n$, because the frequency of oscillation grows without bound. So no single $\delta$ can work for all $n$.</p>
+
+  <p>Now consider $\{f_n\}$ where $f_n(x) = x^n/n$ on $[0,1]$. The derivative is $f_n'(x) = x^{n-1}$, which is bounded by $1$ on $[0,1]$ for all $n$. By the mean value theorem, $|f_n(x) - f_n(y)| \leq |x - y|$ for all $n$. So given $\varepsilon > 0$, taking $\delta = \varepsilon$ works for every $n$. This family is uniformly equicontinuous.</p>
+
+  <div class="note">
+    <div class="box-label">Lipschitz Condition Implies Equicontinuity</div>
+    <div class="box-body">
+      <p>If a family $\{f_n\}$ satisfies $|f_n(x) - f_n(y)| \leq L|x - y|$ for a single constant $L$ and all $n, x, y$, then the family is uniformly equicontinuous: take $\delta = \varepsilon/L$. This is the most common way equicontinuity arises in practice.</p>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">2.3</span> Equicontinuity and Compactness</h2>
+
+  <p>The following theorem, related to Arzelà–Ascoli, is directly relevant to Exercise 6. When you have equicontinuity plus a pointwise bound on a compact space, you can upgrade to a uniform bound. The key trick is covering the compact space by finitely many $\delta$-balls (using compactness), choosing a center in each ball where you have a pointwise bound, and then using equicontinuity to transfer that bound to the whole ball.</p>
+
+  <div class="thm">
+    <div class="box-label">Key Lemma (relevant to Ex 6)</div>
+    <div class="box-body">
+      <p>Let $(X, d)$ be compact, and let $\{f_n\}$ be uniformly equicontinuous and pointwise bounded. Then $\{f_n\}$ is uniformly bounded: there exists $C$ with $|f_n(x)| \leq C$ for all $n$ and all $x \in X$.</p>
+      <p><strong>Proof sketch:</strong> Take $\varepsilon = 1$. By uniform equicontinuity, find $\delta$ such that $d(x,y) < \delta \Rightarrow |f_n(x) - f_n(y)| < 1$ for all $n$. Since $X$ is compact, cover it by finitely many open balls $B(x_1, \delta), \ldots, B(x_k, \delta)$. At each center $x_i$, by pointwise boundedness, there exists $M_i$ with $|f_n(x_i)| \leq M_i$ for all $n$. Set $M = \max_i M_i$. For any $x \in X$, $x$ lies in some ball $B(x_i, \delta)$, so $|f_n(x)| \leq |f_n(x) - f_n(x_i)| + |f_n(x_i)| < 1 + M$. Thus $C = M + 1$ works for all $n$ and $x$.</p>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">2.4</span> Check Your Understanding</h2>
+  <div class="drill-card" id="d2a">
+    <div class="drill-q"><span class="drill-tag mc">MC</span>Which of the following families is uniformly equicontinuous on $[0,1]$?</div>
+    <div class="mc-opts">
+      <button class="mc-opt" onclick="answerMC('d2a',this)" data-correct="false"><span class="mc-lbl">A</span>$f_n(x) = \sin(nx)$</button>
+      <button class="mc-opt" onclick="answerMC('d2a',this)" data-correct="false"><span class="mc-lbl">B</span>$f_n(x) = x^n$ (pointwise limit is discontinuous)</button>
+      <button class="mc-opt" onclick="answerMC('d2a',this)" data-correct="true"><span class="mc-lbl">C</span>$f_n(x) = \sin(x)/n$ (shrinking oscillations)</button>
+      <button class="mc-opt" onclick="answerMC('d2a',this)" data-correct="false"><span class="mc-lbl">D</span>$f_n(x) = nx/(1+nx)$ (converges to $\mathbf{1}_{(0,1]}$ pointwise)</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">C</div><div class="box-body">For $f_n(x) = \sin(x)/n$: $|f_n(x) - f_n(y)| = |\sin x - \sin y|/n \leq |x - y|/n \leq |x - y|$. So $\delta = \varepsilon$ works for all $n$. The other families all have oscillation that fails to be controlled uniformly over $n$. For (D), the functions converge to a discontinuous limit, which is a red flag for equicontinuity failing.</div></div></div>
+  </div>
+  <div class="drill-card" id="d2b">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>A uniformly equicontinuous family on a compact space is automatically uniformly bounded, even without any pointwise bound assumption.</div>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="answerTF('d2b','true',false)">True</button>
+      <button class="tf-btn" onclick="answerTF('d2b','false',false)">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">False</div><div class="box-body">Equicontinuity alone is not enough. The family $f_n(x) = n$ (constant functions) is trivially equicontinuous ($|f_n(x) - f_n(y)| = 0$ for all $x, y$), but not uniformly bounded. You need both equicontinuity AND pointwise boundedness to conclude uniform boundedness — this is exactly the content of Exercise 6.</div></div></div>
+  </div>
+</div>
+</div><!-- end page 2 -->
+
+<!-- ================================================================ -->
+<!-- PAGE 3: THEORY — POWER SERIES -->
+<!-- ================================================================ -->
+<div class="page" id="p3">
+<div class="hero">
+  <div class="badge">Theory § 3</div>
+  <h1>Series of Functions &amp; Power Series</h1>
+  <p class="hero-sub">Term-by-term operations, radius of convergence, and differentiation</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">3.1</span> Convergence of Series of Functions</h2>
+
+  <p>A series of functions $\sum_{n=0}^\infty f_n(x)$ converges pointwise to $S(x)$ if the partial sums $S_N(x) = \sum_{n=0}^N f_n(x)$ converge pointwise. It converges uniformly if the partial sums converge uniformly. The key test for uniform convergence of series is the Weierstrass $M$-test.</p>
+
+  <div class="thm">
+    <div class="box-label">Theorem 7.10 — Weierstrass M-test</div>
+    <div class="box-body">
+      <p>Suppose $|f_n(x)| \leq M_n$ for all $x \in E$ and all $n$, and $\sum M_n$ converges. Then $\sum f_n$ converges uniformly (and absolutely) on $E$.</p>
+      <p><strong>Why:</strong> The tail $|\sum_{k=N}^\infty f_k(x)| \leq \sum_{k=N}^\infty M_k$, and the right side goes to $0$ uniformly in $x$ as $N \to \infty$ (since $\sum M_n < \infty$ means its tail tends to $0$).</p>
+    </div>
+  </div>
+
+  <p>The Weierstrass $M$-test is the workhorse for power series. Inside a compact subset of the disk of convergence, the terms $|c_n x^n| \leq |c_n| r^n$ for some $r < R$, and $\sum|c_n|r^n$ converges. So power series converge uniformly on compacta inside the radius of convergence.</p>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">3.2</span> Power Series and Radius of Convergence</h2>
+
+  <p>A power series is a series of the form $f(x) = \sum_{n=0}^\infty c_n x^n$, where the $c_n$ are coefficients (possibly complex) and $x$ is a real variable. The fundamental fact is that there is a single number $R \in [0, \infty]$ — the <strong>radius of convergence</strong> — such that the series converges absolutely for $|x| < R$ and diverges for $|x| > R$. Behavior at $|x| = R$ is subtle and depends on the specific series.</p>
+
+  <div class="def-box">
+    <div class="box-label">Theorem 3.39 (Hadamard formula) — Rudin</div>
+    <div class="box-body">
+      <p>The radius of convergence of $\sum c_n x^n$ is
+      $$R = \frac{1}{\limsup_{n \to \infty} |c_n|^{1/n}}.$$
+      (With the conventions $1/0 = \infty$ and $1/\infty = 0$.)</p>
+      <p>This formula comes from the root test applied to $|c_n x^n| = (|c_n|^{1/n} |x|)^n$: the series converges when $\limsup |c_n|^{1/n} |x| < 1$, i.e., when $|x| < 1/\limsup |c_n|^{1/n} = R$.</p>
+    </div>
+  </div>
+
+  <div class="explain">
+    <div class="box-label">Reading the Radius: What $R$ Tells You</div>
+    <div class="box-body">
+      <p>Think of $R$ as a threshold. If $|x| < R$, the power series $\sum c_n x^n$ converges absolutely — you can rearrange terms, integrate term by term, differentiate term by term. If $|x| > R$, the terms $c_n x^n$ do not even tend to $0$, so the series diverges. On the circle $|x| = R$ itself, anything can happen: $\sum x^n/n$ converges at $x = -1$ but diverges at $x = 1$; $\sum x^n/n^2$ converges at both endpoints; $\sum x^n$ diverges at both.</p>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">3.3</span> Differentiation of Power Series</h2>
+
+  <p>This is one of the most remarkable theorems about power series, and it is the content of Exercise 5. A power series $f(x) = \sum_{n=0}^\infty c_n x^n$ with radius of convergence $R$ can be differentiated term by term: the derivative is $f'(x) = \sum_{n=1}^\infty n c_n x^{n-1}$, and this differentiated series has the same radius of convergence $R$.</p>
+
+  <p>Why is this remarkable? In general, you cannot differentiate a series term by term just because it converges uniformly — you additionally need the series of derivatives to converge uniformly. For power series, the algebra of the radius of convergence works out exactly so that both conditions are satisfied simultaneously inside the disk of convergence.</p>
+
+  <div class="thm">
+    <div class="box-label">Theorem 7.17 — Rudin (Differentiation of Power Series)</div>
+    <div class="box-body">
+      <p>Let $f(x) = \sum_{n=0}^\infty c_n x^n$ have radius of convergence $R > 0$. Then:</p>
+      <p>(1) The differentiated series $g(x) = \sum_{n=1}^\infty n c_n x^{n-1}$ has radius of convergence $R$.</p>
+      <p>(2) $f$ is differentiable on $(-R, R)$ and $f'(x) = g(x)$ for all $x \in (-R, R)$.</p>
+    </div>
+  </div>
+
+  <div class="explain">
+    <div class="box-label">Why the Radius Stays the Same</div>
+    <div class="box-body">
+      <p>The radius of the differentiated series $\sum n c_n x^{n-1}$ is determined by $\limsup |n c_n|^{1/n}$. Now, $|n c_n|^{1/n} = n^{1/n} \cdot |c_n|^{1/n}$. The key fact is that $n^{1/n} \to 1$ as $n \to \infty$ (check: $n^{1/n} = e^{(\ln n)/n} \to e^0 = 1$). Therefore $\limsup|nc_n|^{1/n} = \limsup|c_n|^{1/n}$, and the radius is unchanged.</p>
+    </div>
+  </div>
+
+  <div class="pw">
+    <div class="pw-label">Proof Strategy for Exercise 5</div>
+    <div class="pw-step">
+      <div class="pw-n">1</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>Show the differentiated series has radius $R$.</strong></div>
+        <div class="pw-w">Use Hadamard: $\limsup|nc_n|^{1/n} = \limsup n^{1/n}|c_n|^{1/n} = 1 \cdot \limsup|c_n|^{1/n}$ since $n^{1/n} \to 1$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">2</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>Fix $x_0 \in (-R, R)$ and choose $r$ with $|x_0| < r < R$.</strong></div>
+        <div class="pw-w">The buffer $r$ gives room. Both $\sum c_n r^n$ and $\sum n c_n r^{n-1}$ converge absolutely, giving uniform convergence on $[-r, r]$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">3</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>Apply Rudin Theorem 7.17: the partial sums $S_N$ of $f$ converge uniformly on $[-r,r]$, and their derivatives $S_N'(x) = \sum_{n=1}^N nc_n x^{n-1}$ also converge uniformly there.</strong></div>
+        <div class="pw-w">The key condition for term-by-term differentiation (Rudin Thm 7.17 antecedent): each $S_N$ is differentiable, $S_N \to f$ pointwise, and $S_N' \to g$ uniformly. Under these conditions, $f$ is differentiable and $f' = g$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">4</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>For the Weierstrass M-test on $[-r,r]$:</strong> $|nc_n x^{n-1}| \leq nc_n r^{n-1}$, and $\sum nc_n r^{n-1}$ converges since the differentiated series has radius $R > r$.</div>
+        <div class="pw-w">So the $M$-test applies to the series of derivatives, giving the required uniform convergence of $S_N'$.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <div class="box-label">Term-by-term differentiation: the general theorem it rests on</div>
+    <div class="box-body">
+      <p>Rudin Theorem 7.17 (the one about sequences, not power series specifically) says: if $f_n$ are differentiable on $[a,b]$, $f_n(x_0) \to f(x_0)$ for some $x_0$, and $f_n' \to g$ uniformly on $[a,b]$, then $f_n \to f$ uniformly and $f' = g$. This is the general engine. For power series, we verify its hypotheses using the M-test and the radius-of-convergence computation.</p>
+    </div>
+  </div>
+
+  <div class="drill-card" id="d3a">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>The power series $\sum_{n=1}^\infty x^n/n$ and its derivative $\sum_{n=1}^\infty x^{n-1} = \sum_{n=0}^\infty x^n$ have the same radius of convergence $R = 1$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="answerTF('d3a','true',true)">True</button>
+      <button class="tf-btn" onclick="answerTF('d3a','false',true)">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True</div><div class="box-body">For $c_n = 1/n$: $\limsup|c_n|^{1/n} = \limsup(1/n)^{1/n} = 1$ (since $n^{1/n} \to 1$, so $(1/n)^{1/n} \to 1$ too). For $nc_n = 1$: $\limsup|nc_n|^{1/n} = 1$. Same radius. Note that behavior at the boundary differs: $\sum x^n/n$ converges at $x=-1$ (alternating harmonic series) but $\sum x^n$ diverges there.</div></div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span class="sec-num">3.4</span> The Integral Test — Background</h2>
+
+  <p>The integral test (Exercise 4) connects the convergence of a series $\sum f(n)$ to the convergence of an improper integral $\int_1^\infty f(x)\,dx$ when $f$ is nonnegative and decreasing. The mechanism is a simple monotone comparison: since $f$ is decreasing, $f$ is bounded below by its value at the right endpoint of each unit interval and above by its value at the left endpoint. This traps each term $f(n)$ between two integrals over an interval of length $1$.</p>
+
+  <div class="thm">
+    <div class="box-label">Setup for the Integral Test</div>
+    <div class="box-body">
+      <p>Since $f$ is nonneg and decreasing on $[n, n+1]$: $f(n+1) \leq f(x) \leq f(n)$ for all $x \in [n, n+1]$. Integrating over $[n, n+1]$:
+      $$f(n+1) \leq \int_n^{n+1} f(x)\,dx \leq f(n).$$
+      Summing from $n = 1$ to $N-1$ gives the two key inequalities that link partial sums of the series to partial integrals.</p>
+    </div>
+  </div>
+
+  <p>From these inequalities you get: $\sum_{n=2}^N f(n) \leq \int_1^N f(x)\,dx \leq \sum_{n=1}^{N-1} f(n)$. As $N \to \infty$, both the partial sums and the integral either both stay bounded (and both converge) or both blow up (and both diverge). This is the equivalence the problem asks you to prove.</p>
+</div>
+</div><!-- end page 3 -->
+
+<!-- ================================================================ -->
+<!-- PAGE EX: ALL EXERCISES -->
+<!-- ================================================================ -->
+<div class="page" id="pex">
+<div class="hero">
+  <div class="badge">Exercises 1 – 6 · PS9</div>
+  <h1>Problem Set 9 — Exercises</h1>
+  <p class="hero-sub">All six exercises, each with preparation, problem statement, and proof walkthrough — flowing sequentially.</p>
+</div>
+
+<!-- ================================================================ -->
+<!-- EXERCISE 1 -->
+<!-- ================================================================ -->
+<div class="sec">
+  <h2><span class="sec-num">Ex 1</span> Uniform Convergence of Products</h2>
+
+  <div class="prep-block">
+    <div class="prep-label">Preparation</div>
+    <p>This problem has two parts that tell opposite stories. Part (a) says: under boundedness, products behave as nicely as sums — uniform convergence is preserved. Part (b) says: drop boundedness and the product can fail to converge uniformly, even if both factors converge uniformly.</p>
+    <p>The core algebraic identity for products is the add-and-subtract trick:
+    $$f_n g_n - fg = (f_n - f) g_n + f(g_n - g).$$
+    You arrive at this by writing $f_n g_n - fg = f_n g_n - f g_n + f g_n - fg = (f_n - f)g_n + f(g_n - g)$. This decomposes the error into two pieces. To bound the whole thing you need each term to go to zero uniformly.</p>
+    <p>For part (a), the boundedness assumption ensures that $|g_n|$ and $|f|$ are bounded by some constant $M$, making both pieces small: $M \cdot |f_n - f|$ and $M \cdot |g_n - g|$, each going to zero uniformly. For part (b), you need an example where one of these "weights" is unbounded, so the product of small and large doesn't go to zero.</p>
+    <p><strong>Key tools:</strong> Part (a) uses the algebraic identity above, plus the triangle inequality, plus the uniform bound hypothesis. You will need to establish that the limit $f$ is also bounded — uniform limits of bounded functions are bounded (pass $|f_n(x)| \leq M$ through the limit at each $x$). Part (b): choose $f_n(x) = g_n(x) = 1/x + 1/n$ on $(0,1)$. Each converges uniformly to $1/x$. But $|f_ng_n - 1/x^2| = |2/(nx) + 1/n^2|$ and $\sup_{x \in (0,1)} 2/(nx) = \infty$ for every $n$. So the product does not converge uniformly.</p>
+    <p><strong>Common pitfall:</strong> For part (a), when you bound $|g_n|$ via the triangle inequality $|g_n| \leq |g_n - g| + |g|$, you need $|g|$ bounded — make sure you establish this before invoking it. The cleaner route is to use $|g_n| \leq M$ directly from the hypothesis (boundedness of $\{g_n\}$), and separately note that $|f| \leq M$ since $f$ is a pointwise limit of functions bounded by $M$.</p>
+  </div>
+
+  <div class="pw">
+    <div class="pw-label">Proof Outline — Part (a)</div>
+    <div class="pw-step">
+      <div class="pw-n">1</div>
+      <div class="pw-c">
+        <div class="pw-s">Let $M$ be a uniform bound: $|f_n(x)| \leq M$ and $|g_n(x)| \leq M$ for all $n, x$.</div>
+        <div class="pw-w">Establish that the limits $f, g$ are also bounded by $M$ (pass the inequality through the limit at each $x$).</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">2</div>
+      <div class="pw-c">
+        <div class="pw-s">Write $|f_n g_n - fg| \leq |f_n - f| \cdot |g_n| + |f| \cdot |g_n - g| \leq M|f_n - f| + M|g_n - g|$.</div>
+        <div class="pw-w">Both terms go to $0$ uniformly: for any $\varepsilon > 0$, choose $N$ so that $n \geq N$ gives $|f_n - f| < \varepsilon/(2M)$ everywhere and $|g_n - g| < \varepsilon/(2M)$ everywhere.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">3</div>
+      <div class="pw-c">
+        <div class="pw-s">Then for $n \geq N$ and all $x$: $|f_n(x)g_n(x) - f(x)g(x)| \leq M \cdot \frac{\varepsilon}{2M} + M \cdot \frac{\varepsilon}{2M} = \varepsilon$.</div>
+        <div class="pw-w">This $N$ depends only on $\varepsilon$ and $M$, not on $x$. So $f_n g_n \to fg$ uniformly. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-header">
+    <span class="prob-num">Exercise 1</span>
+    <span class="prob-title">Uniform Convergence of Products</span>
+  </div>
+  <div class="prob-statement">
+    <div class="stmt-label">Problem Statement (Hirsch, PS9)</div>
+    <p>Let $f_n, g_n : (0,1) \to \mathbb{R}$ be two sequences of continuous functions such that both $(f_n)_{n \in \mathbb{N}}$ and $(g_n)_{n \in \mathbb{N}}$ converge uniformly as $n \to \infty$.</p>
+    <p><strong>(a)</strong> In case $(f_n)_{n \in \mathbb{N}}$ and $(g_n)_{n \in \mathbb{N}}$ are sequences of bounded functions, show that also $(f_n g_n)_{n \in \mathbb{N}}$ converges uniformly as $n \to \infty$.</p>
+    <p><strong>(b)</strong> Show that it is necessary to assume boundedness by giving an example where $(f_n g_n)_{n \in \mathbb{N}}$ does not converge uniformly.</p>
+  </div>
+
+  <p><em>Note on the domain:</em> The domain is $(0,1)$ — an open interval, so functions on it can be unbounded even if they are continuous. This is the key for part (b). On a closed bounded interval $[0,1]$, a continuous function is automatically bounded (by the extreme value theorem), which would make the problem trivial. The open interval $(0,1)$ allows continuous functions to shoot off to infinity near $0$ or $1$.</p>
+
+  <div class="acc" id="acc1-hint">
+    <div class="acc-hdr" onclick="toggleAcc('acc1-hint')">
+      <span>Hint for (b): the right counterexample</span>
+      <span class="acc-arrow">▶</span>
+    </div>
+    <div class="acc-body">
+      <p>Let $f_n(x) = g_n(x) = 1/x + 1/n$ on $(0,1)$. Each converges uniformly to $1/x$ (since $|(1/x + 1/n) - 1/x| = 1/n \to 0$ uniformly). Then $f_ng_n = (1/x + 1/n)^2$ and $fg = 1/x^2$, and $|f_ng_n - 1/x^2| = |2/(nx) + 1/n^2|$. For any fixed $n$, $\sup_{x \in (0,1)} 2/(nx) = \infty$. The product does not converge uniformly.</p>
+    </div>
+  </div>
+</div>
+
+<div class="ex-divider"></div>
+
+<!-- ================================================================ -->
+<!-- EXERCISE 2 -->
+<!-- ================================================================ -->
+<div class="sec">
+  <h2><span class="sec-num">Ex 2</span> Completeness of $C_b([0,1])$ Under the $L^1$ Metric</h2>
+
+  <div class="prep-block">
+    <div class="prep-label">Preparation</div>
+    <p>This problem asks you to determine whether a specific metric space is complete. Recall what completeness means: a metric space $(X, d)$ is <strong>complete</strong> if every Cauchy sequence in $X$ converges to a point that is also in $X$. The space here is $C_b([0,1])$, the bounded continuous functions on $[0,1]$, but equipped with the $L^1$ metric $d_{L^1}(f, g) = \int_0^1 |f(x) - g(x)|\,dx$ rather than the sup metric.</p>
+    <p>The answer is <strong>no</strong> — this space is not complete. To prove incompleteness, you need to exhibit a sequence of functions $f_n \in C_b([0,1])$ that is Cauchy in $d_{L^1}$ but whose $L^1$-limit is not in $C_b([0,1])$, meaning the limit is either discontinuous or does not exist as a bounded continuous function.</p>
+    <p>The key insight is that the $L^1$ norm is much weaker than the sup norm. A sequence can be Cauchy in $L^1$ — meaning the functions get close in average absolute value — while the pointwise behavior near a single point is terrible. A spike of height $1$ but width $1/n$ carries $L^1$ weight $1/n \to 0$ but causes the sup-norm to stay at $1$.</p>
+    <p><strong>The standard counterexample:</strong> Define $f_n : [0,1] \to \mathbb{R}$ as the piecewise-linear function that ramps linearly from $0$ to $1$ on $[1/2 - 1/n, 1/2]$ and holds at $1$ on $[1/2, 1]$, and is $0$ on $[0, 1/2 - 1/n]$. Each $f_n$ is continuous and bounded. The pointwise limit is the step function $f = \mathbf{1}_{[1/2,1]}$, which is discontinuous at $1/2$. The $L^1$ distance $\|f_n - f\|_{L^1} \leq 1/n \to 0$, confirming the sequence is Cauchy (in fact $L^1$-convergent) in $C_b([0,1])$ but its limit lies outside the space.</p>
+    <p><strong>Direction of argument:</strong> To show incompleteness you must exhibit a Cauchy sequence and show it has no limit inside $C_b([0,1])$. It is not enough to find a sequence that fails to converge uniformly — that is a different statement. Use uniqueness of $L^1$ limits: if $d_{L^1}(f_n, g) \to 0$ for some $g \in C_b([0,1])$, then $g = f$ a.e. But $g$ is continuous and $f$ is not, contradiction.</p>
+    <p><strong>Contrast with Theorem 7.15:</strong> $C(K)$ under the sup norm is complete. The sup norm forces every term to be within $\varepsilon$ everywhere simultaneously, which passes continuity to the limit. The $L^1$ norm is too forgiving near a single bad point — it lets that point slide by unpenalized as long as the "bad region" shrinks.</p>
+  </div>
+
+  <div class="pw">
+    <div class="pw-label">Proof Outline: $(C_b([0,1]), d_{L^1})$ is not complete</div>
+    <div class="pw-step">
+      <div class="pw-n">1</div>
+      <div class="pw-c">
+        <div class="pw-s">Define $f_n$ as above (the ramp sequence). Show each $f_n$ is continuous and bounded, hence $f_n \in C_b([0,1])$.</div>
+        <div class="pw-w">Continuous: each piece is linear and they join continuously. Bounded: $0 \leq f_n \leq 1$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">2</div>
+      <div class="pw-c">
+        <div class="pw-s">Show $\{f_n\}$ is Cauchy in $d_{L^1}$. For $m \geq n$, $f_m$ and $f_n$ differ only on $[\tfrac{1}{2}-\tfrac{1}{n}, \tfrac{1}{2}]$, an interval of length $1/n$, where both functions are bounded by $1$. So $d_{L^1}(f_m, f_n) \leq 2/n \to 0$.</div>
+        <div class="pw-w">Alternatively: both $f_n$ and $f_m$ are $L^1$-close to the step function $f$, so they are $L^1$-close to each other by the triangle inequality.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">3</div>
+      <div class="pw-c">
+        <div class="pw-s">Show that any $L^1$-limit must be the step function $f = \mathbf{1}_{[1/2,1]}$ (a.e.), which is not continuous.</div>
+        <div class="pw-w">Suppose $g \in C_b([0,1])$ with $d_{L^1}(f_n, g) \to 0$. Then $f_n \to g$ in $L^1$, but also $f_n \to f$ in $L^1$. By uniqueness of $L^1$ limits, $g = f$ a.e. But $g$ is continuous and $f$ is not, contradiction.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">4</div>
+      <div class="pw-c">
+        <div class="pw-s">Conclude: the Cauchy sequence $\{f_n\}$ has no limit in $C_b([0,1])$, so the space is not complete.</div>
+        <div class="pw-w">$\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-header">
+    <span class="prob-num">Exercise 2</span>
+    <span class="prob-title">Completeness of Bounded Continuous Functions</span>
+  </div>
+  <div class="prob-statement">
+    <div class="stmt-label">Problem Statement (Hirsch, PS9)</div>
+    <p>Let $C_b([0,1])$ be the space of bounded continuous functions on the interval $[0,1]$. Define the norm $\|f\|_{L^1} := \int_0^1 |f(x)|\,dx$ and the corresponding metric $d_{L^1}(f, g) = \|f - g\|_{L^1}$. Is the metric space $(C_b([0,1]), d_{L^1})$ complete?</p>
+  </div>
+</div>
+
+<div class="ex-divider"></div>
+
+<!-- ================================================================ -->
+<!-- EXERCISE 3 -->
+<!-- ================================================================ -->
+<div class="sec">
+  <h2><span class="sec-num">Ex 3</span> Equicontinuity Forces $f$ to Be Constant</h2>
+
+  <div class="prep-block">
+    <div class="prep-label">Preparation</div>
+    <p>This is one of the most elegant problems on the set. The setup is: $f : [0, \infty) \to \mathbb{R}$, and we define $f_n(x) = f(nx)$ — a sequence obtained by rescaling the argument by $n$. So $f_1$ is $f$ itself, $f_2$ is $f$ run "twice as fast" (compressed horizontally by a factor of $2$), and so on. The assumption is that the family $\{f_n\}_{n \in \mathbb{N}}$ is uniformly equicontinuous. The conclusion is that $f$ must be constant.</p>
+    <p>To see why this is surprising: if $f$ is not constant, there exist points $a, b \in [0, \infty)$ with $f(a) \neq f(b)$. When we apply the rescaling $x \mapsto nx$, the distance between any two inputs shrinks by a factor of $n$. Specifically, if we take $x = a/n$ and $y = b/n$, then $f_n(x) = f(a)$ and $f_n(y) = f(b)$, but $|x - y| = |a - b|/n \to 0$. So for large $n$, the points $x$ and $y$ are very close together, but $f_n(x)$ and $f_n(y)$ are still a fixed distance apart. This directly contradicts equicontinuity.</p>
+    <p><strong>Key tool:</strong> The argument is a direct $\varepsilon$-$\delta$ contradiction. Take $\varepsilon = |f(a) - f(b)|/2 > 0$. By uniform equicontinuity, there exists $\delta > 0$ such that for all $n$ and all $x, y$ with $|x - y| < \delta$: $|f_n(x) - f_n(y)| < \varepsilon$. Now choose $n$ large enough that $|a - b|/n < \delta$, and set $x = a/n, y = b/n$. Then $|x - y| = |a-b|/n < \delta$, but $f_n(x) = f(a)$ and $f_n(y) = f(b)$, so $|f_n(x) - f_n(y)| = |f(a) - f(b)| = 2\varepsilon > \varepsilon$ — contradiction.</p>
+    <p><strong>Common pitfall:</strong> The hypothesis is on the family $\{f_n\}$, not on $f$ alone. Do not assume $f$ itself is uniformly continuous — that would be circular. The equicontinuity of the <em>rescaled family</em> is what constrains $f$. Also note: you do not need $f$ to be continuous — the hypothesis gives what you need about the $f_n$'s, which evaluate $f$ at rescaled points.</p>
+  </div>
+
+  <div class="pw">
+    <div class="pw-label">Proof Outline</div>
+    <div class="pw-step">
+      <div class="pw-n">1</div>
+      <div class="pw-c">
+        <div class="pw-s">Suppose for contradiction that $f$ is not constant: there exist $a, b \in [0, \infty)$ with $f(a) \neq f(b)$. Set $\varepsilon_0 = |f(a) - f(b)|/2 > 0$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">2</div>
+      <div class="pw-c">
+        <div class="pw-s">By uniform equicontinuity of $\{f_n\}$: for this $\varepsilon_0$, there exists $\delta > 0$ such that for all $n \in \mathbb{N}$ and all $x, y \in [0,\infty)$ with $|x - y| < \delta$, we have $|f_n(x) - f_n(y)| < \varepsilon_0$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">3</div>
+      <div class="pw-c">
+        <div class="pw-s">Choose $n$ large enough that $|a - b|/n < \delta$ (possible since $|a-b|$ is fixed). Set $x = a/n$ and $y = b/n$. Then $|x - y| = |a - b|/n < \delta$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">4</div>
+      <div class="pw-c">
+        <div class="pw-s">Compute: $f_n(x) = f(n \cdot a/n) = f(a)$ and $f_n(y) = f(n \cdot b/n) = f(b)$. So $|f_n(x) - f_n(y)| = |f(a) - f(b)| = 2\varepsilon_0 > \varepsilon_0$.</div>
+        <div class="pw-w">This contradicts the equicontinuity condition applied to $x, y$ with $|x - y| < \delta$. The contradiction shows $f$ must be constant. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-header">
+    <span class="prob-num">Exercise 3</span>
+    <span class="prob-title">Equicontinuity Forces $f$ Constant</span>
+  </div>
+  <div class="prob-statement">
+    <div class="stmt-label">Problem Statement (Hirsch, PS9)</div>
+    <p>Let $f : [0, \infty) \to \mathbb{R}$ and define $f_n(x) := f(nx)$ for $n \in \mathbb{N}$. Suppose that the family $\{f_n\}_{n \in \mathbb{N}}$ is uniformly equicontinuous on $[0, \infty)$. Show that $f$ is constant on $[0, \infty)$.</p>
+  </div>
+</div>
+
+<div class="ex-divider"></div>
+
+<!-- ================================================================ -->
+<!-- EXERCISE 4 -->
+<!-- ================================================================ -->
+<div class="sec">
+  <h2><span class="sec-num">Ex 4</span> The Integral Test</h2>
+
+  <div class="prep-block">
+    <div class="prep-label">Preparation</div>
+    <p>The integral test says that if $f : [1, \infty) \to \mathbb{R}$ is nonnegative and monotonically decreasing, then $\int_1^\infty f(x)\,dx$ converges if and only if $\sum_{n=1}^\infty f(n)$ converges. The key mechanism is the monotone comparison: on each unit interval $[n, n+1]$, since $f$ is decreasing, $f(n+1) \leq f(x) \leq f(n)$ for all $x$ in that interval. Integrating over the interval (of length $1$) gives $f(n+1) \leq \int_n^{n+1} f(x)\,dx \leq f(n)$.</p>
+    <p><strong>The proof pattern:</strong> Sum this inequality from $n = 1$ to $N-1$. The middle sum telescopes to $\int_1^N f(x)\,dx$. The left sum is $\sum_{n=2}^N f(n)$ and the right sum is $\sum_{n=1}^{N-1} f(n)$. These two inequalities — the partial integral sandwiched between two shifted partial sums — are the entire content of the proof. Once you have them, each direction of the "if and only if" is just a monotone convergence argument using nonnegativity of $f$.</p>
+    <p><strong>Key tools:</strong> (1) The definition of series convergence via partial sums $S_N = \sum_{n=1}^N c_n$ (recall Chapter 3). (2) The improper integral definition: $\int_1^\infty f := \lim_{b \to \infty} \int_1^b f$. (3) The monotone comparison inequality derived above. (4) The fact that for nonneg terms, partial sums are nondecreasing, so convergence is equivalent to boundedness above.</p>
+    <p><strong>Convergence vs. equality:</strong> The integral and the series both converge or both diverge, but they need not be equal. For example, $\sum_{n=1}^\infty 1/n^2 = \pi^2/6$ (the Basel problem) while $\int_1^\infty 1/x^2\,dx = 1$. The test is about convergence/divergence, not about computing values.</p>
+  </div>
+
+  <div class="note">
+    <div class="box-label">Convergence of a Series — The Definition</div>
+    <div class="box-body">
+      <p>The series $\sum_{n=1}^\infty c_n$ <strong>converges</strong> if the sequence of partial sums $S_N = \sum_{n=1}^N c_n$ converges (i.e., $\lim_{N \to \infty} S_N$ exists and is finite). If $S_N \to \infty$ or the limit does not exist, the series diverges. For nonneg terms, the partial sums are nondecreasing, so convergence is equivalent to $S_N$ being bounded above.</p>
+    </div>
+  </div>
+
+  <div class="pw">
+    <div class="pw-label">Proof of the Equivalence</div>
+    <div class="pw-step">
+      <div class="pw-n">1</div>
+      <div class="pw-c">
+        <div class="pw-s">From the monotone inequality on $[n, n+1]$: $f(n+1) \leq \int_n^{n+1} f \leq f(n)$. Sum $n = 1$ to $N-1$:
+        $$\sum_{n=2}^{N} f(n) \leq \int_1^N f(x)\,dx \leq \sum_{n=1}^{N-1}f(n).$$</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">2</div>
+      <div class="pw-c">
+        <div class="pw-s">($\Rightarrow$) Suppose $\int_1^\infty f$ converges to some $L < \infty$. Then for all $N$: $\sum_{n=2}^N f(n) \leq \int_1^N f \leq L$. Since $f \geq 0$, adding the nonneg term $f(1)$: $\sum_{n=1}^N f(n) \leq f(1) + L < \infty$. The partial sums are bounded above, so $\sum f(n)$ converges.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">3</div>
+      <div class="pw-c">
+        <div class="pw-s">($\Leftarrow$) Suppose $\sum_{n=1}^\infty f(n)$ converges to some $S < \infty$. Then for all $N$: $\int_1^N f \leq \sum_{n=1}^{N-1}f(n) \leq S$. The function $F(b) = \int_1^b f$ is nondecreasing and bounded above by $S$, so $\lim_{b \to \infty} F(b)$ exists and is finite. Hence $\int_1^\infty f$ converges.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">4</div>
+      <div class="pw-c">
+        <div class="pw-s">Both directions established. The integral converges if and only if the series converges. $\square$</div>
+        <div class="pw-w">Note: the two limits need not be equal. In general, $\sum f(n)$ and $\int_1^\infty f$ differ by $O(f(1))$. The theorem is about convergence/divergence, not about the values.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card" id="d4a">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>If $f : [1,\infty) \to \mathbb{R}$ is nonneg and decreasing, and $\sum f(n)$ converges, then $\int_1^\infty f\,dx$ converges to the same value as $\sum f(n)$.</div>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="answerTF('d4a','true',false)">True</button>
+      <button class="tf-btn" onclick="answerTF('d4a','false',false)">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">False</div><div class="box-body">The integral and the series both converge, but they need not be equal. For example, $f(x) = 1/x^2$: $\sum_{n=1}^\infty 1/n^2 = \pi^2/6$ (Basel problem), while $\int_1^\infty 1/x^2\,dx = 1$. Same convergence, different values. The integral test is a convergence test, not a computation of the sum.</div></div></div>
+  </div>
+
+  <div class="prob-header">
+    <span class="prob-num">Exercise 4</span>
+    <span class="prob-title">Integral Test</span>
+  </div>
+  <div class="prob-statement">
+    <div class="stmt-label">Problem Statement (Hirsch, PS9)</div>
+    <p><strong>1.</strong> When do we say that an infinite series $\sum_{n=1}^\infty c_n$ is convergent?</p>
+    <p><strong>2.</strong> We define the improper integral $\int_a^\infty f(x)\,dx := \lim_{b \to \infty} \int_a^b f(x)\,dx$, provided the limit exists and is finite. In this case we say that the integral converges.</p>
+    <p>Let $f : [1, \infty) \to \mathbb{R}$ be nonnegative and monotonically decreasing. Show that $\int_1^\infty f(x)\,dx$ converges if and only if $\sum_{n=1}^\infty f(n)$ converges.</p>
+  </div>
+</div>
+
+<div class="ex-divider"></div>
+
+<!-- ================================================================ -->
+<!-- EXERCISE 5 -->
+<!-- ================================================================ -->
+<div class="sec">
+  <h2><span class="sec-num">Ex 5</span> Differentiation of Power Series</h2>
+
+  <div class="prep-block">
+    <div class="prep-label">Preparation</div>
+    <p>This problem asks you to prove Rudin Theorem 7.17 for power series: if $\sum c_n x^n$ has radius of convergence $R > 0$, then $f$ is differentiable on $(-R, R)$ and $f'(x) = \sum n c_n x^{n-1}$. There are two parts to this: first showing the differentiated series has radius $R$, then showing $f' = \sum nc_n x^{n-1}$ inside that radius.</p>
+    <p><strong>Radius of the differentiated series:</strong> By the Hadamard formula, the radius is $1/\limsup|nc_n|^{1/n}$. Now $|nc_n|^{1/n} = n^{1/n} \cdot |c_n|^{1/n}$. The crucial fact is $n^{1/n} \to 1$ (since $n^{1/n} = e^{(\ln n)/n} \to e^0 = 1$). Therefore $\limsup|nc_n|^{1/n} = \limsup|c_n|^{1/n}$, and the radius is unchanged.</p>
+    <p><strong>Showing $f' = g$:</strong> Fix $x_0 \in (-R, R)$. Choose $r$ with $|x_0| < r < R$ — this buffer is essential. Apply the Weierstrass $M$-test to the series $g(x) = \sum nc_n x^{n-1}$ on $[-r, r]$: bound $|nc_n x^{n-1}| \leq n|c_n|r^{n-1}$, and $\sum n|c_n|r^{n-1}$ converges since the differentiated series has radius $R > r$. So $g$ converges uniformly on $[-r, r]$. Now apply Rudin Thm 7.17 for sequences: the partial sums $S_N$ are polynomials (differentiable), $S_N \to f$ pointwise, and $S_N' \to g$ uniformly on $[-r,r]$. Conclusion: $f$ is differentiable at $x_0$ and $f'(x_0) = g(x_0)$. Since $r < R$ was arbitrary, this holds on all of $(-R, R)$.</p>
+    <p><strong>Recognizing the proof pattern:</strong> This is the general engine from Rudin §7.17: if $f_n \to f$ (pointwise at one point) and $f_n' \to g$ uniformly on $[a,b]$, then $f_n \to f$ uniformly and $f' = g$. For power series, the $f_n$ are the partial sums $S_N(x) = \sum_{n=0}^N c_n x^n$, which are polynomials. You verify the hypotheses using the $M$-test.</p>
+    <p><strong>Common mistake:</strong> Do not try to apply the $M$-test on all of $(-R, R)$ at once. Power series need not converge uniformly on the full open interval — only on compact subsets. The strategy of working on $[-r, r]$ for $r < R$ is essential.</p>
+  </div>
+
+  <div class="pw">
+    <div class="pw-label">Full Proof Outline</div>
+    <div class="pw-step">
+      <div class="pw-n">A1</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>Radius of differentiated series:</strong> The differentiated series is $\sum_{n=1}^\infty nc_n x^{n-1}$. By the Hadamard formula and $n^{1/n} \to 1$: $\limsup|nc_n|^{1/n} = \limsup|c_n|^{1/n}$. Radius equals $R$.</div>
+        <div class="pw-w">Check: $n^{1/n} = e^{(\ln n)/n} \to e^0 = 1$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">B1</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>Setup for differentiation:</strong> Fix $x_0 \in (-R, R)$. Let $r$ satisfy $|x_0| < r < R$. Let $S_N(x) = \sum_{n=0}^N c_n x^n$ be the partial sums.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">B2</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>M-test for the derivative series on $[-r,r]$:</strong> $|nc_n x^{n-1}| \leq n|c_n|r^{n-1}$ for $x \in [-r,r]$. Since $\sum n|c_n|r^{n-1}$ converges (differentiated series has radius $R > r$), the M-test gives uniform convergence of $\sum nc_n x^{n-1}$ on $[-r, r]$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">B3</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>Apply Rudin 7.17:</strong> $S_N$ are differentiable on $[-r,r]$, $S_N(0) = c_0$ converges, and $S_N' \to g(x) = \sum nc_n x^{n-1}$ uniformly on $[-r,r]$. Conclusion: $f$ is differentiable on $[-r,r]$ and $f' = g$ there.</div>
+        <div class="pw-w">Since this holds for every $r < R$ and $x_0$ was arbitrary in $(-R,R)$, we get $f'(x) = \sum_{n=1}^\infty nc_n x^{n-1}$ for all $x \in (-R,R)$. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-header">
+    <span class="prob-num">Exercise 5</span>
+    <span class="prob-title">Differentiation of Power Series</span>
+  </div>
+  <div class="prob-statement">
+    <div class="stmt-label">Problem Statement (Hirsch, PS9)</div>
+    <p>Let $(c_n)_{n \in \mathbb{N}}$ be a sequence of complex numbers, and consider the power series
+    $$f(x) = \sum_{n=0}^\infty c_n x^n$$
+    with radius of convergence $R > 0$. Show that $f$ is differentiable on $(-R, R)$ and that its derivative is given by
+    $$f'(x) = \sum_{n=1}^\infty nc_n x^{n-1},$$
+    and that the differentiated series also has radius of convergence $R$.</p>
+  </div>
+
+  <div class="acc" id="acc5-hint">
+    <div class="acc-hdr" onclick="toggleAcc('acc5-hint')">
+      <span>Key lemma to cite: $n^{1/n} \to 1$</span>
+      <span class="acc-arrow">▶</span>
+    </div>
+    <div class="acc-body">
+      <p>The fact $n^{1/n} \to 1$ is standard and you may cite it without proof. It follows because $n^{1/n} = e^{(\ln n)/n}$ and $(\ln n)/n \to 0$ (L'Hopital or squeeze). Alternatively: for any $\varepsilon > 0$, $(1+\varepsilon)^n \geq \binom{n}{2}\varepsilon^2 \geq n(n-1)\varepsilon^2/2$, so $n \leq (1+\varepsilon)^n$ for large $n$, giving $n^{1/n} \leq 1 + \varepsilon$. Since also $n^{1/n} \geq 1$, we get $n^{1/n} \to 1$.</p>
+    </div>
+  </div>
+</div>
+
+<div class="ex-divider"></div>
+
+<!-- ================================================================ -->
+<!-- EXERCISE 6 -->
+<!-- ================================================================ -->
+<div class="sec">
+  <h2><span class="sec-num">Ex 6</span> Pointwise Bounded + Equicontinuous $\Rightarrow$ Uniformly Bounded</h2>
+
+  <div class="prep-block">
+    <div class="prep-label">Preparation</div>
+    <p>This problem is a key ingredient in the proof of the Arzelà–Ascoli theorem. The setup: $(X, d)$ is a <em>compact</em> metric space, and $\{f_n\}$ is a sequence of functions that is pointwise bounded (at each $x$, the values $\{f_n(x)\}$ are bounded, though the bound may depend on $x$) and uniformly equicontinuous (a single $\delta$ controls oscillation for all $n$ and all pairs of points). The conclusion is that $\{f_n\}$ is uniformly bounded: a single constant $C$ bounds all $|f_n(x)|$ for all $n$ and all $x$.</p>
+    <p>The compactness of $X$ is absolutely essential. Without it, the argument breaks down: you would need infinitely many $\delta$-balls to cover $X$, giving infinitely many center points, and the sup of infinitely many pointwise bounds might be infinite. Compactness forces the cover to be finite.</p>
+    <p><strong>The idea:</strong> Equicontinuity says that within any $\delta$-ball around a point, the functions don't change much. So if you know the functions are bounded at the center of the ball, you can control them everywhere in the ball. Compactness gives you finitely many balls that cover all of $X$. The max of the finitely many bounds at the centers plus $1$ is the global bound.</p>
+    <p><strong>Key tools:</strong> (1) Apply uniform equicontinuity with $\varepsilon = 1$ to get a $\delta$ that works for all $n$. (2) Cover $X$ by finitely many open balls $B(x_1, \delta), \ldots, B(x_k, \delta)$ — this uses compactness. (3) At each center $x_i$, pointwise boundedness gives $M_i$ with $|f_n(x_i)| \leq M_i$ for all $n$. Set $M = \max_i M_i$ (finite, since there are finitely many centers). (4) For any $x \in X$, find the ball $B(x_i, \delta)$ containing $x$; equicontinuity gives $|f_n(x) - f_n(x_i)| \leq 1$; triangle inequality gives $|f_n(x)| \leq M + 1$.</p>
+    <p><strong>Common pitfall:</strong> The problem states equicontinuity with $d_X(x,y) \leq \delta \Rightarrow |f_n(x) - f_n(y)| \leq \varepsilon$ (closed balls). Be consistent: if you cover by open balls $B(x_i, \delta)$ (where $d < \delta$), then $d < \delta \leq \delta$, so the equicontinuity condition still applies. Either formulation works — just be careful about the inequality direction when you invoke equicontinuity.</p>
+    <p><strong>Quantifier comparison:</strong> Pointwise bounded says $\forall x, \exists M_x, \forall n: |f_n(x)| \leq M_x$. Uniformly bounded says $\exists C, \forall x, \forall n: |f_n(x)| \leq C$. The proof moves the existential quantifier on $C$ out by using compactness to reduce to finitely many $M_{x_i}$ and taking the max.</p>
+  </div>
+
+  <div class="pw">
+    <div class="pw-label">Proof Outline</div>
+    <div class="pw-step">
+      <div class="pw-n">1</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>Apply uniform equicontinuity with $\varepsilon = 1$:</strong> There exists $\delta > 0$ such that for all $n \in \mathbb{N}$ and all $x, y \in X$ with $d(x, y) \leq \delta$, we have $|f_n(x) - f_n(y)| \leq 1$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">2</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>Use compactness to find a finite $\delta$-cover:</strong> The open balls $\{B(x, \delta)\}_{x \in X}$ cover $X$. By compactness, finitely many suffice: $X = B(x_1, \delta) \cup \cdots \cup B(x_k, \delta)$ for some $x_1, \ldots, x_k \in X$.</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">3</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>Use pointwise boundedness at the centers:</strong> For each center $x_i$, by hypothesis there exists $M_i$ such that $|f_n(x_i)| \leq M_i$ for all $n$. Set $M = \max_{i=1}^k M_i$ (finite maximum of finitely many numbers).</div>
+      </div>
+    </div>
+    <div class="pw-step">
+      <div class="pw-n">4</div>
+      <div class="pw-c">
+        <div class="pw-s"><strong>Transfer the bound to all of $X$:</strong> Let $x \in X$ be arbitrary. Then $x \in B(x_i, \delta)$ for some $i$, so $d(x, x_i) \leq \delta$. By equicontinuity: $|f_n(x) - f_n(x_i)| \leq 1$ for all $n$. Therefore:
+        $$|f_n(x)| \leq |f_n(x) - f_n(x_i)| + |f_n(x_i)| \leq 1 + M.$$</div>
+        <div class="pw-w">Set $C = M + 1$. Then $|f_n(x)| \leq C$ for all $n \in \mathbb{N}$ and all $x \in X$. This is uniform boundedness. $\square$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drill-card" id="d6a">
+    <div class="drill-q"><span class="drill-tag mc">MC</span>Why does the proof fail if $X$ is not compact?</div>
+    <div class="mc-opts">
+      <button class="mc-opt" onclick="answerMC('d6a',this)" data-correct="false"><span class="mc-lbl">A</span>Equicontinuity is not defined on non-compact spaces.</button>
+      <button class="mc-opt" onclick="answerMC('d6a',this)" data-correct="true"><span class="mc-lbl">B</span>You would need infinitely many center points, and the maximum of infinitely many bounds $M_i$ might not be finite.</button>
+      <button class="mc-opt" onclick="answerMC('d6a',this)" data-correct="false"><span class="mc-lbl">C</span>Pointwise boundedness implies uniform boundedness on any metric space.</button>
+      <button class="mc-opt" onclick="answerMC('d6a',this)" data-correct="false"><span class="mc-lbl">D</span>The triangle inequality is not available on non-compact spaces.</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">B</div><div class="box-body">The crucial step is covering $X$ by finitely many $\delta$-balls. On a non-compact space, you might need infinitely many balls, giving infinitely many centers $x_1, x_2, \ldots$ and corresponding bounds $M_1, M_2, \ldots$. There is no reason for $\sup_i M_i$ to be finite — the pointwise bounds might grow without limit as you move further out in the space. Compactness is exactly what forces the cover to be finite, making the max of the bounds a finite number.</div></div></div>
+  </div>
+
+  <div class="drill-card" id="d6b">
+    <div class="drill-q"><span class="drill-tag tf">T/F</span>In the proof, we need the equicontinuity to hold for all $n \in \mathbb{N}$ simultaneously — not just for each fixed $n$ separately.</div>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="answerTF('d6b','true',true)">True</button>
+      <button class="tf-btn" onclick="answerTF('d6b','false',true)">False</button>
+    </div>
+    <div class="drill-exp"><div class="thm"><div class="box-label">True</div><div class="box-body">In step 1, we use $\delta$ that works for all $n$ simultaneously. If we only had: for each fixed $n$, there exists $\delta_n$ such that... (ordinary uniform continuity of each $f_n$ individually), then each $\delta_n$ might depend on $n$ and we could not apply a single $\delta$ to cover all $n$. The key word "uniformly equicontinuous" means one $\delta$ handles all $n$ at once. This is what allows the bound $|f_n(x) - f_n(x_i)| \leq 1$ to hold for all $n$ and all $x \in B(x_i, \delta)$ simultaneously.</div></div></div>
+  </div>
+
+  <div class="prob-header">
+    <span class="prob-num">Exercise 6</span>
+    <span class="prob-title">Uniform Boundedness from Equicontinuity</span>
+  </div>
+  <div class="prob-statement">
+    <div class="stmt-label">Problem Statement (Hirsch, PS9)</div>
+    <p>Let $(X, d)$ be a compact metric space, and let $f_n : X \to \mathbb{R}$, $n \in \mathbb{N}$, be a pointwise bounded and uniformly equicontinuous sequence of functions, i.e.:
+    $$\forall x \in X : \exists M \in \mathbb{R} : \forall n \in \mathbb{N} : |f_n(x)| \leq M,$$
+    and
+    $$\forall \varepsilon > 0 : \exists \delta > 0 : \forall x, y \in X : \forall n \in \mathbb{N} : \bigl(d_X(x,y) \leq \delta \Rightarrow |f_n(x) - f_n(y)| \leq \varepsilon\bigr).$$
+    Show that $(f_n)_{n \in \mathbb{N}}$ is also uniformly bounded, i.e.,
+    $$\exists C \in \mathbb{R} : \forall x \in X : \forall n \in \mathbb{N} : |f_n(x)| \leq C.$$</p>
+  </div>
+</div>
+
+</div><!-- end page pex -->
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ================================================================ -->
+<script>
+/* ── Page switching ── */
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+  updateBar();
+}
+
+/* ── Progress bar ── */
+function updateBar() {
+  const el = document.querySelector('.page.active');
+  if (!el) return;
+  const handler = () => {
+    const s = el.scrollTop || window.pageYOffset;
+    const h = (el.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+    document.getElementById('pf').style.width = (h > 0 ? Math.min(100, s/h*100) : 100) + '%';
+  };
+  window.removeEventListener('scroll', window._barHandler);
+  window._barHandler = handler;
+  window.addEventListener('scroll', handler);
+  handler();
+}
+updateBar();
+
+/* ── Accordions ── */
+function toggleAcc(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+/* ── Drill: True/False ── */
+function answerTF(cardId, chosen, correct) {
+  const card = document.getElementById(cardId);
+  if (card.dataset.answered) return;
+  card.dataset.answered = '1';
+  const isCorrect = (chosen === String(correct));
+  card.querySelectorAll('.tf-btn').forEach(btn => {
+    btn.disabled = true;
+    const btnVal = btn.getAttribute('onclick').match(/'(true|false)'/)[1];
+    if (btnVal === String(correct)) btn.classList.add('correct');
+    else if (btnVal === chosen && !isCorrect) btn.classList.add('wrong');
+  });
+  const exp = card.querySelector('.drill-exp');
+  if (exp) exp.style.display = 'block';
+  if (window.MathJax) MathJax.typesetPromise([exp]).catch(() => {});
+}
+
+/* ── Drill: Multiple Choice ── */
+function answerMC(cardId, clickedBtn) {
+  const card = document.getElementById(cardId);
+  if (card.dataset.answered) return;
+  card.dataset.answered = '1';
+  const isCorrect = clickedBtn.dataset.correct === 'true';
+  card.querySelectorAll('.mc-opt').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') btn.classList.add('correct');
+    else if (btn === clickedBtn && !isCorrect) btn.classList.add('wrong');
+  });
+  const exp = card.querySelector('.drill-exp');
+  if (exp) exp.style.display = 'block';
+  if (window.MathJax) MathJax.typesetPromise([exp]).catch(() => {});
+}
+
+/* ── MathJax: typeset on page load ── */
+window.addEventListener('load', () => {
+  if (window.MathJax) MathJax.typesetPromise().catch(e => console.warn(e));
+});
+
+/* ── Typeset on page switch ── */
+const origShowPage = showPage;
+window.showPage = function(id, btn) {
+  origShowPage(id, btn);
+  const el = document.getElementById(id);
+  if (window.MathJax && el) MathJax.typesetPromise([el]).catch(() => {});
+};
+</script>
+</body>
+</html>
